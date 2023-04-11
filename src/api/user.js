@@ -1,3 +1,16 @@
+import client from './api'
+
+//login
+export const login = (data) => {
+  return client({
+    url: '/api/user/login',
+    method : 'post',
+    data : data,
+    withCredentials : true
+  });
+}
+
+
 /* 사용자 행위 api */
 
 // 휴가 신청

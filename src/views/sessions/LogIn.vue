@@ -23,7 +23,7 @@
                 class="w-full px-4 py-1 focus:outline-none border rounded"
                 type="text"
                 placeholder="사번"
-                v-model="user.id"
+                v-model="user.empNum"
               />
             </div>
             <div class="mb-3">
@@ -31,7 +31,7 @@
                 class="w-full px-4 py-1 focus:outline-none border rounded"
                 type="password"
                 placeholder="비밀번호"
-                v-model="user.password"
+                v-model="user.pwd"
               />
             </div>
             <div class="mb-3">
@@ -62,49 +62,60 @@
 
 <script>
 import router from '@/router/index.js'
-import { reactive } from 'vue'
+import { ref } from 'vue';
+import { login } from '@/api/user.js';
+import client from '@/api/api';
+import store from '@/store/index'
+
 export default {
   setup() {
-    const user = reactive({})
+    const user = ref({
+      empNum : '',
+      pwd : ''
+    })
+    
+    // const loginBtn = () => {
+    //   // console.log(user)
+    //   router.push({
+    //     path: '/dashboards/main',
+    //   })
+    // }
+
     const loginBtn = () => {
-      // console.log(user)
-      router.push({
-        path: '/dashboards/main',
-      })
+        const response = login(user.value)
+        response.then((res) => {
+            console.log(res);
+            const token = res.headers.token
+            client.defaults.headers.common[
+                'Authorization'
+            ] = `Bearer ${token}`
+
+            // 권한을 vuex state 에 저장
+            store.commit('setRole', res.headers.role)
+            store.commit('setEmpNum', res.headers.empNum)
+            movePage(res.headers.role)
+        })
+        
     }
 
-    // const loginBtn = () => {
-    //     const response = login(user.value)
-    //     response.then((res) => {
-    //         const token = res.headers.token
-    //         client.defaults.headers.common[
-    //             'Authorization'
-    //         ] = `Bearer ${token}`
-
-    //         // 권한을 vuex state 에 저장
-    //         store.commit('setRole', res.headers.role)
-    //         store.commit('setUserId', res.headers.userid)
-    //         movePage(res.headers.role)
-    //     })
-    // }
-
-    // const movePage = (role) => {
-    //     switch (role) {
-    //         case 'ROLE_ADMIN':
-    //             router.push({ name: 'AdminMain' })
-    //             break
-    //         case 'ROLE_MEMBER':
-    //             router.push({ name: 'MemberMain' })
-    //             break
-    //         case 'ROLE_CREW':
-    //             router.push({ name: 'CrewMain' })
-    //             break
-    //     }
-    // }
+    const movePage = (role) => {
+        switch (role) {
+            case 'ROLE_ADMIN':
+                router.push({ name: 'AdminMain' })
+                break
+            // case 'ROLE_MEMBER':
+            //     router.push({ name: 'MemberMain' })
+            //     break
+            // case 'ROLE_CREW':
+            //     router.push({ name: 'CrewMain' })
+            //     break
+        }
+    }
 
     return {
       loginBtn,
       user,
+      movePage
     }
   },
 }
