@@ -1,8 +1,8 @@
-import client from './api'
+import api from './api'
 
 //login
 export const login = (data) => {
-  return client({
+  return api({
     url: '/api/user/login',
     method : 'post',
     data : data,
