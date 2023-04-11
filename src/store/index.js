@@ -6,6 +6,7 @@ export default createStore({
   state: {
     role: '',
     userid: '',
+      empNum: "",
     emp: {},
       empNum:''
   },
