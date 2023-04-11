@@ -84,6 +84,9 @@ const onClickLoginBtn = () => {
     movePage(res.headers.role)
   })
 
+  // router.push({
+  //   name: '일정관리',
+  // })
 }
 
 // 임시
