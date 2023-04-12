@@ -40,6 +40,21 @@ const routes = [
         ],
       },
       {
+        path: '/vacations',
+        name: 'Vacations',
+        component: () => import('../views/vacations/index.vue'),
+        meta: {
+          title: 'Vacations',
+        },
+        children: [
+          {
+            path: 'request',
+            name: '휴가 신청',
+            component: () => import('../views/vacations/VacationRequest.vue'),
+          },
+        ],
+      },
+      {
         path: '/admin/main',
         name: 'AdminMain',
         component: () => import('@/views/admin/AdminMain.vue'),
