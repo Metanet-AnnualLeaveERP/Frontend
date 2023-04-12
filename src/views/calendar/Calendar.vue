@@ -4,12 +4,11 @@
       <div v-if="state.message" class="notification is-success">
         {{ state.message }}
       </div>
-
-      <div class="box">
-        <h4 class="title is-5">옵션을 선택하세요</h4>
+      <BaseCard>
+        <h4 class="title is-5">캘린더 설정</h4>
 
         <div class="field">
-          <label class="label">Period UOM</label>
+          <label class="label">기간 설정</label>
           <div class="control">
             <div class="select">
               <select v-model="state.displayPeriodUom">
@@ -22,7 +21,7 @@
         </div>
 
         <div class="field">
-          <label class="label">Period Count</label>
+          <label class="label">표시 개월 수</label>
           <div class="control">
             <div class="select">
               <select v-model="state.displayPeriodCount">
@@ -35,7 +34,7 @@
         </div>
 
         <div class="field">
-          <label class="label">Starting day of the week</label>
+          <label class="label">주 시작 요일</label>
           <div class="control">
             <div class="select">
               <select v-model="state.startingDayOfWeek">
@@ -61,7 +60,7 @@
         <div class="field">
           <label class="checkbox">
             <input v-model="state.displayWeekNumbers" type="checkbox" />
-            Show week number
+            주 번호 표시
           </label>
         </div>
 
@@ -73,10 +72,11 @@
         </div>
 
         <div class="field">
-          <label class="label">Themes</label>
+          <!-- Tooltip 설정. 카테고리로 활용 가능할까? -->
+          <label class="label">Tooltips</label>
           <label class="checkbox">
             <input v-model="state.useDefaultTheme" type="checkbox" />
-            Default
+            Default CSS
           </label>
         </div>
 
@@ -86,9 +86,16 @@
             Holidays
           </label>
         </div>
-      </div>
 
-      <div class="box">
+        <BaseBtn
+          class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
+          @click="clickRequestBtn"
+          >휴가 신청</BaseBtn
+        >
+      </BaseCard>
+
+      <!-- 일정 추가 -->
+      <!-- <div class="box">
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
@@ -113,14 +120,14 @@
         <button class="button is-info" @click="clickTestAddItem">
           Add Item
         </button>
-      </div>
+      </div> -->
     </div>
     <div class="calendar-parent">
       <CalendarView
         :items="state.items"
         :show-date="state.showDate"
         :time-format-options="{ hour: 'numeric', minute: '2-digit' }"
-        :enable-drag-drop="true"
+        :enable-drag-drop="false"
         :disable-past="state.disablePast"
         :disable-future="state.disableFuture"
         :show-times="state.showTimes"
@@ -162,8 +169,9 @@ import {
 import { onMounted, reactive, computed, ref, onUpdated } from 'vue'
 
 import { getHolidays } from '@/api/calendar-api.js'
+import router from '@/router/index.js'
 
-// style?
+// 캘린더 규격 css
 import '/node_modules/vue-simple-calendar/dist/style.css'
 
 export default {
@@ -193,7 +201,7 @@ export default {
       newItemTitle: '',
       newItemStartDate: '',
       newItemEndDate: '',
-      useDefaultTheme: true,
+      useDefaultTheme: false,
       useHolidayTheme: true,
       useTodayIcons: false,
       items: [
@@ -226,6 +234,8 @@ export default {
         },
       ],
     })
+
+    // 지역 설정
     const userLocale = computed(() => CalendarMath.getDefaultBrowserLocale())
 
     const dayNames = computed(() =>
@@ -234,27 +244,10 @@ export default {
 
     const themeClasses = computed(() => ({
       'theme-default': state.useDefaultTheme,
-      //   "holiday-us-traditional": state.useHolidayTheme,
-      //   "holiday-us-official": state.useHolidayTheme,
     }))
 
     const myDateClasses = () => {
       const o = {}
-      state.items.forEach((e) => {
-        // console.log(e.title);
-        // console.log(e.title + " : " + e.description);
-        // document.getElementsByClassName("holiday").style.color = "blue";
-        // o[e.startDate] = e.tooltip == "공휴일" ? ["holiday"] : ["anniversary"];
-        // let date = new Date(e.startDate).getMonth();
-        // const theFirst = thisMonth(1);
-        // if (theFirst.getMonth() == date) {
-        //   thisMonthHoliday.value.push({
-        //     title: e.title,
-        //     description: e.description == "공휴일" ? "holiday" : "anniversary",
-        //   });
-        // }
-        // console.log(date);
-      })
 
       // const theFirst = thisMonth(1)
       // const ides = [2, 4, 6, 9].includes(theFirst.getMonth()) ? 15 : 13
@@ -297,6 +290,11 @@ export default {
           console.log(err)
         })
     })
+
+    const clickRequestBtn = () => {
+      console.log('휴가 신청 버튼 클릭')
+      router.push({ path: '/vacations/request' })
+    }
 
     const periodChanged = () => {
       // range, eventSource) {
@@ -372,6 +370,7 @@ export default {
       finishSelection,
       onDrop,
       clickTestAddItem,
+      clickRequestBtn,
     }
   },
 }
@@ -442,6 +441,11 @@ export default {
 
 #example-full .cv-day.do-you-remember.the-21st .cv-day-number::after {
   content: '\1F30D\1F32C\1F525';
+}
+
+.cv-item {
+  text-align: center;
+  border-radius: 0.5em;
 }
 
 /* my custom */

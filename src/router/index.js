@@ -29,13 +29,28 @@ const routes = [
         name: 'Calendars',
         component: () => import('../views/calendar/index.vue'),
         meta: {
-          title: 'Calendar',
+          title: 'Calendars',
         },
         children: [
           {
             path: 'main',
             name: '일정 관리',
             component: () => import('../views/calendar/Calendar.vue'),
+          },
+        ],
+      },
+      {
+        path: '/vacations',
+        name: 'Vacations',
+        component: () => import('../views/vacations/index.vue'),
+        meta: {
+          title: 'Vacations',
+        },
+        children: [
+          {
+            path: 'request',
+            name: '휴가 신청',
+            component: () => import('../views/vacations/VacationRequest.vue'),
           },
         ],
       },
