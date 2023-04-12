@@ -25,16 +25,16 @@ const routes = [
     },
     children: [
       {
-        path: '/schedule',
-        name: 'Schedule',
+        path: '/calendars',
+        name: 'Calendars',
         component: () => import('../views/calendar/index.vue'),
         meta: {
-          title: 'Schedule',
+          title: 'Calendars',
         },
         children: [
           {
             path: 'main',
-            name: '일정관리',
+            name: '일정 관리',
             component: () => import('../views/calendar/Calendar.vue'),
           },
         ],
@@ -48,52 +48,11 @@ const routes = [
         },
         children: [
           {
-            path: 'request/new',
-            name: '휴가신청',
-            component: () => import('../views/vacations/NewRequest.vue'),
-          },
-          {
-            path: 'request/list',
-            name: '휴가신청내역',
-            component: () => import('../views/vacations/RequestList.vue'),
-          },
-          {
-            path: 'request/detail',
-            name: '휴가신청상세',
-            component: () => import('../views/vacations/RequestDetail.vue'),
+            path: 'request',
+            name: '휴가 신청',
+            component: () => import('../views/vacations/VacationRequest.vue'),
           },
         ],
-      },
-      {
-        path: '/anp-docs',
-        name: 'AnnualPromoteDoc',
-        component: () => import('../views/annual_promote_doc/index.vue'),
-        meta: {
-          title: 'AnnualPromoteDoc',
-        },
-        children: [
-          {
-            path: 'main',
-            name: '연차촉진문서함',
-            component: () => import('../views/annual_promote_doc/AnpList.vue'),
-          },
-        ],
-      },
-      {
-        path: '/admin/main',
-        name: 'AdminMain',
-        component: () => import('@/views/admin/AdminMain.vue'),
-        meta: {
-          roles: ['ROLE_ADMIN']
-        }
-      },
-      {
-        path: '/admin/main',
-        name: 'AdminMain',
-        component: () => import('@/views/admin/AdminMain.vue'),
-        meta: {
-          roles: ['ROLE_ADMIN']
-        }
       },
       {
         path: '/dashboards',
