@@ -44,9 +44,11 @@
         <BaseCard>
           <form>
             <label
-              class="block mb-2 text-2xl font-bold text-gray-900 dark:text-white"
+              class="block mb-2 text-xl font-bold text-gray-900 dark:text-white"
               >요청사항 작성</label
             >
+
+            <p class="mb-5">날짜를 먼저 선택해 주세요!</p>
 
             <div class="field">
               <label
@@ -56,27 +58,38 @@
               >
               <!-- 휴가 유형 get 해서 v-for문으로 select 에 넣기 -->
               <select
+                disabled
+                v-model="formData.vcType"
                 id="types"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                @change="onClickTypes($event)"
               >
                 <option selected>유형을 선택하세요</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
+                <option value="연차">연차</option>
+                <option value="포상휴가">포상휴가</option>
                 <option value="FR">France</option>
                 <option value="DE">Germany</option>
               </select>
             </div>
 
+            <!-- 유형을 선택했을 경우에만 보이도록 설정 -->
             <div class="field">
               <label
-                for="types"
+                for="alTypes"
                 class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
                 >요청 시간</label
               >
+              <!-- 휴가 선택일 보이게 설정 -->
+              <div>{{ state.selectedDays }}</div>
+
+              <!-- 연차에 한해서만 보이게 설정 / 연차를 하루만 쓸 때 -->
               <!-- 연차(1) or 반차(0.5) -->
               <select
-                id="types"
+                disabled
+                id="alTypes"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                v-model="alType"
+                @change="onClickAlTypes($event)"
               >
                 <option selected>시간을 선택하세요</option>
                 <option value="FULL">연차</option>
@@ -90,7 +103,7 @@
                 class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
                 >요청 대상</label
               >
-              <span>
+              <span class="ml-5">
                 <!-- 연차를 선택했을 경우 자동 승인이 뜨도록 설정 -->
                 <!-- 연차이외의 휴가인 경우 현재 로그인한 사원의 팀장 -->
                 김철수 팀장
@@ -106,7 +119,7 @@
               <!-- 텍스트필드 -->
               <textarea
                 id="message"
-                rows="2"
+                rows="1"
                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="사유를 입력하세요 (ex. 결혼식 참석)"
               ></textarea>
@@ -140,31 +153,39 @@
             <!-- 반응형으로 구현할 것 -->
             <div class="my-req">
               <label
-                class="mb-2 mr-5 text-base font-semibold text-gray-900 dark:text-white"
+                class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
                 >날짜</label
               >
-              <span>
+              <span class="ml-5">
                 {{ state.selectedDays }}
               </span>
               <br />
               <label
-                class="mb-2 mr-5 text-base font-semibold text-gray-900 dark:text-white"
+                class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
                 >유형</label
               >
-              <span>
+              <span class="ml-5">
                 <!-- 내가 선택한 유형 -->
-                오전 반차
+                {{ formData.vcType }}
+              </span>
+              <br />
+              <label
+                class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
+                >총 요청 일수</label
+              >
+              <span class="ml-5">
+                {{ formData.reqDays }}
               </span>
 
               <p
                 class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
                 id="req-info"
               >
-                승인 시 {연차} 잔여 일수는 {현재 잔여일수} -> {현재 잔여일수 -
-                reqdays}일입니다.
+                승인 시 {{ formData.vcType }} 잔여 일수는 {현재 잔여일수} ->
+                {현재 잔여일수 - reqdays}일입니다.
               </p>
             </div>
-            <div id="btn-wrapper" class="flex justify-end">
+            <div id="btn-wrapper" class="flex justify-start">
               <BaseBtn
                 class="mb-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 @click="onClickRequestBtn"
@@ -173,7 +194,7 @@
               </BaseBtn>
             </div>
 
-            <div v-if="state.message" class="notification is-success">
+            <div v-show="state.message" class="notification is-success">
               {{ state.message }}
             </div>
           </form>
@@ -256,6 +277,25 @@ export default {
       ],
     })
 
+    const formData = reactive({
+      // reqDate: '',
+      startDate: '',
+      endDate: '',
+      vcType: '',
+      reqDays: '',
+      comments: '',
+      status: '',
+      empId: 0,
+    })
+
+    const alType = ref(0)
+
+    // const select = reactive({
+    //   type: false,
+    //   al: false,
+    //   other: false,
+    // })
+
     // 지역 설정
     const userLocale = computed(() => CalendarMath.getDefaultBrowserLocale())
 
@@ -313,11 +353,25 @@ export default {
         })
     })
 
+    // 특정 날짜 하루 선택
     const onClickDay = (d) => {
       state.selectionStart = undefined
       state.selectionEnd = undefined
       state.message = `You clicked: ${d.toLocaleDateString()}`
       state.selectedDays = `${d.toLocaleDateString()}`
+
+      // 시작일 및 종료일을 클릭 날짜로 1일 설정
+      formData.startDate = d
+      formData.endDate = d
+      formData.reqDays = 1
+
+      // 날짜를 선택해야 select box 활성화
+      document.getElementById('types').disabled = false
+
+      // 연차/반차 select box 활성화
+      if (formData.vcType == '연차') {
+        document.getElementById('alTypes').disabled = false
+      }
     }
 
     const onClickItem = (e) => {
@@ -334,6 +388,7 @@ export default {
       state.selectionStart = dateRange[0]
     }
 
+    // 여러 날짜를 선택한 경우
     const finishSelection = (dateRange) => {
       setSelection(dateRange)
       state.message = `You selected: ${
@@ -343,6 +398,16 @@ export default {
       state.selectedDays = `${
         state.selectionStart?.toLocaleDateString() ?? 'n/a'
       } - ${state.selectionEnd?.toLocaleDateString() ?? 'n/a'}`
+
+      formData.startDate = state.selectionStart
+      formData.endDate = state.selectionEnd
+      formData.reqDays = getDateDiff(formData.endDate, formData.startDate)
+
+      // 날짜를 선택해야 select box 활성화
+      document.getElementById('types').disabled = false
+
+      // 연차/반차 select box 비활성화
+      document.getElementById('alTypes').disabled = true
     }
 
     const clickTestAddItem = () => {
@@ -357,8 +422,40 @@ export default {
       state.message = 'You added a calendar item!'
     }
 
+    // 휴가 신청 버튼 클릭 시
     const onClickRequestBtn = () => {
       console.log('휴가 신청 버튼 클릭')
+      console.log(formData)
+    }
+
+    // 휴가 유형 선택 시
+    // 호출 시점: 날짜 선택 이후
+    const onClickTypes = (e) => {
+      if (e.target.value == '연차') {
+        document.getElementById('alTypes').disabled = false
+      }
+    }
+
+    const onClickAlTypes = (e) => {
+      switch (e.target.value) {
+        case 'FULL':
+          formData.reqDays = 1
+          break
+        case 'AM':
+        case 'PM':
+          formData.reqDays = 0.5
+          break
+      }
+    }
+
+    // 두 날짜 사이의 차이 일수 구하기
+    const getDateDiff = (d1, d2) => {
+      const date1 = new Date(d1)
+      const date2 = new Date(d2)
+
+      const diffDate = date1.getTime() - date2.getTime()
+
+      return Math.abs(diffDate / (1000 * 60 * 60 * 24)) + 1 // 밀리세컨 * 초 * 분 * 시 = 일
     }
 
     return {
@@ -375,6 +472,10 @@ export default {
       finishSelection,
       clickTestAddItem,
       onClickRequestBtn,
+      formData,
+      onClickTypes,
+      onClickAlTypes,
+      alType,
     }
   },
 }
