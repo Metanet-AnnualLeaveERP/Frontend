@@ -137,6 +137,7 @@
                 id="multiple_files"
                 type="file"
                 multiple
+                @change="uploadFile($event)"
               />
               <p
                 class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
@@ -188,7 +189,7 @@
             <div id="btn-wrapper" class="flex justify-start">
               <BaseBtn
                 class="mb-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                @click="onClickRequestBtn"
+                @click="onSubmit"
               >
                 신청하기
               </BaseBtn>
@@ -216,6 +217,8 @@ import { getHolidays } from '@/api/calendar-api.js'
 
 // 캘린더 규격 css
 import '/node_modules/vue-simple-calendar/dist/style.css'
+
+import { upload } from '@/api/file.js'
 
 export default {
   components: {
@@ -246,35 +249,7 @@ export default {
       newItemEndDate: '',
       useDefaultTheme: true,
       selectedDays: '',
-      items: [
-        /*{
-			id: "e0",
-			startDate: "2018-01-05",
-		},*/
-        {
-          id: 'e1',
-          startDate: thisMonth(15, 0, 0),
-          title: 'First',
-        },
-        {
-          id: 'e2',
-          startDate: thisMonth(15),
-          title: 'Single-day item with a long title',
-        },
-        {
-          id: 'e3',
-          startDate: thisMonth(7, 9, 25),
-          endDate: thisMonth(10, 16, 30),
-          title: 'Multi-day item with a long title and times',
-        },
-        {
-          id: 'e4',
-          startDate: thisMonth(20),
-          title: 'My Birthday!',
-          classes: 'birthday',
-          url: 'https://en.wikipedia.org/wiki/Birthday',
-        },
-      ],
+      items: [],
     })
 
     const formData = reactive({
@@ -288,13 +263,8 @@ export default {
       empId: 0,
     })
 
+    // 연차 시간
     const alType = ref(0)
-
-    // const select = reactive({
-    //   type: false,
-    //   al: false,
-    //   other: false,
-    // })
 
     // 지역 설정
     const userLocale = computed(() => CalendarMath.getDefaultBrowserLocale())
@@ -422,10 +392,15 @@ export default {
       state.message = 'You added a calendar item!'
     }
 
-    // 휴가 신청 버튼 클릭 시
-    const onClickRequestBtn = () => {
+    // 휴가 신청 버튼 클릭 시 (Submit form)
+    const onSubmit = () => {
       console.log('휴가 신청 버튼 클릭')
       console.log(formData)
+
+      // 업로드한 파일이 있을 때만 호출
+      if (file.value != null) {
+        submitFile()
+      }
     }
 
     // 휴가 유형 선택 시
@@ -458,6 +433,34 @@ export default {
       return Math.abs(diffDate / (1000 * 60 * 60 * 24)) + 1 // 밀리세컨 * 초 * 분 * 시 = 일
     }
 
+    /*----------파일 관련-----------*/
+    const file = ref(null)
+
+    // 로컬에서 파일을 업로드할 때마다 파일 정보를 file.value에 넣어 준다
+    const uploadFile = (event) => {
+      file.value = event.target.files
+      // console.log(11111111111)
+      // console.log(file.value)
+    }
+
+    // 서버에 파일을 업로드하는 메소드
+    const submitFile = () => {
+      let formData = new FormData()
+
+      Array.from(file.value).forEach((file) => {
+        formData.append('uploadFiles', file)
+      })
+
+      upload(formData).then((res) => {
+        console.log(res.data)
+      })
+
+      // file이 잘 담겼는지 로그 확인용
+      // for (var pair of formData.entries()) {
+      //   console.log(pair[0] + ', ' + pair[1])
+      // }
+    }
+
     return {
       state,
       userLocale,
@@ -471,11 +474,12 @@ export default {
       setSelection,
       finishSelection,
       clickTestAddItem,
-      onClickRequestBtn,
+      onSubmit,
       formData,
       onClickTypes,
       onClickAlTypes,
       alType,
+      uploadFile,
     }
   },
 }
