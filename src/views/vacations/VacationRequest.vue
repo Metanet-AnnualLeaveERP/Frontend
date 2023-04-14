@@ -42,7 +42,7 @@
       </div>
       <div class="calendar-controls">
         <BaseCard>
-          <form>
+          <form encType="multipart/form-data" @submit.prevent="onSubmit">
             <label
               class="block mb-2 text-xl font-bold text-gray-900 dark:text-white"
               >요청사항 작성</label
@@ -59,7 +59,7 @@
               <!-- 휴가 유형 get 해서 v-for문으로 select 에 넣기 -->
               <select
                 disabled
-                v-model="formData.vcType"
+                v-model="reqData.vcType"
                 id="types"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 @change="onClickTypes($event)"
@@ -167,7 +167,7 @@
               >
               <span class="ml-5">
                 <!-- 내가 선택한 유형 -->
-                {{ formData.vcType }}
+                {{ reqData.vcType }}
               </span>
               <br />
               <label
@@ -175,23 +175,29 @@
                 >총 요청 일수</label
               >
               <span class="ml-5">
-                {{ formData.reqDays }}
+                {{ reqData.reqDays }}
               </span>
 
               <p
                 class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
                 id="req-info"
               >
-                승인 시 {{ formData.vcType }} 잔여 일수는 {현재 잔여일수} ->
+                승인 시 {{ reqData.vcType }} 잔여 일수는 {현재 잔여일수} ->
                 {현재 잔여일수 - reqdays}일입니다.
               </p>
             </div>
             <div id="btn-wrapper" class="flex justify-start">
               <BaseBtn
+                type="submit"
                 class="mb-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                @click="onSubmit"
               >
                 신청하기
+              </BaseBtn>
+              <BaseBtn
+                class="mb-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                @click="onClickDownloadTest"
+              >
+                파일 다운로드 테스트
               </BaseBtn>
             </div>
 
@@ -218,7 +224,8 @@ import { getHolidays } from '@/api/calendar-api.js'
 // 캘린더 규격 css
 import '/node_modules/vue-simple-calendar/dist/style.css'
 
-import { upload } from '@/api/file.js'
+// api 모듈
+import { createRequest, download } from '@/api/index.js'
 
 export default {
   components: {
@@ -226,6 +233,52 @@ export default {
     CalendarViewHeader,
   },
   setup() {
+    // 다운로드 파일 이름을 추출하는 함수
+    const extractDownloadFilename = (response) => {
+      const disposition = response.headers['content-disposition']
+      const fileName = decodeURI(
+        disposition
+          .match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1]
+          .replace(/['"]/g, '')
+      )
+      return fileName
+    }
+
+    const onClickDownloadTest = () => {
+      // db에 저장된 vcReq의 filePath
+      const filePath =
+        'd:\\ALE_downloaded_files\\2023_04_14\\7d6f8f04-914e-40fe-a572-03c0e440ef55.zip'
+      const encodedFilePath = encodeURIComponent(filePath)
+
+      download(encodedFilePath).then((response) => {
+        console.log(response)
+        // 응답 헤더에서 파일 이름을 가져옴
+        const name = response.headers['content-disposition']
+          .split('filename=')[1]
+          .replace(/"/g, '')
+
+        // 응답으로 받은 바이너리 파일을 blob 객체로 변환
+        const blob = new Blob([response.data])
+
+        // blob을 통해 객체 url을 생성
+        const fileUrl = window.URL.createObjectURL(blob)
+
+        // blob 객체 URL을 설정할 링크 생성 -> a 태그
+        const link = document.createElement('a')
+        link.href = fileUrl
+        link.setAttribute('download', name) // 파일 이름
+        link.style.cssText = 'display:none' // 보이지 않도록 설정
+
+        // 링크를 body에 추가하고 강제로 click 이벤트를 발생시켜 파일 다운로드를 실행
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+
+        // 다운로드가 끝난 리소스(객체 URL)를 해제
+        window.URL.revokeObjectURL(fileUrl)
+      })
+    }
+
     const thisMonth = (d, h, m) => {
       const t = new Date()
       return new Date(t.getFullYear(), t.getMonth(), d, h || 0, m || 0)
@@ -252,15 +305,15 @@ export default {
       items: [],
     })
 
-    const formData = reactive({
-      // reqDate: '',
+    const reqData = reactive({
       startDate: '',
       endDate: '',
       vcType: '',
       reqDays: '',
       comments: '',
       status: '',
-      empId: 0,
+      // filePath: null,
+      // empId: null,
     })
 
     // 연차 시간
@@ -331,15 +384,15 @@ export default {
       state.selectedDays = `${d.toLocaleDateString()}`
 
       // 시작일 및 종료일을 클릭 날짜로 1일 설정
-      formData.startDate = d
-      formData.endDate = d
-      formData.reqDays = 1
+      reqData.startDate = d
+      reqData.endDate = d
+      reqData.reqDays = 1
 
       // 날짜를 선택해야 select box 활성화
       document.getElementById('types').disabled = false
 
       // 연차/반차 select box 활성화
-      if (formData.vcType == '연차') {
+      if (reqData.vcType == '연차') {
         document.getElementById('alTypes').disabled = false
       }
     }
@@ -369,9 +422,9 @@ export default {
         state.selectionStart?.toLocaleDateString() ?? 'n/a'
       } - ${state.selectionEnd?.toLocaleDateString() ?? 'n/a'}`
 
-      formData.startDate = state.selectionStart
-      formData.endDate = state.selectionEnd
-      formData.reqDays = getDateDiff(formData.endDate, formData.startDate)
+      reqData.startDate = state.selectionStart
+      reqData.endDate = state.selectionEnd
+      reqData.reqDays = getDateDiff(reqData.endDate, reqData.startDate)
 
       // 날짜를 선택해야 select box 활성화
       document.getElementById('types').disabled = false
@@ -392,17 +445,6 @@ export default {
       state.message = 'You added a calendar item!'
     }
 
-    // 휴가 신청 버튼 클릭 시 (Submit form)
-    const onSubmit = () => {
-      console.log('휴가 신청 버튼 클릭')
-      console.log(formData)
-
-      // 업로드한 파일이 있을 때만 호출
-      if (file.value != null) {
-        submitFile()
-      }
-    }
-
     // 휴가 유형 선택 시
     // 호출 시점: 날짜 선택 이후
     const onClickTypes = (e) => {
@@ -414,11 +456,11 @@ export default {
     const onClickAlTypes = (e) => {
       switch (e.target.value) {
         case 'FULL':
-          formData.reqDays = 1
+          reqData.reqDays = 1
           break
         case 'AM':
         case 'PM':
-          formData.reqDays = 0.5
+          reqData.reqDays = 0.5
           break
       }
     }
@@ -433,30 +475,48 @@ export default {
       return Math.abs(diffDate / (1000 * 60 * 60 * 24)) + 1 // 밀리세컨 * 초 * 분 * 시 = 일
     }
 
-    /*----------파일 관련-----------*/
+    /*===========휴가 신청 api 호출============*/
     const file = ref(null)
+    const formData = ref(null)
+
+    // 휴가 신청 버튼 클릭 시 (Submit form)
+    const onSubmit = () => {
+      // 선택 유형이 연차면 상태 = '자동승인' / 타 휴가면 '대기중'
+      reqData.status = reqData.vcType == '연차' ? '자동승인' : '대기중'
+      console.log(reqData)
+      formData.value = new FormData()
+      // 객체를 JSON 타입으로 변환하여 Blob 객체 생성
+      formData.value.append(
+        'request',
+        new Blob([JSON.stringify(reqData)], {
+          type: 'application/json',
+        })
+      )
+      // 업로드한 파일이 있을 때 reqData에 append
+      if (file.value != null) {
+        appendFile()
+      }
+
+      createRequest(formData.value).then((res) => {
+        console.log(res)
+      })
+    }
+
+    /*===========파일 관련============*/
 
     // 로컬에서 파일을 업로드할 때마다 파일 정보를 file.value에 넣어 준다
     const uploadFile = (event) => {
       file.value = event.target.files
-      // console.log(11111111111)
-      // console.log(file.value)
     }
 
-    // 서버에 파일을 업로드하는 메소드
-    const submitFile = () => {
-      let formData = new FormData()
-
-      Array.from(file.value).forEach((file) => {
-        formData.append('uploadFiles', file)
+    // reqData를 생성하여 file들을 append (multipart data 생성)
+    const appendFile = () => {
+      Array.from(file.value).forEach((f) => {
+        formData.value.append('uploadFiles', f)
       })
-
-      upload(formData).then((res) => {
-        console.log(res.data)
-      })
-
       // file이 잘 담겼는지 로그 확인용
-      // for (var pair of formData.entries()) {
+      // console.log('filesssss')
+      // for (var pair of formData.value.entries()) {
       //   console.log(pair[0] + ', ' + pair[1])
       // }
     }
@@ -475,11 +535,12 @@ export default {
       finishSelection,
       clickTestAddItem,
       onSubmit,
-      formData,
+      reqData,
       onClickTypes,
       onClickAlTypes,
       alType,
       uploadFile,
+      onClickDownloadTest,
     }
   },
 }
