@@ -7,7 +7,6 @@ export default createStore({
     role: '',
     userid: '',
     emp: {},
-      empNum:''
   },
   mutations: {
     setRole(state, role) {

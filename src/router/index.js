@@ -80,22 +80,6 @@ const routes = [
         ],
       },
       {
-        path: '/admin/main',
-        name: 'AdminMain',
-        component: () => import('@/views/admin/AdminMain.vue'),
-        meta: {
-          roles: ['ROLE_ADMIN']
-        }
-      },
-      {
-        path: '/admin/main',
-        name: 'AdminMain',
-        component: () => import('@/views/admin/AdminMain.vue'),
-        meta: {
-          roles: ['ROLE_ADMIN']
-        }
-      },
-      {
         path: '/dashboards',
         name: 'Dashboards',
         component: () => import('../views/dashboards/index.vue'),
