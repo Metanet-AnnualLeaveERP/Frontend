@@ -114,17 +114,37 @@ let toggleSubMenu = (e) => {
         <!-- sidebar 부모 -->
         <perfect-scrollbar>
           <ul class="navigation-left dark:bg-foreground dark:text-gray-300">
+            <!-- nav child 없는 애들 -->
             <li
               @mouseenter="toggleSubMenu"
               class="nav-item border-b border-gray-200 dark:border-dark"
-              data-item="calendar"
-              :data-submenu="true"
             >
-              <a class="nav-item-hold"
+              <router-link class="nav-item-hold" :to="{ name: '일정관리' }"
                 ><i class="i-Calendar text-3xl"></i>
-                <p>일정 현황</p>
-              </a>
+                <p>캘린더</p>
+              </router-link>
             </li>
+            <li
+              @mouseenter="toggleSubMenu"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+            >
+              <router-link class="nav-item-hold" :to="{ name: '휴가신청내역' }"
+                ><i class="i-Calendar text-3xl"></i>
+                <p>휴가 신청 내역</p>
+              </router-link>
+            </li>
+            <li
+              @mouseenter="toggleSubMenu"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+            >
+              <router-link
+                class="nav-item-hold"
+                :to="{ name: '연차촉진문서함' }"
+                ><i class="i-Calendar text-3xl"></i>
+                <p>문서 보관함</p>
+              </router-link>
+            </li>
+            <!-- nav child 있는 애들 -->
             <li
               @mouseenter="toggleSubMenu"
               class="nav-item border-b border-gray-200 dark:border-dark"
@@ -209,18 +229,6 @@ let toggleSubMenu = (e) => {
         }"
         class="sidebar-left-secondary shadow bg-white dark:bg-foreground dark:text-gray-300"
       >
-        <ul
-          class="mb-4 childNav"
-          data-parent="calendar"
-          :class="selectedParentMenu == 'calendar' ? 'block' : 'hidden'"
-        >
-          <li>
-            <router-link :to="{ path: '/calendars/main' }">
-              <i class="nav-icon i-Checked-User text-base mr-2"></i>
-              <span class="item-name"> 메인 캘린더 </span>
-            </router-link>
-          </li>
-        </ul>
         <ul
           class="mb-4 childNav"
           data-parent="dashboards"
