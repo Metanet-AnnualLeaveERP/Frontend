@@ -44,7 +44,10 @@
               </label>
             </div>
             <div class="mb-4">
-              <BaseBtn block class="bg-primary text-white" @click="loginBtn"
+              <BaseBtn
+                block
+                class="bg-primary text-white"
+                @click="onClickLoginBtn"
                 >로그인</BaseBtn
               >
             </div>
@@ -60,52 +63,60 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import router from '@/router/index.js'
 import { reactive } from 'vue'
-export default {
-  setup() {
-    const user = reactive({})
-    const loginBtn = () => {
-      // console.log(user)
-      router.push({
-        path: '/dashboards/main',
-      })
-    }
+import store from '@/store/index.js'
+const user = reactive({})
+const onClickLoginBtn = () => {
+  // 아래 주석 처리 해놓은 것처럼
+  // 로그인 시 필요 정보 vuex state에 저장
+  // 권한 별로 페이지 다르게 이동하도록 추가
 
-    // const loginBtn = () => {
-    //     const response = login(user.value)
-    //     response.then((res) => {
-    //         const token = res.headers.token
-    //         client.defaults.headers.common[
-    //             'Authorization'
-    //         ] = `Bearer ${token}`
+  // 임시
+  // const role = 'ROLE_EMP'
+  // const role = 'ROLE_ADMIN'
+  const role = 'ROLE_MGR'
+  store.commit('setRole', role)
+  movePage(role)
 
-    //         // 권한을 vuex state 에 저장
-    //         store.commit('setRole', res.headers.role)
-    //         store.commit('setUserId', res.headers.userid)
-    //         movePage(res.headers.role)
-    //     })
-    // }
-
-    // const movePage = (role) => {
-    //     switch (role) {
-    //         case 'ROLE_ADMIN':
-    //             router.push({ name: 'AdminMain' })
-    //             break
-    //         case 'ROLE_MEMBER':
-    //             router.push({ name: 'MemberMain' })
-    //             break
-    //         case 'ROLE_CREW':
-    //             router.push({ name: 'CrewMain' })
-    //             break
-    //     }
-    // }
-
-    return {
-      loginBtn,
-      user,
-    }
-  },
+  // router.push({
+  //   name: '일정관리',
+  // })
 }
+
+// 임시
+const movePage = (role) => {
+  switch (role) {
+    case 'ROLE_ADMIN':
+      router.push({ name: '일정관리' })
+      break
+    case 'ROLE_MGR':
+      router.push({ name: '일정관리' })
+      break
+    case 'ROLE_EMP':
+      router.push({ name: '일정관리' })
+      break
+  }
+}
+
+// const onClickLoginBtn = () => {
+//     const response = login(user.value)
+//     response.then((res) => {
+//         const token = res.headers.token
+//         client.defaults.headers.common[
+//             'Authorization'
+//         ] = `Bearer ${token}`
+
+//         // 권한을 vuex state 에 저장
+//         store.commit('setRole', res.headers.role)
+//         store.commit('setUserId', res.headers.userid)
+//         movePage(res.headers.role)
+//     })
+// }
+
+// return {
+//   onClickLoginBtn,
+//   user,
+// }
 </script>
