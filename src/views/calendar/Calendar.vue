@@ -89,7 +89,7 @@
 
         <BaseBtn
           class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
-          @click="onClickRequestBtn"
+          @click="clickRequestBtn"
           >휴가 신청</BaseBtn
         >
       </BaseCard>
@@ -291,6 +291,11 @@ export default {
         })
     })
 
+    const clickRequestBtn = () => {
+      console.log('휴가 신청 버튼 클릭')
+      router.push({ path: '/vacations/request' })
+    }
+
     const periodChanged = () => {
       // range, eventSource) {
       // Demo does nothing with this information, just including the method to demonstrate how
@@ -350,10 +355,6 @@ export default {
       state.message = 'You added a calendar item!'
     }
 
-    const onClickRequestBtn = () => {
-      router.push({ path: '/vacations/request' })
-    }
-
     return {
       state,
       userLocale,
@@ -369,7 +370,7 @@ export default {
       finishSelection,
       onDrop,
       clickTestAddItem,
-      onClickRequestBtn,
+      clickRequestBtn,
     }
   },
 }
