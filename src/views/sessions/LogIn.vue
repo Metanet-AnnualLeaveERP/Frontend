@@ -68,7 +68,7 @@
 import router from '@/router/index.js'
 import {ref} from 'vue';
 import store from '@/store/index.js'
-
+import { login } from '@/api/user.js';
 const user = ref({
   empNum: '',
   pwd: ''
