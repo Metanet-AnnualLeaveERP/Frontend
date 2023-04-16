@@ -23,7 +23,7 @@
                 class="w-full px-4 py-1 focus:outline-none border rounded"
                 type="text"
                 placeholder="사번"
-                v-model="user.id"
+                v-model="user.empNum"
               />
             </div>
             <div class="mb-3">
@@ -31,7 +31,7 @@
                 class="w-full px-4 py-1 focus:outline-none border rounded"
                 type="password"
                 placeholder="비밀번호"
-                v-model="user.password"
+                v-model="user.pwd"
               />
             </div>
             <div class="mb-3">
@@ -65,21 +65,23 @@
 
 <script setup>
 import router from '@/router/index.js'
-import { reactive } from 'vue'
+import {ref} from 'vue';
 import store from '@/store/index.js'
-const user = reactive({})
+import { login } from '@/api/user.js';
+const user = ref({
+  empNum: '',
+  pwd: ''
+})
 const onClickLoginBtn = () => {
   // 아래 주석 처리 해놓은 것처럼
   // 로그인 시 필요 정보 vuex state에 저장
   // 권한 별로 페이지 다르게 이동하도록 추가
-
-  // 임시
-  const role = 'ROLE_EMP'
-  // const role = 'ROLE_ADMIN'
-  // const role = 'ROLE_MGR'
-  store.commit('setRole', role)
-  store.commit('setUserId', 2)
-  movePage(role)
+  login(user.value).then((res) => {
+    // 권한을 vuex state 에 저장
+    store.commit('setRole', res.headers.role)
+    store.commit('setEmpNum', res.headers.empnum)
+    movePage(res.headers.role)
+  })
 }
 
 // 임시
@@ -96,19 +98,4 @@ const movePage = (role) => {
       break
   }
 }
-
-// const onClickLoginBtn = () => {
-//     const response = login(user.value)
-//     response.then((res) => {
-//         const token = res.headers.token
-//         client.defaults.headers.common[
-//             'Authorization'
-//         ] = `Bearer ${token}`
-
-//         // 권한을 vuex state 에 저장
-//         store.commit('setRole', res.headers.role)
-//         store.commit('setUserId', res.headers.userid)
-//         movePage(res.headers.role)
-//     })
-// }
 </script>
