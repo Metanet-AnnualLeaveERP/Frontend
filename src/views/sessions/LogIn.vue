@@ -74,15 +74,12 @@ const onClickLoginBtn = () => {
   // 권한 별로 페이지 다르게 이동하도록 추가
 
   // 임시
-  // const role = 'ROLE_EMP'
+  const role = 'ROLE_EMP'
   // const role = 'ROLE_ADMIN'
-  const role = 'ROLE_MGR'
+  // const role = 'ROLE_MGR'
   store.commit('setRole', role)
+  store.commit('setUserId', 2)
   movePage(role)
-
-  // router.push({
-  //   name: '일정관리',
-  // })
 }
 
 // 임시
@@ -113,10 +110,5 @@ const movePage = (role) => {
 //         store.commit('setUserId', res.headers.userid)
 //         movePage(res.headers.role)
 //     })
-// }
-
-// return {
-//   onClickLoginBtn,
-//   user,
 // }
 </script>

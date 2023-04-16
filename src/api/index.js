@@ -6,5 +6,9 @@ import { upload, download } from './file'
 export { upload, download }
 
 // 휴가 신청
-import { createRequest } from './vacation-request'
-export { createRequest }
+import { createRequest, getVcReqList } from './vacation-request'
+export { createRequest, getVcReqList }
+
+// EMP
+import { getMyInfo, getManagerInfo } from './emp'
+export { getMyInfo, getManagerInfo }

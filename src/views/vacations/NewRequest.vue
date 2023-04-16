@@ -6,8 +6,8 @@
       </span>
     </div>
 
-    <div id="example-full">
-      <div class="calendar-parent">
+    <div id="request-div">
+      <div class="request-calendar">
         <CalendarView
           :items="state.items"
           :show-date="state.showDate"
@@ -40,7 +40,7 @@
           </template>
         </CalendarView>
       </div>
-      <div class="calendar-controls">
+      <div class="request-form">
         <BaseCard>
           <form encType="multipart/form-data" @submit.prevent="onSubmit">
             <label
@@ -48,7 +48,7 @@
               >요청사항 작성</label
             >
 
-            <p class="mb-5">날짜를 먼저 선택해 주세요!</p>
+            <p class="mb-5">캘린더에서 날짜를 선택해 주세요!</p>
 
             <div class="field">
               <label
@@ -212,19 +212,14 @@
 </template>
 
 <script>
+import '/node_modules/vue-simple-calendar/dist/style.css'
 import {
   CalendarView,
   CalendarViewHeader,
   CalendarMath,
 } from 'vue-simple-calendar'
-import { onMounted, reactive, computed, ref, onUpdated } from 'vue'
-
+import { onMounted, reactive, computed, ref } from 'vue'
 import { getHolidays } from '@/api/calendar-api.js'
-
-// 캘린더 규격 css
-import '/node_modules/vue-simple-calendar/dist/style.css'
-
-// api 모듈
 import { createRequest, download } from '@/api/index.js'
 
 export default {
@@ -233,17 +228,6 @@ export default {
     CalendarViewHeader,
   },
   setup() {
-    // 다운로드 파일 이름을 추출하는 함수
-    const extractDownloadFilename = (response) => {
-      const disposition = response.headers['content-disposition']
-      const fileName = decodeURI(
-        disposition
-          .match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1]
-          .replace(/['"]/g, '')
-      )
-      return fileName
-    }
-
     const onClickDownloadTest = () => {
       // db에 저장된 vcReq의 filePath
       const filePath =
@@ -446,10 +430,11 @@ export default {
     }
 
     // 휴가 유형 선택 시
-    // 호출 시점: 날짜 선택 이후
     const onClickTypes = (e) => {
-      if (e.target.value == '연차') {
+      if (reqData.reqDays == 1 && e.target.value == '연차') {
         document.getElementById('alTypes').disabled = false
+      } else {
+        document.getElementById('alTypes').disabled = true
       }
     }
 
@@ -547,60 +532,5 @@ export default {
 </script>
 
 <style>
-@import 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css';
-/* For apps using the npm package, the below URLs should reference /node_modules/vue-simple-calendar/dist/css/ instead */
-@import '/node_modules/vue-simple-calendar/dist/css/default.css';
-@import '/node_modules/vue-simple-calendar/dist/css/gcal.css';
-
-#example-full {
-  display: flex;
-  flex-direction: row;
-  font-family: Calibri, sans-serif;
-  width: 96vw;
-  min-width: 30rem;
-  max-width: 100rem;
-  min-height: 40rem;
-}
-
-#example-full .calendar-controls {
-  min-width: 40rem;
-  max-width: 40rem;
-}
-
-#example-full .calendar-parent {
-  margin-right: 1rem;
-
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  max-height: 80vh;
-  background-color: white;
-}
-
-/* For long calendars, ensure each week gets sufficient height. The body of the calendar will scroll if needed */
-#example-full .cv-wrapper.period-month.periodCount-2 .cv-week,
-#example-full .cv-wrapper.period-month.periodCount-3 .cv-week,
-#example-full .cv-wrapper.period-year .cv-week {
-  min-height: 6rem;
-}
-
-.cv-item {
-  text-align: center;
-  border-radius: 0.5em;
-}
-
-/* my custom */
-.holiday {
-  background-color: #ff9999 !important;
-}
-
-.anniversary {
-  background-color: #ccffcc !important;
-}
-
-/* .cv-day-number::after {
-  content: "";
-} */
+@import '@/assets/css/request-calendar.css';
 </style>
