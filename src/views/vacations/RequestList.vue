@@ -59,7 +59,7 @@ const setStatusStyle = (s) => {
 }
 
 const onClickItem = (id) => {
-  console.log(id)
+  // console.log(id)
   router.push({ name: '휴가신청상세', params: { id: id } })
 }
 </script>
