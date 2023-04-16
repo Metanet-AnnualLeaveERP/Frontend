@@ -14,11 +14,21 @@ export const createRequest = (data) => {
 }
 
 // 휴가 신청 내역 조회
-export const getVcReqList = () => {
+export const getVcReqListPaging = (p, n) => {
   return api({
     url: '/vacations',
     method: 'get',
+    params: {
+      page: p,
+      pagenum: n,
+    },
   })
 }
 
 // 휴가 신청 하나 상세 조회
+export const getVcReqDetail = (id) => {
+  return api({
+    url: `/vacations/${id}`,
+    method: 'get',
+  })
+}

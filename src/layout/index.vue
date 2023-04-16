@@ -54,8 +54,8 @@ import { onBeforeMount, ref } from 'vue'
 const role = ref('')
 onBeforeMount(() => {
   role.value = store.state.role
-  console.log(11111)
-  console.log(role.value)
+  // console.log(11111)
+  // console.log(role.value)
 })
 </script>
 

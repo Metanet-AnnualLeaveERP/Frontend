@@ -1,3 +1,42 @@
+<script setup>
+import router from '@/router/index.js'
+import { ref } from 'vue'
+import store from '@/store/index.js'
+import { login } from '@/api'
+
+const user = ref({
+  empNum: '',
+  pwd: '',
+})
+
+const onClickLoginBtn = () => {
+  // 아래 주석 처리 해놓은 것처럼
+  // 로그인 시 필요 정보 vuex state에 저장
+  // 권한 별로 페이지 다르게 이동하도록 추가
+  login(user.value).then((res) => {
+    // 권한을 vuex state 에 저장
+    store.commit('setRole', res.headers.role)
+    store.commit('setEmpNum', res.headers.empnum)
+    movePage(res.headers.role)
+  })
+}
+
+// 임시
+const movePage = (role) => {
+  switch (role) {
+    case 'ROLE_ADMIN':
+      router.push({ name: '일정관리' })
+      break
+    case 'ROLE_MGR':
+      router.push({ name: '일정관리' })
+      break
+    case 'ROLE_EMP':
+      router.push({ name: '일정관리' })
+      break
+  }
+}
+</script>
+
 <template>
   <div
     class="auth-layout-wrap flex justify-center min-h-screen flex-col bg-cover items-center bg-gray-800"
@@ -62,40 +101,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import router from '@/router/index.js'
-import {ref} from 'vue';
-import store from '@/store/index.js'
-import { login } from '@/api/user.js';
-const user = ref({
-  empNum: '',
-  pwd: ''
-})
-const onClickLoginBtn = () => {
-  // 아래 주석 처리 해놓은 것처럼
-  // 로그인 시 필요 정보 vuex state에 저장
-  // 권한 별로 페이지 다르게 이동하도록 추가
-  login(user.value).then((res) => {
-    // 권한을 vuex state 에 저장
-    store.commit('setRole', res.headers.role)
-    store.commit('setEmpNum', res.headers.empnum)
-    movePage(res.headers.role)
-  })
-}
-
-// 임시
-const movePage = (role) => {
-  switch (role) {
-    case 'ROLE_ADMIN':
-      router.push({ name: '일정관리' })
-      break
-    case 'ROLE_MGR':
-      router.push({ name: '일정관리' })
-      break
-    case 'ROLE_EMP':
-      router.push({ name: '일정관리' })
-      break
-  }
-}
-</script>

@@ -58,7 +58,7 @@ const routes = [
             component: () => import('../views/vacations/RequestList.vue'),
           },
           {
-            path: 'request/detail',
+            path: 'request/detail/:id',
             name: '휴가신청상세',
             component: () => import('../views/vacations/RequestDetail.vue'),
           },
