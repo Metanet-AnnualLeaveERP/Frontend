@@ -19,7 +19,7 @@ export const infoAlert = (text) => {
 export const successToast = (text) => {
   Swal.fire({
     icon: 'success',
-    title: text,
+    text: text,
     showConfirmButton: false,
     timer: 1500,
   })

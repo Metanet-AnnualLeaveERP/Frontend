@@ -1,126 +1,130 @@
 <template>
-  <div id="example-full">
+  <div id="default-calendar">
     <div class="calendar-controls">
       <div v-if="state.message" class="notification is-success">
         {{ state.message }}
       </div>
       <BaseCard>
-        <h4 class="title is-5">캘린더 설정</h4>
+        <div class="text-xl font-bold mb-3">캘린더 설정</div>
 
-        <div class="field">
-          <label class="label">기간 설정</label>
-          <div class="control">
-            <div class="select">
-              <select v-model="state.displayPeriodUom">
-                <option>month</option>
-                <option>week</option>
-                <option>year</option>
-              </select>
-            </div>
+        <div class="items-center mb-4">
+          <label class="font-semibold">기간 설정</label>
+          <div class="mt-1">
+            <select
+              v-model="state.displayPeriodUom"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option>month</option>
+              <option>week</option>
+              <option>year</option>
+            </select>
           </div>
         </div>
 
-        <div class="field">
-          <label class="label">표시 개월 수</label>
-          <div class="control">
-            <div class="select">
-              <select v-model="state.displayPeriodCount">
-                <option :value="1">1</option>
-                <option :value="2">2</option>
-                <option :value="3">3</option>
-              </select>
-            </div>
+        <div class="items-center mb-4">
+          <label class="font-semibold">표시 개월 수</label>
+          <div class="mt-1">
+            <select
+              v-model="state.displayPeriodCount"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option :value="1">1</option>
+              <option :value="2">2</option>
+              <option :value="3">3</option>
+            </select>
           </div>
         </div>
 
-        <div class="field">
-          <label class="label">주 시작 요일</label>
-          <div class="control">
-            <div class="select">
-              <select v-model="state.startingDayOfWeek">
-                <option
-                  v-for="(d, index) in dayNames"
-                  :key="index"
-                  :value="index"
-                >
-                  {{ d }}
-                </option>
-              </select>
-            </div>
+        <div class="items-center mb-4">
+          <label class="font-semibold">주 시작 요일</label>
+          <div class="mt-1">
+            <select
+              v-model="state.startingDayOfWeek"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option
+                v-for="(d, index) in dayNames"
+                :key="index"
+                :value="index"
+              >
+                {{ d }}
+              </option>
+            </select>
           </div>
         </div>
 
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.useTodayIcons" type="checkbox" />
-            Use icon for today's period
-          </label>
+        <div>
+          <div class="mb-2">
+            <label class="font-semibold">기타 설정</label>
+          </div>
+
+          <div class="flex items-center mb-4">
+            <input
+              v-model="state.useTodayIcons"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >Use icon for today's period</label
+            >
+          </div>
+          <div class="flex items-center mb-4">
+            <input
+              v-model="state.displayWeekNumbers"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >주 번호 표시</label
+            >
+          </div>
+
+          <div class="flex items-center mb-4">
+            <input
+              v-model="state.showTimes"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >일정에 시간 표시</label
+            >
+          </div>
+          <div class="flex items-center mb-4">
+            <input
+              v-model="state.useDefaultTheme"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >캘린더 CSS 적용</label
+            >
+          </div>
+          <!-- 아직 미완성 -->
+          <div class="flex items-center mb-4">
+            <input
+              v-model="state.useHolidayTheme"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >공휴일 표시</label
+            >
+          </div>
         </div>
 
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.displayWeekNumbers" type="checkbox" />
-            주 번호 표시
-          </label>
+        <div class="flex justify-center mt-10">
+          <BaseBtn
+            class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
+            @click="onClickRequestBtn"
+            >휴가 신청</BaseBtn
+          >
         </div>
-
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.showTimes" type="checkbox" />
-            Show times
-          </label>
-        </div>
-
-        <div class="field">
-          <!-- Tooltip 설정. 카테고리로 활용 가능할까? -->
-          <label class="label">Tooltips</label>
-          <label class="checkbox">
-            <input v-model="state.useDefaultTheme" type="checkbox" />
-            Default CSS
-          </label>
-        </div>
-
-        <div class="field">
-          <label class="checkbox">
-            <input v-model="state.useHolidayTheme" type="checkbox" />
-            Holidays
-          </label>
-        </div>
-
-        <BaseBtn
-          class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
-          @click="onClickRequestBtn"
-          >휴가 신청</BaseBtn
-        >
       </BaseCard>
-
-      <!-- 일정 추가 -->
-      <!-- <div class="box">
-        <div class="field">
-          <label class="label">Title</label>
-          <div class="control">
-            <input v-model="state.newItemTitle" class="input" type="text" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Start date</label>
-          <div class="control">
-            <input v-model="state.newItemStartDate" class="input" type="date" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">End date</label>
-          <div class="control">
-            <input v-model="state.newItemEndDate" class="input" type="date" />
-          </div>
-        </div>
-
-        <button class="button is-info" @click="clickTestAddItem">
-          Add Item
-        </button>
-      </div> -->
     </div>
     <div class="calendar-parent">
       <CalendarView
@@ -171,7 +175,7 @@ import {
 } from 'vue-simple-calendar'
 import { onMounted, reactive, computed, ref, onUpdated } from 'vue'
 import { getHolidays } from '@/api/calendar-api.js'
-import { getVcReqList, getMyInfo } from '@/api/index.js'
+import { getMyInfo } from '@/api/index.js'
 import store from '@/store/index.js'
 
 const thisMonth = (d, h, m) => {
@@ -195,7 +199,7 @@ const state = reactive({
   newItemTitle: '',
   newItemStartDate: '',
   newItemEndDate: '',
-  useDefaultTheme: false,
+  useDefaultTheme: true,
   useHolidayTheme: true,
   useTodayIcons: false,
   items: [],
@@ -216,11 +220,11 @@ const myDateClasses = () => {
   const o = {}
 }
 
-onMounted(() => {
+onMounted(async () => {
   state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
   state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 
-  getHolidays().then((res) => {
+  await getHolidays().then((res) => {
     console.log('google calendar api called')
 
     const list = res.data.items
@@ -239,23 +243,24 @@ onMounted(() => {
     })
   })
 
-  getVcReqList().then((res) => {
-    console.log(res.data)
-    const list = res.data.vcReqs
-    list.forEach((e) => {
-      // if (e.endDate == )
-      state.items.push({
-        id: '1' + Math.random().toString(36).substring(2, 11), // gives an random id
-        startDate: e.startDate,
-        endDate: e.endDate,
-        title: e.vcType,
-        tooltip: 'mine',
-        classes: ['my-vacation'],
-      })
-    })
-  })
+  // 팀원 전체의 휴가 리스트를 가져오는 것으로 변경하기
+  // getVcReqList().then((res) => {
+  //   console.log(res.data)
+  //   const list = res.data.vcReqs
+  //   list.forEach((e) => {
+  //     // if (e.endDate == )
+  //     state.items.push({
+  //       id: '1' + Math.random().toString(36).substring(2, 11), // gives an random id
+  //       startDate: e.startDate,
+  //       endDate: e.endDate,
+  //       title: e.vcType,
+  //       tooltip: 'mine',
+  //       classes: ['my-vacation'],
+  //     })
+  //   })
+  // })
 
-  getMyInfo().then((res) => {
+  await getMyInfo().then((res) => {
     store.commit('setEmp', res.data)
     console.log(store.state.emp)
   })

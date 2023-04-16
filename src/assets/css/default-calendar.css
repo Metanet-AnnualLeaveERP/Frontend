@@ -1,9 +1,13 @@
-@import 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css';
+/* @import 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css'; */
 /* For apps using the npm package, the below URLs should reference /node_modules/vue-simple-calendar/dist/css/ instead */
 @import '/node_modules/vue-simple-calendar/dist/css/default.css';
 @import '/node_modules/vue-simple-calendar/dist/css/gcal.css';
 
-#example-full {
+/* .theme-default {
+  background-color: #99CCFF;
+} */
+
+#default-calendar {
   display: flex;
   flex-direction: row;
   font-family: Calibri, sans-serif;
@@ -15,13 +19,13 @@
   margin-right: auto;
 }
 
-#example-full .calendar-controls {
+#default-calendar .calendar-controls {
   margin-right: 1rem;
   min-width: 14rem;
   max-width: 14rem;
 }
 
-#example-full .calendar-parent {
+#default-calendar .calendar-parent {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -32,9 +36,9 @@
 }
 
 /* For long calendars, ensure each week gets sufficient height. The body of the calendar will scroll if needed */
-#example-full .cv-wrapper.period-month.periodCount-2 .cv-week,
-#example-full .cv-wrapper.period-month.periodCount-3 .cv-week,
-#example-full .cv-wrapper.period-year .cv-week {
+#default-calendar .cv-wrapper.period-month.periodCount-2 .cv-week,
+#default-calendar .cv-wrapper.period-month.periodCount-3 .cv-week,
+#default-calendar .cv-wrapper.period-year .cv-week {
   min-height: 6rem;
 }
 
