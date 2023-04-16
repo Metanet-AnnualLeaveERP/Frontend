@@ -171,7 +171,7 @@ import {
 } from 'vue-simple-calendar'
 import { onMounted, reactive, computed, ref, onUpdated } from 'vue'
 import { getHolidays } from '@/api/calendar-api.js'
-import { getVcReqList, getMyInfo } from '@/api/index.js'
+import { getVcReqListPaging, getMyInfo } from '@/api/index.js'
 import store from '@/store/index.js'
 
 const thisMonth = (d, h, m) => {
@@ -239,7 +239,7 @@ onMounted(() => {
     })
   })
 
-  getVcReqList().then((res) => {
+  getVcReqListPaging().then((res) => {
     console.log(res.data)
     const list = res.data.vcReqs
     list.forEach((e) => {
