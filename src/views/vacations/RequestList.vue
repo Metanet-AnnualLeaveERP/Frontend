@@ -14,15 +14,15 @@ onMounted(() => {
   getList(1)
 })
 
-const getList = (page) => {
+const getList = async (page) => {
   if (page > pagination.value.endPage || page < pagination.value.startPage) {
     return
   }
   currentPage.value = page
 
-  getVcReqListPaging(page, 10)
+  await getVcReqListPaging(page, 10)
     .then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       list.value = res.data.vcReqs
       pagination.value = res.data.paging
       // console.log(pagination.value)
