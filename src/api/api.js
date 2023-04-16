@@ -6,10 +6,6 @@ import { errorAlert } from '@/sweetAlert'
 const api = axios.create()
 api.defaults.baseURL = '/api'
 
-// const token = store.state.token
-// api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-// console.log(token)
-
 api.interceptors.response.use(
   (response) => {
     return response

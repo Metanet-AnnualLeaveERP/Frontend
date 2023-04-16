@@ -2,11 +2,13 @@
 import router from '@/router/index.js'
 import { ref } from 'vue'
 import store from '@/store/index.js'
-import { login } from '@/api/user.js'
+import { login } from '@/api'
+
 const user = ref({
   empNum: '',
   pwd: '',
 })
+
 const onClickLoginBtn = () => {
   // 아래 주석 처리 해놓은 것처럼
   // 로그인 시 필요 정보 vuex state에 저장
