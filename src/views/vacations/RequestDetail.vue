@@ -65,11 +65,6 @@ const onClickDownloadBtn = async () => {
 const onClickBackBtn = () => {
   router.go(-1)
 }
-
-// 증명서 발급
-const onClickIssue = () => {
-  console.log('증명서 발급 버튼 클릭')
-}
 </script>
 
 <template>
@@ -79,23 +74,14 @@ const onClickIssue = () => {
       <div v-if="detailLoaded">
         <VacationRequestCertificate :item="detail" />
       </div>
-
-      <div class="flex justify-end mt-7">
-        <BaseBtn
-          v-if="detail.filePath != null"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          @click="onClickDownloadBtn"
-        >
-          첨부파일 다운로드
-        </BaseBtn>
-      </div>
     </BaseCard>
     <div class="flex justify-end mt-5">
       <BaseBtn
+        v-if="detail.filePath != null"
         class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        @click="onClickIssue"
+        @click="onClickDownloadBtn"
       >
-        증명서 PDF 발급
+        첨부파일 다운로드
       </BaseBtn>
       <BaseBtn
         class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
