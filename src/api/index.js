@@ -8,10 +8,11 @@ export { upload, download }
 // 휴가 신청
 import {
   createRequest,
-  getVcReqListPaging,
+  getVcReqList,
   getVcReqDetail,
+  getMyTeamSchedule,
 } from './vacation-request'
-export { createRequest, getVcReqListPaging, getVcReqDetail }
+export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
 
 // EMP
 import { getMyInfo, getManagerInfo } from './emp'
@@ -20,3 +21,7 @@ export { getMyInfo, getManagerInfo }
 // user
 import { login } from './user'
 export { login }
+
+// vcTotal
+import { getVcRemainInfo } from './vctype-total'
+export { getVcRemainInfo }

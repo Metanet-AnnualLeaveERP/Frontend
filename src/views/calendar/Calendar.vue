@@ -1,22 +1,19 @@
 <template>
   <div id="default-calendar">
     <div class="calendar-controls">
-      <div v-if="state.message" class="notification is-success">
-        {{ state.message }}
-      </div>
       <BaseCard>
         <div class="text-xl font-bold mb-3">캘린더 설정</div>
 
         <div class="items-center mb-4">
-          <label class="font-semibold">기간 설정</label>
+          <label class="font-semibold">표시 기간 설정</label>
           <div class="mt-1">
             <select
               v-model="state.displayPeriodUom"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              <option>month</option>
-              <option>week</option>
-              <option>year</option>
+              <option value="month">월 단위</option>
+              <option value="week">주 단위</option>
+              <option value="year">연 단위</option>
             </select>
           </div>
         </div>
@@ -28,9 +25,9 @@
               v-model="state.displayPeriodCount"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
-              <option :value="1">1</option>
-              <option :value="2">2</option>
-              <option :value="3">3</option>
+              <option :value="1">1개월</option>
+              <option :value="2">2개월</option>
+              <option :value="3">3개월</option>
             </select>
           </div>
         </div>
@@ -77,7 +74,7 @@
             />
             <label
               class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >주 번호 표시</label
+              >주 번호 표시하기</label
             >
           </div>
 
@@ -89,10 +86,10 @@
             />
             <label
               class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >일정에 시간 표시</label
+              >일정에 시간 표시하기</label
             >
           </div>
-          <div class="flex items-center mb-4">
+          <div class="items-center mb-4">
             <input
               v-model="state.useDefaultTheme"
               type="checkbox"
@@ -103,25 +100,26 @@
               >캘린더 CSS 적용</label
             >
           </div>
-          <!-- 아직 미완성 -->
-          <div class="flex items-center mb-4">
-            <input
-              v-model="state.useHolidayTheme"
-              type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >공휴일 표시</label
+        </div>
+
+        <div class="mt-10">
+          <div class="text-center">
+            <label class="font-semibold"> {{ todayDate }} 기준</label>
+          </div>
+          <div class="flex justify-center mt-2">
+            <BaseBtn
+              class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
+              @click="onClickCheckBtn"
+              >휴가 정보 확인하기</BaseBtn
             >
           </div>
         </div>
 
-        <div class="flex justify-center mt-10">
+        <div class="flex justify-center mt-5">
           <BaseBtn
             class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
             @click="onClickRequestBtn"
-            >휴가 신청</BaseBtn
+            >휴가 신청하기</BaseBtn
           >
         </div>
       </BaseCard>
@@ -173,10 +171,20 @@ import {
   CalendarViewHeader,
   CalendarMath,
 } from 'vue-simple-calendar'
-import { onMounted, reactive, computed, ref, onUpdated } from 'vue'
+import { onMounted, reactive, computed, ref, onUpdated, watch } from 'vue'
 import { getHolidays } from '@/api/calendar-api.js'
-import { getMyInfo } from '@/api/index.js'
+import { getMyInfo, getMyTeamSchedule, getVcReqList } from '@/api/index.js'
 import store from '@/store/index.js'
+import { showComponentInModal } from '@/sweetAlert'
+import VacationStatistics from '@/components/VacationStatistics.vue'
+
+const todayDate = computed(() => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  const date = String(today.getDate()).padStart(2, '0')
+  return `${year}-${month}-${date}`
+})
 
 const thisMonth = (d, h, m) => {
   const t = new Date()
@@ -200,7 +208,6 @@ const state = reactive({
   newItemStartDate: '',
   newItemEndDate: '',
   useDefaultTheme: true,
-  useHolidayTheme: true,
   useTodayIcons: false,
   items: [],
 })
@@ -224,6 +231,42 @@ onMounted(async () => {
   state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
   state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 
+  // 로그인한 사용자의 휴가 리스트
+  await getVcReqList('false').then((res) => {
+    // console.log(res.data)
+    const list = res.data.vcReqs
+    list.forEach((e) => {
+      // console.log(e)
+      const id = '1' + Math.random().toString(36).substring(2, 11) // gives an random id
+      state.items.push({
+        id: id,
+        startDate: e.startDate,
+        endDate: e.endDate,
+        title: e.vcTypeDto.typeName,
+        tooltip: 'mine',
+        classes: ['my-vacation'],
+      })
+    })
+  })
+
+  // 팀원 전체의 휴가 리스트
+  await getMyTeamSchedule().then((res) => {
+    // console.log(res.data)
+    const list = res.data
+    list.forEach((e) => {
+      // console.log(e)
+      state.items.push({
+        id: '1' + Math.random().toString(36).substring(2, 11), // gives an random id
+        startDate: e.startDate,
+        endDate: e.endDate,
+        title:
+          e.empDto.name + ' ' + e.empDto.position + ' ' + e.vcTypeDto.typeName,
+        tooltip: 'team',
+        classes: ['team-vacation'],
+      })
+    })
+  })
+
   await getHolidays().then((res) => {
     console.log('google calendar api called')
 
@@ -243,28 +286,15 @@ onMounted(async () => {
     })
   })
 
-  // 팀원 전체의 휴가 리스트를 가져오는 것으로 변경하기
-  // getVcReqList().then((res) => {
-  //   console.log(res.data)
-  //   const list = res.data.vcReqs
-  //   list.forEach((e) => {
-  //     // if (e.endDate == )
-  //     state.items.push({
-  //       id: '1' + Math.random().toString(36).substring(2, 11), // gives an random id
-  //       startDate: e.startDate,
-  //       endDate: e.endDate,
-  //       title: e.vcType,
-  //       tooltip: 'mine',
-  //       classes: ['my-vacation'],
-  //     })
-  //   })
-  // })
-
   await getMyInfo().then((res) => {
     store.commit('setEmp', res.data)
-    console.log(store.state.emp)
+    // console.log(store.state.emp)
   })
 })
+
+const onClickCheckBtn = () => {
+  showComponentInModal('나의 휴가 통계', VacationStatistics)
+}
 
 const periodChanged = () => {
   // range, eventSource) {
@@ -277,15 +307,15 @@ const periodChanged = () => {
 const onClickDay = (d) => {
   state.selectionStart = undefined
   state.selectionEnd = undefined
-  state.message = `You clicked: ${d.toLocaleDateString()}`
+  // state.message = `You clicked: ${d.toLocaleDateString()}`
 }
 
 const onClickItem = (e) => {
-  state.message = `You clicked: ${e.title}`
+  // state.message = `You clicked: ${e.title}`
 }
 
 const setShowDate = (d) => {
-  state.message = `Changing calendar view to ${d.toLocaleDateString()}`
+  // state.message = `Changing calendar view to ${d.toLocaleDateString()}`
   state.showDate = d
 }
 
@@ -296,13 +326,14 @@ const setSelection = (dateRange) => {
 
 const finishSelection = (dateRange) => {
   setSelection(dateRange)
-  state.message = `You selected: ${
-    state.selectionStart?.toLocaleDateString() ?? 'n/a'
-  } - ${state.selectionEnd?.toLocaleDateString() ?? 'n/a'}`
+  // state.message = `You selected: ${
+  //   state.selectionStart?.toLocaleDateString() ?? 'n/a'
+  // } - ${state.selectionEnd?.toLocaleDateString() ?? 'n/a'}`
 }
 
+// 사용 x
 const onDrop = (item, date) => {
-  state.message = `You dropped ${item.id} on ${date.toLocaleDateString()}`
+  // state.message = `You dropped ${item.id} on ${date.toLocaleDateString()}`
   // Determine the delta between the old start date and the date chosen,
   // and apply that delta to both the start and end date to move the item.
   const eLength = CalendarMath.dayDiff(item.startDate, date)
@@ -310,6 +341,7 @@ const onDrop = (item, date) => {
   item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
 }
 
+// 사용 x
 const clickTestAddItem = () => {
   state.items.push({
     startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
@@ -317,7 +349,7 @@ const clickTestAddItem = () => {
     title: state.newItemTitle,
     id: 'e' + Math.random().toString(36).substring(2, 11),
   })
-  state.message = 'You added a calendar item!'
+  // state.message = 'You added a calendar item!'
 }
 
 const onClickRequestBtn = () => {
