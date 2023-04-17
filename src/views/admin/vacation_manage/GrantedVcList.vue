@@ -25,6 +25,61 @@
                 </BaseBtn>
               </div>
             </div>
+            <TabGroup>
+                    <TabList class="flex p-1 space-x-1 dark:bg-dark rounded-xl">
+                        <Tab
+                            v-for="category in Object.keys(categories)"
+                            as="template"
+                            :key="category"
+                            v-slot="{ selected }"
+                        >
+                            <button
+                                role="button"
+                                :class="[
+                                    'px-3 py-1 text-sm leading-5  rounded-lg',
+                                    'focus:outline-none',
+                                    selected
+                                        ? 'bg-primary text-white shadow'
+                                        : 'text-gray-700 hover:bg-white/[0.12] hover:text-primary text-primary',
+                                ]"
+                            >
+                                {{ category }}
+                            </button>
+                        </Tab>
+                    </TabList>
+
+                    <TabPanels class="mt-2">
+                        <TabPanel
+                            v-for="(posts, idx) in Object.values(categories)"
+                            :key="idx"
+                            :class="[]"
+                        >
+                            <ul>
+                                <li
+                                    v-for="post in posts"
+                                    :key="post.id"
+                                    class="relative p-3 rounded-md hover:bg-coolGray-100"
+                                >
+                                    <h3 class="text-md font-medium leading-5">
+                                        {{ post.title }}
+                                    </h3>
+                                    <ul
+                                        class="flex mt-1 space-x-1"
+                                    >
+                                    {{ post.data }}
+                                    </ul>
+                                    <!-- <a
+                                        href="#"
+                                        :class="[
+                                            'absolute inset-0 rounded-md',
+                                            'focus:z-10 focus:outline-none focus:ring-2 ring-primary',
+                                        ]"
+                                    /> -->
+                                </li>
+                            </ul>
+                        </TabPanel>
+                    </TabPanels>
+                </TabGroup>
             <div
               class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
             >
@@ -104,7 +159,7 @@
                 </tbody>
               </table>
             </div>
-            <!-- 페이지 버튼 -->
+            <!-- 페이징 -->
             <div class="dataTable-bottom mt-6">
                 <nav class="dataTable-pagination">
                   <div
@@ -198,7 +253,7 @@
                     </div>
                   </div>
                 </nav>
-              </div>
+              </div><!-- 페이징 -->
           </div>
         </div>
       </BaseCard>
@@ -210,6 +265,26 @@
 import { getListGrantedVc } from '@/api/index.js'
 import { onMounted, ref } from 'vue'
 
+// for TapGroup
+import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+import Breadcrumbs from '@/components/Breadcrumbs.vue'
+let categories = ref({
+    연차휴가: [
+        {
+            id: 1,
+            title: '연차휴가',
+            data: "연차휴가컴포넌트"
+        },
+    ],
+    기타휴가: [
+        {
+            id: 1,
+            title: '기타휴가',
+            data: "기타휴가컴포넌트"
+        },
+    ],
+})
+// for TapGroup
 const list = ref({})
 const pagination = ref({})
 const currentPage = ref(1)
