@@ -4,7 +4,9 @@
       <BaseCard>
         <template v-slot:cardHeader>
           <div class="card-header">
-            <div class="card-title py-3"><h1><strong>휴가유형관리</strong></h1></div>
+            <div class="card-title py-3">
+              <h1><strong>휴가유형관리</strong></h1>
+            </div>
           </div>
         </template>
         <div
@@ -69,35 +71,29 @@
                 <tbody>
                   <tr
                     class="hover:bg-gray-100 cursor-pointer dark:hover:bg-dark"
-                    v-for="(n, index) in 8"
+                    v-for="(item, index) in list"
                     :key="index"
                   >
                     <td style="min-width: 100px" class="py-5 px-4">
-                      # {{ n }}
+                      {{ item.typeName }}
                     </td>
-
-                    <td style="min-width: 100px" class="">Jhon</td>
-                    <td style="min-width: 100px" class="py-5">
-                      <div class="flex">
-                        <img
-                          class="w-9 h-9 rounded-full mr-2"
-                          src="/images/products/speaker-1.jpg"
-                          alt=""
-                        /><img
-                          class="w-9 h-9 rounded-full mr-2"
-                          src="/images/products/speaker-1.jpg"
-                          alt=""
-                        />
-                      </div>
+                    <td style="min-width: 100px" class="py-5 px-4">
+                      {{ item.pto === 1 ? '유급' : '무급' }}
+                    </td>
+                    <td style="min-width: 100px" class="py-5 px-4">
+                      {{ item.maxGrantedDays }}
+                    </td>
+                    <td style="min-width: 100px" class="py-5 px-4">
+                      {{ item.creationDate }}
+                    </td>
+                    <td style="min-width: 100px" class="py-5 px-4">
+                      <span v-if="item.updateDate">{{ item.updateDate }}</span>
+                      <span v-else>-</span>
                     </td>
                     <td style="min-width: 100px" class="py-5">
-                      <span
-                        class="px-3 py-1 rounded-full text-success border border-success mr-3 text-xs"
-                        >Delivered</span
-                      >
+                      <span v-if="item.description">{{ item.description }}</span>
+                      <span v-else>-</span>
                     </td>
-                    <td style="min-width: 100px" class="py-5">3.34%</td>
-                    <td style="min-width: 100px" class="py-5">12-02-20</td>
                     <td style="min-width: 100px" class="py-5">
                       <BaseBtn
                         rounded
@@ -110,14 +106,6 @@
                 </tbody>
               </table>
             </div>
-            <!-- <div class="dataTable-bottom">
-                                <div class="dataTable-info">
-                                    Showing 1 to 8 of 8 entries
-                                </div>
-                                <nav class="dataTable-pagination">
-                                    <ul class="dataTable-pagination-list"></ul>
-                                </nav>
-                            </div> -->
           </div>
         </div>
       </BaseCard>
@@ -127,14 +115,24 @@
 
 <script setup>
 import { getVcTypeList } from '@/api/index.js'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
-onMounted(()=>{
-  getVcTypeList().then((res)=>{
-    console.log(res.data)
-    //const vcTypeList = res.data.vcTypeList
-  })
+const list = ref({})
+
+onMounted(() => {
+  getList()
 })
+
+const getList = async () => {
+  await getVcTypeList()
+    .then((res) => {
+      console.log(res.data)
+      list.value = res.data
+    })
+    .catch(() => {
+      failToast('데이터 로딩에 실패했습니다.')
+    })
+}
 </script>
 
 <style></style>

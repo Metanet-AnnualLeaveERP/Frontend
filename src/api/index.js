@@ -21,10 +21,14 @@ export { getMyInfo, getManagerInfo }
 import { login } from './user'
 export { login }
 
-//vcType
+// vcType
 import { getVcTypeList,
   insertVcTypeList,
   deleteVcType,
   updateVcType
 } from './vacation-type'
 export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
+
+// grantedVc
+import { getListGrantedVc } from './vacation-granted'
+export { getListGrantedVc }
