@@ -4,12 +4,12 @@ import {onMounted, ref} from "vue";
 import {getTeamApprovalList} from "@/api";
 import BaseBtn from "@/components/Base/BaseBtn.vue";
 import router from "@/router";
-
+import {setStatusStyle} from "@/views/admin/vacation_manage/StatusStyle";
 const temp = ref("border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold");
 const check = ref(true);
 const cri = ref({
   pageNum: 1,
-  keyword: null,
+  keyword: '',
 });
 const currentPage = ref(1);
 const pagination = ref({
@@ -33,36 +33,12 @@ const getTeamApproval=()=>{
     vcReqList.value = res.data.vcReqs;
   });
 }
-
+getTeamApproval();
 const getList = (page) => {
   cri.value.pageNum = page;
+  currentPage.value=page;
+  getTeamApproval();
 }
-const setStatusStyle = (s) => {
-  let style = ''
-  switch (s) {
-    case '자동승인':
-      style = 'bg-info py-3'
-      break
-    case '반려':
-      style = 'bg-danger py-3'
-      break
-    case '승인':
-      style = 'bg-success py-3'
-      break
-    case '관리자 대기중':
-    case '대기중':
-      style = 'bg-warning py-3'
-      break
-    case '취소':
-      style = 'bg-light py-3'
-      break
-    default:
-      style = 'bg-primary py-3'
-      break
-  }
-  return style
-}
-
 const onClickVcReq = (reqId) => {
   // console.log(id)
   router.push({name: '관리자결재상세', params: {id: reqId}})
@@ -84,7 +60,8 @@ const toggleDropdownPosition = () => {
 
 const selectOptionPosition = (option) => {
 
-  cri.value.keyword = option.value ?option.value  : '' ;
+  cri.value.keyword = option.value ?option.value  : '';
+  cri.value.pageNum=1;
   getTeamApproval();
   toggleDropdownPosition();
 };
@@ -92,6 +69,7 @@ const selectOptionPosition = (option) => {
 </script>
 
 <template>
+  <div>
   <TabGroup>
     <TabList class="bg-primary rounded-lg pl-3 py-1">
       <Tab class="mr-12 bg-transparent hover:text-black text-white text-2xl"
@@ -112,7 +90,7 @@ const selectOptionPosition = (option) => {
             style="height: 500px">
               <div class="grid grid-cols-1 justify-items-end">
                 <div
-                    class="m-4 gap-x-1 flex justify-between align-middle items-center w-1/2 lg:w-1/12 md:w-1/3 sm:w-1/3">
+                    class="m-4 gap-x-1 flex justify-between align-middle items-center w-1/2 lg:w-1/6 md:w-1/3 sm:w-1/3">
                   <div class="flex-2 relative inline-block w-full text-gray-700">
                     <div class="relative">
                       <div
@@ -213,6 +191,7 @@ const selectOptionPosition = (option) => {
                              aria-label="Pagination">
                           <a href="#"
                              @click="getList(currentPage - 1)"
+                             v-show="pagination.prev"
                              class="relative inline-flex
                              items-center px-2 py-2 rounded-l-md border
                               border-gray-300 text-sm font-medium text-gray-500
@@ -258,7 +237,9 @@ const selectOptionPosition = (option) => {
                               @click="getList(currentPage + 1)"
                               class="dark:border-foreground dark:hover:bg-foreground relative inline-flex
                               items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium
-                              text-gray-500 hover:bg-gray-50">
+                              text-gray-500 hover:bg-gray-50"
+                              v-show="pagination.next"
+                          >
                             <span class="sr-only">Next</span>
                             <svg
                                 class="h-5 w-5"
@@ -290,6 +271,7 @@ const selectOptionPosition = (option) => {
       <TabPanel>내1용</TabPanel>
     </TabPanels>
   </TabGroup>
+  </div>
 </template>
 
 

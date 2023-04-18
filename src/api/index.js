@@ -12,8 +12,9 @@ import {
   getVcReqDetail,
   getTeamApprovalList,
   getMyTeamSchedule,
+  approvalProcess
 } from './vacation-request'
-export { createRequest,getVcReqList, getVcReqDetail ,getTeamApprovalList}
+export { createRequest,getVcReqList, getVcReqDetail ,getTeamApprovalList,getMyTeamSchedule,approvalProcess}
 
 
 // EMP
@@ -35,7 +36,7 @@ import { getVcTypeList,
   deleteVcType,
   updateVcType
 } from './vacation-type'
-export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
+export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType}
 
 // grantedVc
 import { getListGrantedVc } from './vacation-granted'

@@ -25,7 +25,7 @@ export const successToast = (text) => {
     timer: 1500,
   })
 }
-
+1
 export const showRequest = (text) => {
   text = text == null ? '요청사항이 없습니다.' : text
   Swal.fire({

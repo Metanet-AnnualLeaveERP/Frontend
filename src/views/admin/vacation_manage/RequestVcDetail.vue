@@ -1,19 +1,43 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {ref} from 'vue'
 import {useRoute} from 'vue-router'
 import router from '@/router/index.js'
-import {getVcReqDetail} from "@/api";
+import {approvalProcess, getVcReqDetail} from "@/api";
 import BaseBtn from "@/components/Base/BaseBtn.vue";
+import {setStatusStyle} from "@/views/admin/vacation_manage/StatusStyle";
+import {checkConfirm} from "@/sweetAlert";
 
 const route = useRoute();
 const reqId = route.params.id;
-const detail = ref({});
-
+const req = ref({});
+const openModal = ref(false);
+const comments = ref('');
 getVcReqDetail(reqId).then((res) => {
   console.log(res.data)
-  detail.value = res.data
+  res.data.reqDate = res.data.reqDate.replaceAll("-", '.').slice(2);
+  req.value = res.data
 })
-
+const warning= ref();
+const approvalCancel = (data) => {
+  const size = comments.value.length;
+  if (size >= 10 && size <= 100) {
+    approvalProcess(req.value?.reqId, '반려', comments.value).then((res) => {
+      console.log(res)
+    })
+  } else {
+    warning.value = true;
+  }
+}
+const onChangeText=()=>{
+  warning.value=false;
+}
+const approvalSuccess = () => {
+  checkConfirm("휴가요청 처리", "휴가 요청을 처리하시겠습니까?").then((data) => {
+    approvalProcess(req.value?.reqId, '승인', '1').then((res) => {
+      console.log(res)
+    })
+  })
+}
 // 돌아가기
 const onClickBackBtn = () => {
   router.go(-1)
@@ -22,16 +46,229 @@ const onClickBackBtn = () => {
 
 <template>
   <div>
-    <BaseCard class="h-full">
-
-    </BaseCard>
-    <BaseBtn class="
+    <div>
+      <BaseBtn class="
         border border-primary
         text-primary
-        hover:bg-primary hover:text-white mt-3"
-             @click="onClickBackBtn"
-    >돌아가기
-    </BaseBtn>
+        hover:bg-primary hover:text-white m-3"
+               @click="onClickBackBtn"
+      >돌아가기
+      </BaseBtn>
+      <BaseCard class="h-full">
+        <div class="flex flex-col md:flex-row justify-evenly justify-items-center items-center">
+          <div class="w-2/3 md:w-5/6 text-center  text-2xl md:text-3xl ">
+            휴가 상세 내역
+          </div>
+          <div
+              class="w-full justify-between mt-5 md:flex-col md:justify-end justify-items-center md:items-end
+             items-center text-end md:w-2/6 justify-end flex flex-row">
+            <div class="text-2xl">
+              No. {{ req?.reqId }}
+            </div>
+            <div class="text-1xl lg:text-1xl ">
+              [요청일자] {{ req.reqDate }}
+            </div>
+            <div>
+              <base-btn :class="setStatusStyle(req?.status)"
+                        class="my-3 text-white"
+                        disabled
+              >{{ req?.status }}
+              </base-btn>
+            </div>
+          </div>
+        </div>
+        <hr class="m-2">
+        <div class="grid grid-cols-1 lg:grid-cols-2 font-black font gap-x-8">
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">휴가 신청 사원명
+              <span>
+          {{ req?.empDto?.name }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between hr">
+              신청일자
+              <span>
+            {{ req?.startDate }} ~ {{ req?.endDate }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              요청 일수
+              <span>
+             {{ req?.reqDays }} 일
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              휴가 종류
+              <span>
+              {{ req?.vcTypeDto?.typeName }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              사내메일
+              <span>
+              {{ req?.empDto?.pEmail }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              전화번호
+              <span>
+              {{ req?.empDto?.tel }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+        </div>
+      </BaseCard>
+      <div class="flex justify-end">
+        <BaseBtn class="
+        border border-primary
+        text-primary
+        hover:bg-primary hover:text-white m-3"
+                 v-if="req?.status==='관리자 대기중'"
+                 @click="approvalSuccess"
+        >승인하기
+        </BaseBtn>
+        <BaseBtn class="
+        border border-warning
+        text-warning
+        hover:bg-warning hover:text-white m-3"
+                 @click="openModal=true"
+                 v-if="req?.status==='관리자 대기중'"
+        >반려하기
+        </BaseBtn>
+      </div>
+    </div>
 
+
+    <div
+        v-show="openModal"
+        class="absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50
+       w-full">
+      <div class="w-2/3 h-2/3 p-6 mx-4 bg-white rounded-md shadow-xl overflow-scroll">
+        <div class="grid grid-cols-1 lg:grid-cols-2 justify-between align-middle items-center">
+          <h3 class="text-3xl font-bold text-center lg:text-end ">반려 사유</h3>
+          <h3 class="flex-col flex text-2xl font-bold text-end items-end">
+            <div class="my-3 align-bottom ">
+              No. {{ req?.reqId }}
+              <base-btn :class="setStatusStyle(req?.status)"
+                        class=" text-white"
+                        disabled
+              >{{ req?.status }}
+              </base-btn>
+            </div>
+            <div
+                class="w-full">
+              <div class="text-1xl ">
+                요청일자 {{ req.reqDate }}
+              </div>
+
+            </div>
+          </h3>
+
+        </div>
+
+        <hr class="m-2">
+        <div class="grid grid-cols-1 lg:grid-cols-2 font-black font gap-x-8">
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">휴가 신청 사원명
+              <span>
+          {{ req?.empDto?.name }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between hr">
+              신청일자
+              <span>
+            {{ req?.startDate }} ~ {{ req?.endDate }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              요청 일수
+              <span>
+             {{ req?.reqDays }} 일
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              휴가 종류
+              <span>
+              {{ req?.vcTypeDto?.typeName }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              사내메일
+              <span>
+              {{ req?.empDto?.pEmail }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+          <div class="hover:bg-gray-100">
+            <div class="flex flex-row  rounded-sm p-2 m-2 justify-between">
+              전화번호
+              <span>
+              {{ req?.empDto?.tel }}
+          </span>
+            </div>
+            <hr class="m-2">
+          </div>
+        </div>
+        <form class="space-y-12">
+          <div class="mt-4">
+            <div class="mb-4">
+            <textarea
+                class="p-4 text-gray-900 border rounded-md h-full dark:placeholder-gray-400
+                    dark:text-white dark:focus:ring-blue-500 w-full dark:focus:border-blue-500 h-32
+                    overflow-hidden break-words break-inside-auto"
+                placeholder="반려 사유를 입력해주세요."
+                v-model="comments"
+                @input="onChangeText"
+                required/>
+            </div>
+            <BaseBtn
+                @click="approvalCancel"
+                rounded
+                class="border border-danger text-danger hover:bg-danger hover:text-white mr-3"
+                type="button"
+            >반려하기
+            </BaseBtn>
+            <BaseBtn
+                @click="openModal = false"
+                rounded
+                class="border border-primary text-primary hover:bg-primary hover:text-white"
+                type="button"
+            >
+              돌아가기
+            </BaseBtn>
+            <div v-if="warning" class="text-red-600">반려 사유를 입력해주세요.</div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>

@@ -49,3 +49,17 @@ export const getMyTeamSchedule = () => {
     method: 'get',
   })
 }
+
+
+export const approvalProcess=(reqId,status,comment=null)=>{
+  console.log(reqId,status,comment)
+  // return null;
+  return api({
+    url:`/manager/vacations/confirm/${reqId}`,
+    params:{
+      status: status,
+      comment: comment
+    },
+    method:"PUT"
+  })
+}
