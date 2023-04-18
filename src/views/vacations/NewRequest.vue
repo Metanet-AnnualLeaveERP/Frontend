@@ -48,8 +48,6 @@
               >요청사항 작성</label
             >
 
-            <p class="mb-5">캘린더에서 날짜를 선택해 주세요!</p>
-
             <div class="field">
               <label
                 for="types"
@@ -58,19 +56,23 @@
               >
               <!-- 휴가 유형 get 해서 v-for문으로 select 에 넣기 -->
               <select
-                disabled
-                v-model="reqData.vcType"
+                v-model="reqData.vcTypeDto.typeId"
                 id="types"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 @change="onChangeTypes($event)"
               >
-                <option selected>유형을 선택하세요</option>
-                <option value="연차">연차</option>
-                <option value="포상휴가">포상휴가</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
+                <option value="" selected>유형을 선택하세요</option>
+                <option
+                  v-for="(item, index) in vcTypeNames"
+                  :key="index"
+                  :value="item.typeId"
+                >
+                  {{ item.name }}
+                </option>
               </select>
             </div>
+
+            <p class="mt-5 mb-5">캘린더에서 날짜를 선택해 주세요!</p>
 
             <!-- 유형을 선택했을 경우에만 보이도록 설정 -->
             <div class="field">
@@ -91,7 +93,7 @@
                 v-model="alType"
                 @change="onChangeAlTypes($event)"
               >
-                <option selected>시간을 선택하세요</option>
+                <option value="" selected>시간을 선택하세요</option>
                 <option value="FULL">연차</option>
                 <option value="AM">오전 반차</option>
                 <option value="PM">오후 반차</option>
@@ -122,6 +124,7 @@
                 rows="1"
                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="사유를 입력하세요 (ex. 결혼식 참석)"
+                v-model="reqData.comments"
               ></textarea>
             </div>
 
@@ -165,7 +168,7 @@
               >
               <span class="ml-5">
                 <!-- 내가 선택한 유형 -->
-                {{ reqData.vcType }}
+                {{ selectedVcType }}
               </span>
               <br />
               <label
@@ -179,22 +182,24 @@
               <p
                 class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
                 id="req-info"
+                v-if="remainDays != -999"
               >
-                승인 시 {{ reqData.vcType }} 잔여 일수는 {현재 잔여일수} ->
-                {현재 잔여일수 - reqdays}일입니다.
+                승인 시 {{ reqData.vcType }} 휴가의 잔여 일수는
+                {{ remainDays }} -> {{ newRemainDays }}일입니다.
               </p>
             </div>
-            <div id="btn-wrapper" class="flex justify-start">
+            <div id="btn-wrapper" class="flex justify-between mb-5">
               <BaseBtn
                 type="submit"
-                class="mb-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 신청하기
               </BaseBtn>
-            </div>
-
-            <div v-show="state.message" class="notification is-success">
-              {{ state.message }}
+              <BaseBtn
+                class="text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                돌아가기
+              </BaseBtn>
             </div>
           </form>
         </BaseCard>
@@ -210,10 +215,12 @@ import {
   CalendarViewHeader,
   CalendarMath,
 } from 'vue-simple-calendar'
-import { onMounted, reactive, computed, ref } from 'vue'
+import { onMounted, reactive, computed, ref, watch } from 'vue'
 import { getHolidays } from '@/api/calendar-api.js'
-import { createRequest, getManagerInfo } from '@/api/index.js'
+import { createRequest, getVcRemainInfo } from '@/api/index.js'
 import store from '@/store/index.js'
+import { warningAlert, successToast } from '@/sweetAlert'
+import router from '@/router/index.js'
 
 const thisMonth = (d, h, m) => {
   const t = new Date()
@@ -244,16 +251,33 @@ const state = reactive({
 const reqData = reactive({
   startDate: '',
   endDate: '',
-  vcType: '',
+  vcTypeDto: {
+    typeId: '',
+  },
   reqDays: '',
   comments: '',
   status: '',
+  empDto: {
+    empId: store.state.emp.empId,
+  },
   // filePath: null,
   // empId: null,
 })
 
+// 휴가 유형
+const vcTypeNames = ref([])
+const selectedVcType = ref('')
+
+// 휴가 잔여일 정보 리스트
+const vcTypeRemains = ref([])
+const remainDays = ref(-999)
+const newRemainDays = ref(-999)
+
+// remainDays < newRemainDays일 경우
+const notAcceptable = ref(false)
+
 // 나의 상사
-const manager = ref({})
+const manager = store.state.mgr
 
 // 요청 대상
 const reqTarget = ref(null)
@@ -287,11 +311,57 @@ const myDateClasses = () => {
   // return o
 }
 
-onMounted(() => {
+// 타입이 바뀔 때마다 잔여일 계산
+watch(
+  () => reqData.vcTypeDto.typeId,
+  (newValue, oldValue) => {
+    // 연차
+    if (newValue == 1) {
+      selectedVcType.value = '연차'
+      remainDays.value = vcTypeRemains.value.annual.remainDays
+    } else {
+      vcTypeRemains.value.reward.forEach((e) => {
+        if (newValue == e.vcTypeDto.typeId) {
+          selectedVcType.value = e.vcTypeDto.typeName
+          remainDays.value = e.cnt
+        }
+      })
+    }
+    newRemainDays.value = remainDays.value - reqData.reqDays
+  }
+)
+
+// 요청일이 계산될 때마다 새로운 잔여일 계산
+watch(
+  () => reqData.reqDays,
+  (newValue, oldValue) => {
+    // 잔여일 값을 구한 이후에만 변경되도록 제한
+    if (remainDays.value != -999) {
+      newRemainDays.value = remainDays.value - reqData.reqDays
+    }
+  }
+)
+
+// 계산된 잔여일이 음수가 되면 요청일이 잔여일보다 크다는 의미
+watch(
+  () => newRemainDays.value,
+  (newValue, oldValue) => {
+    if (newValue < 0) {
+      warningAlert(
+        '요청일수가 잔여일수보다 큽니다.\n날짜를 다시 선택해 주세요.'
+      )
+      notAcceptable.value = true
+    } else {
+      notAcceptable.value = false
+    }
+  }
+)
+
+onMounted(async () => {
   state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
   state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 
-  getHolidays().then((res) => {
+  await getHolidays().then((res) => {
     console.log('google calendar api called')
 
     const list = res.data.items
@@ -311,14 +381,20 @@ onMounted(() => {
     })
   })
 
-  const mgrId = store.state.emp.mgrId
-  if (mgrId != null) {
-    getManagerInfo(mgrId).then((res) => {
-      manager.value = res.data
+  // vcType 조회
+  await getVcRemainInfo().then((res) => {
+    vcTypeRemains.value = res.data
+    vcTypeNames.value.push({ typeId: 1, name: '연차' })
+    res.data.reward.forEach((e) => {
+      vcTypeNames.value.push({
+        typeId: e.vcTypeDto.typeId,
+        name: e.vcTypeDto.typeName,
+      })
     })
-  }
+    // console.log(vcTypeNames.value)
+    // console.log(vcTypeRemains.value)
+  })
 })
-
 // 특정 날짜 하루 선택
 const onClickDay = (d) => {
   state.selectionStart = undefined
@@ -331,11 +407,8 @@ const onClickDay = (d) => {
   reqData.endDate = d
   reqData.reqDays = 1
 
-  // 날짜를 선택해야 select box 활성화
-  document.getElementById('types').disabled = false
-
   // 연차/반차 select box 활성화
-  if (reqData.vcType == '연차') {
+  if (reqData.vcTypeDto.typeId == 1) {
     document.getElementById('alTypes').disabled = false
   }
 }
@@ -388,26 +461,30 @@ const clickTestAddItem = () => {
 
 // 휴가 유형 선택 시
 const onChangeTypes = (e) => {
-  if (e.target.value == '연차') {
+  if (e.target.value == 1) {
     reqTarget.value = '자동승인'
   } else {
-    reqTarget.value = manager.value.name + ' ' + manager.value.position
+    reqTarget.value = manager.name + ' ' + manager.position
   }
 
-  if (reqData.reqDays == 1 && e.target.value == '연차') {
+  if (reqData.reqDays == 1 && e.target.value == 1) {
     document.getElementById('alTypes').disabled = false
   } else {
     document.getElementById('alTypes').disabled = true
   }
 }
 
+// 연차/오전반차/오후반차 선택 시 reqDays 설정
 const onChangeAlTypes = (e) => {
   switch (e.target.value) {
     case 'FULL':
       reqData.reqDays = 1
+      reqData.vcTypeDto.typeId = 1
       break
     case 'AM':
+      reqData.vcTypeDto.typeId = 2
     case 'PM':
+      reqData.vcTypeDto.typeId = 3
       reqData.reqDays = 0.5
       break
   }
@@ -429,9 +506,13 @@ const formData = ref(null)
 
 // 휴가 신청 버튼 클릭 시 (Submit form)
 const onSubmit = () => {
+  if (notAcceptable.value) {
+    warningAlert('요청일수가 잔여일수보다 큽니다.\n날짜를 다시 선택해 주세요.')
+    return
+  }
   // 선택 유형이 연차면 상태 = '자동승인' / 타 휴가면 '대기중'
-  reqData.status = reqData.vcType == '연차' ? '자동승인' : '대기중'
-  console.log(reqData)
+  reqData.status = reqData.vcTypeDto.typeId == 1 ? '자동승인' : '대기중'
+  // console.log(reqData)
   formData.value = new FormData()
   // 객체를 JSON 타입으로 변환하여 Blob 객체 생성
   formData.value.append(
@@ -445,8 +526,12 @@ const onSubmit = () => {
     appendFile()
   }
 
-  createRequest(formData.value).then((res) => {
-    console.log(res)
+  console.log(1111)
+  console.log(reqData)
+
+  createRequest(formData.value).then(() => {
+    successToast('휴가 신청이 완료되었습니다.')
+    router.go(-1)
   })
 }
 

@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2'
+import { createApp } from 'vue'
 
 export const errorAlert = (text) => {
   Swal.fire({
@@ -43,6 +44,14 @@ export const failToast = (text) => {
   })
 }
 
+export const warningAlert = (text) => {
+  Swal.fire({
+    icon: 'warning',
+    title: '경고',
+    text: text,
+  })
+}
+
 export const returnInfoAlert = (text, title) => {
   return Swal.fire({
     icon: 'success',
@@ -57,5 +66,22 @@ export const checkConfirm = (title, content) => {
     text: content,
     showCancelButton: true,
     title: title,
+  })
+}
+
+export const showComponentInModal = async (title, component) => {
+  const el = document.createElement('div')
+  const app = createApp(component)
+  app.mount(el)
+
+  return await Swal.fire({
+    // icon: 'info',
+    title: title,
+    html: el,
+    showCloseButton: true,
+    showConfirmButton: false,
+    willClose: () => {
+      app.unmount()
+    },
   })
 }

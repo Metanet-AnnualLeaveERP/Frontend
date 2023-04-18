@@ -1,9 +1,10 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import { getVcReqListPaging } from '@/api/index.js'
+import { getVcReqList } from '@/api/index.js'
 import store from '@/store/index.js'
 import { onMounted, ref } from 'vue'
 import router from '@/router/index.js'
+import { failToast } from '@/sweetAlert'
 
 const list = ref({})
 const pagination = ref({})
@@ -20,7 +21,7 @@ const getList = async (page) => {
   }
   currentPage.value = page
 
-  await getVcReqListPaging(page, 10)
+  await getVcReqList('true', page, 10)
     .then((res) => {
       // console.log(res.data)
       list.value = res.data.vcReqs
@@ -112,7 +113,7 @@ const onClickItem = (id) => {
                       @click="onClickItem(item.reqId)"
                     >
                       <td class="py-3">{{ item.vcTypeDto.typeName }}</td>
-                      <td class="py-3" v-if="item.reqDays != 1">
+                      <td class="py-3" v-if="item.reqDays >= 1">
                         {{ item.startDate }} - {{ item.endDate }}
                       </td>
                       <td class="py-3" v-else>
