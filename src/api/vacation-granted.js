@@ -12,3 +12,12 @@ export const getListGrantedVc =(p, a) => {
     },
   })
 }
+
+// 휴가부여 추가
+export const insertGrantedVc = (data) => {
+  return api({
+    url: '/admin/vacations/granted',
+    method:'post',
+    data:data
+  })
+}

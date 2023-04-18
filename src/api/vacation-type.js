@@ -10,9 +10,9 @@ export const getVcTypeList = () => {
 }
 
 // 휴가 유형 생성
-export const insertVcTypeList = () => {
+export const insertVcTypeList = (data) => {
   return api({
-    url: '/admin/vacation/type',
+    url: '/admin/vacations/type',
     method: 'post',
     data: data,
   })
@@ -27,7 +27,7 @@ export const deleteVcType = (typeId) => {
 }
 
 //휴가 유형 수정
-export const updateVcType = (typeId) => {
+export const updateVcType = (typeId, data) => {
   return api({
     url: `/admin/vacation/type/${typeId}`,
     method: 'put',

@@ -16,3 +16,11 @@ export const getManagerInfo = (id) => {
     method: 'get',
   })
 }
+
+// deptId 로 empList 리턴
+export const getListEmpByDeptId = (id) => {
+  return api({
+    url: `/admin/dept-emp-info/${id}`,
+    method:'get',
+  })
+}
