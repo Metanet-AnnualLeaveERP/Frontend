@@ -20,11 +20,11 @@ onMounted(async () => {
 <template>
   <div class="relative overflow-x-auto">
     <table
-      class="w-full text-sm text-center text-gray-500 dark:text-gray-400"
+      class="w-full text-center text-sm text-gray-500 dark:text-gray-400"
       v-if="loading"
     >
       <thead
-        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+        class="align-middle text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       >
         <tr>
           <th scope="col" class="px-6 py-3">휴가 유형</th>
@@ -33,7 +33,8 @@ onMounted(async () => {
           <th scope="col" class="px-6 py-3">잔여일</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="align-middle text-center">
+        <!-- 연차 -->
         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
           <th
             scope="row"
@@ -47,6 +48,7 @@ onMounted(async () => {
           </td>
           <td class="px-6 py-4">{{ annual.remainDays }}</td>
         </tr>
+        <!-- 타 휴가 리스트 -->
         <tr
           v-for="(item, index) in reward"
           :key="index"

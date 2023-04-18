@@ -113,7 +113,7 @@ const onClickItem = (id) => {
                       @click="onClickItem(item.reqId)"
                     >
                       <td class="py-3">{{ item.vcTypeDto.typeName }}</td>
-                      <td class="py-3" v-if="item.reqDays != 1">
+                      <td class="py-3" v-if="item.reqDays >= 1">
                         {{ item.startDate }} - {{ item.endDate }}
                       </td>
                       <td class="py-3" v-else>
