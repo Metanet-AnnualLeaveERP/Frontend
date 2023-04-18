@@ -13,7 +13,7 @@ const detailLoaded = ref(false)
 
 onMounted(async () => {
   await getVcReqDetail(reqId).then((res) => {
-    console.log(res.data)
+    // console.log(res.data)
     detailLoaded.value = true
     detail.value = res.data
   })
@@ -84,7 +84,7 @@ const onClickBackBtn = () => {
         첨부파일 다운로드
       </BaseBtn>
       <BaseBtn
-        class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        class="mr-3 text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         @click="onClickBackBtn"
       >
         돌아가기

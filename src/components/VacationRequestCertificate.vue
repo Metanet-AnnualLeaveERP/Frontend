@@ -1,6 +1,7 @@
 <script>
 import { onMounted, ref } from 'vue'
 import html2pdf from 'html2pdf.js'
+import store from '@/store/index.js'
 export default {
   props: {
     item: {
@@ -10,17 +11,18 @@ export default {
   },
 
   setup(props) {
-    const alType = ref(false)
+    const alHalfType = ref(false)
     const startDate = ref('')
     const endDate = ref('')
     const pdfContent = ref(null)
+    // 나의 상사
+    const manager = store.state.mgr
 
     onMounted(() => {
-      //   console.log(props.item)
-      const typeName = props.item.vcTypeDto.typeName
-      if (props.item.reqDays == 1 && typeName == '연차') {
-        console.log('연차이고 하루만 신청했을 경우 반차인지 아닌지 표시')
-        alType.value = true
+      console.log(props.item)
+      const typeId = props.item.vcTypeDto.typeId
+      if (props.item.reqDays <= 1 && (typeId == 3 || typeId == 2)) {
+        alHalfType.value = true
       }
 
       // Date 객체로 변환
@@ -45,7 +47,7 @@ export default {
         '휴가확인서_' +
         props.item.empDto.name +
         '_' +
-        props.item.startDate +
+        props.item.reqDate +
         '.pdf'
       const options = {
         filename: filename,
@@ -68,11 +70,12 @@ export default {
     }
 
     return {
-      alType,
+      alHalfType,
       startDate,
       endDate,
       downloadPDF,
       pdfContent,
+      manager,
     }
   },
 }
@@ -117,7 +120,9 @@ export default {
               휴가 확인서
             </td>
           </tr>
-          <tr class="h-12"></tr>
+          <tr class="h-12">
+            <td class="bg-white dark:bg-foreground" colspan="2"></td>
+          </tr>
           <tr>
             <td
               style="width: 300px; border: 0; padding: 0 !important"
@@ -159,11 +164,14 @@ export default {
                         border: 0px solid black;
                       "
                     >
-                      기안 부서
+                      {{ item.empDto.deptDto.deptName }}
                     </td>
                   </tr>
-                  <tr class="h-4"></tr>
+                  <tr class="h-4">
+                    <td class="bg-white dark:bg-foreground" colspan="2"></td>
+                  </tr>
                   <!-- 결재 담당 (상사) -->
+                  <!-- 연차이면 자동 승인 -->
                   <tr>
                     <td
                       class="bg-white font-bold dark:bg-foreground dark:text-white text-left"
@@ -187,10 +195,15 @@ export default {
                         border: 0px solid black;
                       "
                     >
-                      기안 부서
+                      <span v-if="item.status == '자동승인'"> 자동승인 </span>
+                      <span v-else>
+                        {{ manager.name + ' ' + manager.position }}
+                      </span>
                     </td>
                   </tr>
-                  <tr class="h-4"></tr>
+                  <tr class="h-4">
+                    <td class="bg-white dark:bg-foreground" colspan="2"></td>
+                  </tr>
                   <!-- 성명 -->
                   <tr>
                     <td
@@ -219,7 +232,40 @@ export default {
                       {{ item.empDto.name }}
                     </td>
                   </tr>
-                  <tr class="h-4"></tr>
+                  <tr class="h-4">
+                    <td class="bg-white dark:bg-foreground" colspan="2"></td>
+                  </tr>
+                  <!-- 직위 -->
+                  <tr>
+                    <td
+                      class="bg-white font-bold dark:bg-foreground dark:text-white text-left"
+                      style="
+                        width: 100px;
+                        height: 22px;
+                        vertical-align: middle;
+                        border: 0px solid black;
+                        padding: 3px !important;
+                      "
+                    >
+                      직 위 :
+                    </td>
+
+                    <td
+                      class="bg-white dark:bg-foreground dark:text-white text-left"
+                      style="
+                        width: 200px;
+                        height: 22px;
+                        vertical-align: middle;
+                        border: 0px solid black;
+                        padding: 3px !important;
+                      "
+                    >
+                      {{ item.empDto.position }}
+                    </td>
+                  </tr>
+                  <tr class="h-4">
+                    <td class="bg-white dark:bg-foreground" colspan="2"></td>
+                  </tr>
                   <!-- 휴가 신청일 -->
                   <tr>
                     <td
@@ -273,7 +319,9 @@ export default {
         "
       >
         <tbody>
-          <tr class="h-4"></tr>
+          <tr class="h-4">
+            <td class="bg-white dark:bg-foreground" colspan="2"></td>
+          </tr>
           <tr>
             <td
               class="bg-white font-bold dark:bg-foreground dark:text-white text-left"
@@ -287,7 +335,9 @@ export default {
               상기인은 아래와 같이 휴가 신청하였음을 확인합니다.
             </td>
           </tr>
-          <tr class="h-6"></tr>
+          <tr class="h-6">
+            <td class="bg-white dark:bg-foreground" colspan="2"></td>
+          </tr>
           <!-- 휴가 종류 -->
           <tr>
             <td
@@ -300,7 +350,7 @@ export default {
               class="bg-white dark:bg-foreground dark:text-white text-left"
               style="padding: 5px; border: 0px solid black; height: 25px"
             >
-              <span class="mr-5" v-if="item.vcTypeDto.typeName == '연차'">
+              <span class="mr-5" v-if="item.vcTypeDto.typeId <= 3">
                 ☑ 연차
               </span>
               <span class="mr-5" v-else> ☐ 연차 </span>
@@ -315,22 +365,30 @@ export default {
             </td>
           </tr>
           <!-- 반차 여부 -->
-          <tr v-if="alType">
+          <tr v-if="alHalfType">
             <td
               class="bg-white font-bold dark:bg-foreground dark:text-white text-left"
               style="padding: 5px; border: 0px solid black; height: 25px"
             >
-              반차 여부
+              &nbsp;- 반차 구분 :
             </td>
             <td
               class="bg-white dark:bg-foreground dark:text-white text-left"
               style="padding: 5px; border: 0px solid black; height: 25px"
             >
-              오전반차인지 오후반차인지 추가
+              <span class="mr-5" v-if="item.vcTypeDto.typeName == '오전반차'">
+                ☑ 오전 반차
+              </span>
+              <span class="mr-5" v-else> ☐ 오전 반차 </span>
+              <span class="mr-5" v-if="item.vcTypeDto.typeName == '오후반차'">
+                ☑ 오후 반차
+              </span>
+              <span class="mr-5" v-else> ☐ 오후 반차 </span>
             </td>
           </tr>
-          <tr class="h-4"></tr>
-
+          <tr class="h-4">
+            <td class="bg-white dark:bg-foreground" colspan="2"></td>
+          </tr>
           <!-- 휴가 기간 -->
           <tr>
             <td
@@ -347,7 +405,7 @@ export default {
                 width: 700px;
                 height: 22px;
               "
-              v-if="item.reqDays != 1"
+              v-if="item.reqDays >= 1"
             >
               {{ startDate }} - {{ endDate }}
             </td>
@@ -366,7 +424,9 @@ export default {
               {{ item.startDate }} - {{ item?.endDate }}
             </td>
           </tr>
-          <tr class="h-4"></tr>
+          <tr class="h-4">
+            <td class="bg-white dark:bg-foreground" colspan="2"></td>
+          </tr>
           <!-- 휴가 일수 -->
           <tr>
             <td
@@ -387,8 +447,9 @@ export default {
               총 {{ item.reqDays }} 일
             </td>
           </tr>
-          <tr class="h-4"></tr>
-
+          <tr class="h-4">
+            <td class="bg-white dark:bg-foreground" colspan="2"></td>
+          </tr>
           <!-- 휴가 사유 -->
           <tr>
             <td
@@ -404,7 +465,9 @@ export default {
               {{ item.comments }}
             </td>
           </tr>
-          <tr class="h-12"></tr>
+          <tr class="h-12">
+            <td class="bg-white dark:bg-foreground" colspan="2"></td>
+          </tr>
           <!-- 원칙 -->
           <tr>
             <td

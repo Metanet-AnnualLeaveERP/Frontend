@@ -14,13 +14,14 @@ export const createRequest = (data) => {
 }
 
 // 휴가 신청 내역 조회
-export const getVcReqListPaging = (p, n) => {
+export const getVcReqList = (p, pno, a) => {
   return api({
     url: '/vacations',
     method: 'get',
     params: {
-      page: p,
-      pagenum: n,
+      paging: p,
+      pageNum: pno,
+      amount: a,
     },
   })
 }
@@ -29,6 +30,14 @@ export const getVcReqListPaging = (p, n) => {
 export const getVcReqDetail = (id) => {
   return api({
     url: `/vacations/${id}`,
+    method: 'get',
+  })
+}
+
+// 팀원 휴가 승인내역 조회 (캘린더용)
+export const getMyTeamSchedule = () => {
+  return api({
+    url: '/vacations/my-team',
     method: 'get',
   })
 }
