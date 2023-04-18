@@ -15,8 +15,8 @@ import {
 export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
 
 // EMP
-import { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin } from './emp'
-export { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin}
+import { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin, registerEmp } from './emp'
+export { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin, registerEmp}
 
 // user
 import { login, disableAccountByAdmin } from './user'

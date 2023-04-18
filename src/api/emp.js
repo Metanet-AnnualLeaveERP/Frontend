@@ -42,4 +42,15 @@ export const modifyEmpInfoByAdmin = (data) => {
     method :'put',
     data : data
   })
+
+}
+
+// 직원등록
+export const registerEmp = (data) => {
+  return api({
+    url : `/admin/emp/create`,
+    method :'post',
+    data : data
+  })
+
 }

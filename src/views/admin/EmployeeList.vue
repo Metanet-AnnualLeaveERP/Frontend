@@ -4,6 +4,9 @@
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12">
         <BaseCard>
+          <div class="grid grid-cols-1 justify-items-end mb-5">
+            <BaseBtn class="bg-primary text-white hover:bg-blue-700" :md="true" @click="addMember">직원등록</BaseBtn>
+          </div>
           <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
             <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
               <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
@@ -143,7 +146,9 @@
                     </div>
                   </div>
                 </nav>
+
               </div>
+
             </div>
           </div>
         </BaseCard>
@@ -186,6 +191,10 @@ const getList = async (page) => {
 
 const onClickView = (empId) => {
   router.push({ name: '사원상세', params: { id:empId } })
+}
+
+const addMember = () => {
+  router.push({name: '직원등록'})
 }
 
 </script>

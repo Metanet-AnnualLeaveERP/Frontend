@@ -105,6 +105,11 @@ const routes = [
             component: () => import('@/views/admin/EmployeeDetail.vue'),
           },
           {
+            path: 'employee/register/',
+            name: '직원등록',
+            component: () => import('@/views/admin/EmployeeRegister.vue'),
+          },
+          {
             path: 'vacation_manage/type',
             name: '휴가유형관리',
             component: () => import('@/views/admin/vacation_manage/VcTypeList.vue')
