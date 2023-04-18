@@ -22,19 +22,27 @@ export { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin
 import { login, disableAccountByAdmin } from './user'
 export { login, disableAccountByAdmin }
 
-
 // vcTotal
 import { getVcRemainInfo } from './vctype-total'
 export { getVcRemainInfo }
 
 // vcType
-import { getVcTypeList,
+import {
+  getVcTypeList,
   insertVcTypeList,
   deleteVcType,
-  updateVcType
+  updateVcType,
 } from './vacation-type'
 export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
 
 // grantedVc
 import { getListGrantedVc } from './vacation-granted'
 export { getListGrantedVc }
+
+// certificates
+import {
+  getCertificateDetail,
+  getCertificateList,
+  createCertificate,
+} from './certificate'
+export { getCertificateDetail, getCertificateList, createCertificate }

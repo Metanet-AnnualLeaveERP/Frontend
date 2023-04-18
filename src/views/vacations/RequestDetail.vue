@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router/index.js'
 import { getVcReqDetail, download } from '@/api'
-import VacationRequestCertificate from '@/components/VacationRequestCertificate.vue'
+import VacationReqConfirmation from '@/components/VacationReqConfirmation.vue'
 import { successToast } from '@/sweetAlert'
 
 const route = useRoute()
@@ -72,7 +72,7 @@ const onClickBackBtn = () => {
     <BaseCard>
       <!-- axios response 후 props 넘기기 위해 v-if 설정  -->
       <div v-if="detailLoaded">
-        <VacationRequestCertificate :item="detail" />
+        <VacationReqConfirmation :item="detail" />
       </div>
     </BaseCard>
     <div class="flex justify-end mt-5">

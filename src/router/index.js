@@ -22,7 +22,7 @@ const routes = [
     redirect: '/sessions/login',
     meta: {
       title: 'Home',
-      roles:[]
+      roles: [],
     },
     children: [
       {
@@ -39,7 +39,6 @@ const routes = [
             component: () => import('../views/calendar/Calendar.vue'),
           },
         ],
-
       },
       {
         path: '/vacations',
@@ -49,6 +48,7 @@ const routes = [
           title: 'Vacations',
         },
         children: [
+          // 휴가 신청 관련
           {
             path: 'request/new',
             name: '휴가신청',
@@ -63,6 +63,39 @@ const routes = [
             path: 'request/detail/:id',
             name: '휴가신청상세',
             component: () => import('../views/vacations/RequestDetail.vue'),
+          },
+          // 휴가 취소 관련
+          {
+            path: 'request/list',
+            name: '휴가취소내역',
+            component: () => import('../views/vacations/CancelList.vue'),
+          },
+          {
+            path: 'cancel/detail/:id',
+            name: '휴가취소상세',
+            component: () => import('../views/vacations/CancelDetail.vue'),
+          },
+        ],
+      },
+      {
+        path: '/certificates',
+        name: 'Certificates',
+        component: () => import('../views/annual_promote_doc/index.vue'),
+        meta: {
+          title: 'AnnualPromoteDoc',
+        },
+        children: [
+          {
+            path: 'main',
+            name: '증명서내역',
+            component: () =>
+              import('../views/certificates/CertificateList.vue'),
+          },
+          {
+            path: 'detail/:id',
+            name: '증명서상세',
+            component: () =>
+              import('../views/certificates/CertificateDetail.vue'),
           },
         ],
       },
@@ -86,13 +119,13 @@ const routes = [
         name: 'AdminMain',
         component: () => import('@/views/admin/index.vue'),
         meta: {
-          roles: ['ROLE_ADMIN']
+          roles: ['ROLE_ADMIN'],
         },
         children: [
           {
             path: 'main',
             name: '관리자메인',
-            component: () => import('@/views/admin/AdminMain.vue'),   
+            component: () => import('@/views/admin/AdminMain.vue'),
           },
           {
             path: 'employee/list',
@@ -112,18 +145,21 @@ const routes = [
           {
             path: 'vacation_manage/type',
             name: '휴가유형관리',
-            component: () => import('@/views/admin/vacation_manage/VcTypeList.vue')
+            component: () =>
+              import('@/views/admin/vacation_manage/VcTypeList.vue'),
           },
           {
             path: 'vacation_manage/grant',
             name: '휴가부여관리',
-            component: () => import('@/views/admin/vacation_manage/GrantedVcList.vue')
+            component: () =>
+              import('@/views/admin/vacation_manage/GrantedVcList.vue'),
           },
           {
             path: 'vacation_manage/request',
             name: '휴가요청관리',
-            component: () => import('@/views/admin/vacation_manage/RequestVcList.vue')
-          }
+            component: () =>
+              import('@/views/admin/vacation_manage/RequestVcList.vue'),
+          },
         ],
       },
       {
@@ -317,7 +353,7 @@ const routes = [
         component: () => import('../views/sessions/LogIn.vue'),
         meta: {
           roles: [],
-        }
+        },
       },
 
       {
@@ -347,18 +383,17 @@ const router = createRouter({
 
 // 현재 페이지 이름 설정
 router.beforeEach((to, from, next) => {
-
   /* 권한은 로그인 시에만 부여되고 모든 서비스는 로그인한 유저에 한헤서만 접근 가능하다. */
-  const role = store.state.role;
+  const role = store.state.role
 
   // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
   // console.log(to.meta.roles)
   if (to.meta.roles != '' && !to.meta.roles.includes(role)) {
-    console.log('접근 권한이 없습니다.');
+    console.log('접근 권한이 없습니다.')
     // 권한이 없는 유저는 403 에러 페이지로 보낸다
-    return next({name: '404'});
+    return next({ name: '404' })
   } else {
-    return next();
+    return next()
   }
 })
 
