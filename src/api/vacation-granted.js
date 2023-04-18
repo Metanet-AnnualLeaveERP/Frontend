@@ -7,7 +7,7 @@ export const getListGrantedVc =(p, a) => {
     url:'/admin/vacations/granted',
     method: 'get',
     params: {
-      pagenum: p,
+      pageNum: p,
       amount: a,
     },
   })

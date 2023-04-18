@@ -20,7 +20,7 @@ export const getVcReqListPaging = (p, n) => {
     method: 'get',
     params: {
       page: p,
-      pagenum: n,
+      pageNum: n,
     },
   })
 }
