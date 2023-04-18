@@ -4,7 +4,6 @@ import { getVcRemainInfo } from '@/api/index.js'
 
 const annual = ref([])
 const reward = ref([])
-const list = ref([])
 const loading = ref(false)
 
 onMounted(async () => {
@@ -40,13 +39,30 @@ onMounted(async () => {
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{ annual.vcTypeDto.typeId }}
+            {{ annual.vcTypeDto.typeName }}
           </th>
           <td class="px-6 py-4">{{ annual.vcDays }}</td>
           <td class="px-6 py-4">
             {{ annual.vcDays - annual.remainDays }}
           </td>
           <td class="px-6 py-4">{{ annual.remainDays }}</td>
+        </tr>
+        <tr
+          v-for="(item, index) in reward"
+          :key="index"
+          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+        >
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          >
+            {{ item.vcTypeDto.typeName }}
+          </th>
+          <td class="px-6 py-4">{{ item.totalGvCnt }}</td>
+          <td class="px-6 py-4">
+            {{ item.totalGvCnt - item.cnt }}
+          </td>
+          <td class="px-6 py-4">{{ item.cnt }}</td>
         </tr>
       </tbody>
     </table>
