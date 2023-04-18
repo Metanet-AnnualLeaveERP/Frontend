@@ -17,8 +17,8 @@ export const infoAlert = (text) => {
   })
 }
 
-export const successToast = (text) => {
-  Swal.fire({
+export const successToast = async (text) => {
+  await Swal.fire({
     icon: 'success',
     text: text,
     showConfirmButton: false,
@@ -82,6 +82,22 @@ export const showComponentInModal = async (title, component) => {
     showConfirmButton: false,
     willClose: () => {
       app.unmount()
+    },
+  })
+}
+
+export const inputTextModal = async (title, text, label) => {
+  return await Swal.fire({
+    title: title,
+    text: text,
+    input: 'text',
+    inputLabel: label,
+    showCancelButton: true,
+    inputValidator: (value) => {
+      console.log(value)
+      if (!value) {
+        return value
+      }
     },
   })
 }
