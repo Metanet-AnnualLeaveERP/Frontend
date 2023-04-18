@@ -237,11 +237,6 @@ const getList = async () => {
     })
 }
 
-  data(){
-    return {
-      
-    }
-  }
 </script>
 
 <style>
