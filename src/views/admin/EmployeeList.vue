@@ -4,6 +4,40 @@
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12">
         <BaseCard>
+          <div class="m-4 gap-x-10 flex justify-between align-middle items-center">
+            <div class="flex-1 relative inline-block w-full text-gray-700">
+              <select v-model="keyword" :class="['hidden']">
+                <option value="" disabled selected>직책 선택</option>
+                <option value="팀장">팀장</option>
+                <option value="사원">사원</option>
+                <!-- 추가적인 직책은 여기에 작성 -->
+              </select>
+              <div class="relative w-1/4 grid grid-cols-1 right-0">
+                <div
+                    class="bg-white w-full  rounded-md shadow-md w-full border border-gray-300 px-3 py-2 text-gray-700 font-medium h-full cursor-pointer select-none"
+                    @click="toggleDropdown">
+                  <div class="flex items-center justify-between">
+                    <span v-if="keyword" class="text-base">{{ keyword }}</span>
+                    <span v-else class="text-gray-400 italic">선택</span>
+                    <svg class="w-5 h-5 fill-current text-gray-400" viewBox="0 0 20 20">
+                      <path d="M6 8l4 4 4-4"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div v-show="isOpen"
+                     class="absolute top-11 left-0 right-0 z-10 bg-white rounded-md shadow-md
+        border border-gray-300 px-3 py-2 text-gray-700 font-medium cursor-pointer">
+                  <div class="flex flex-col space-y-2">
+                    <option v-for="(option, index) in options" :value="option.value" :key="index"
+                            :class="['py-2', 'hover:bg-gray-100', 'cursor-pointer']"
+                            @click="selectOption(option)">
+                      {{ option.text }}
+                    </option>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="grid grid-cols-1 justify-items-end mb-5">
             <BaseBtn class="bg-primary text-white hover:bg-blue-700" :md="true" @click="addMember">직원등록</BaseBtn>
           </div>
@@ -161,11 +195,13 @@
 import {getEmpList, } from '@/api'
 import {onMounted, ref} from 'vue'
 import router from '@/router/index.js'
+import { failToast } from '@/sweetAlert';
 
 const empList = ref([]);
 const pagination = ref({});
 const currentPage = ref(1);
 const keyword = ref('');
+
 onMounted(() => {
   getList(1)
 });
@@ -178,15 +214,14 @@ const getList = async (page) => {
 
   await getEmpList(page, 10, keyword.value)
       .then((res) => {
-        console.log(res.data.empList)
 
         empList.value = res.data.empList;
         pagination.value = res.data.paging;
 
-      })
-      .catch(() => {
+      }).catch(() => {
         failToast('데이터 로딩에 실패했습니다.')
       });
+
 }
 
 const onClickView = (empId) => {
