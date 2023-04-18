@@ -114,23 +114,27 @@ let toggleSubMenu = (e) => {
         <!-- sidebar 부모 -->
         <perfect-scrollbar>
           <ul class="navigation-left dark:bg-foreground dark:text-gray-300">
-            <!-- nav child 없는 애들 -->
+            <!-- nav child 없는 애 -->
             <li
               @mouseenter="toggleSubMenu"
               class="nav-item border-b border-gray-200 dark:border-dark"
             >
-              <router-link class="nav-item-hold" :to="{ name: '일정관리' }"
-                ><i class="i-Calendar text-3xl"></i>
-                <p>관리자사이드바테스트</p>
+              <router-link class="nav-item-hold" :to="{ name: '사원관리' }"
+                ><i class="i-MaleFemale text-3xl"></i>
+                <p>사원관리</p>
               </router-link>
             </li>
+            <!-- nav child 있는 애 -->
             <li
               @mouseenter="toggleSubMenu"
               class="nav-item border-b border-gray-200 dark:border-dark"
+              :class="selectedParentMenu == 'vacation_manage' ? 'active' : ''"
+              data-item="vacation_manage"
+              :data-submenu="true"
             >
-              <router-link class="nav-item-hold" :to="{ name: '휴가신청내역' }"
-                ><i class="i-Calendar text-3xl"></i>
-                <p>휴가 신청 내역</p>
+              <router-link class="nav-item-hold" :to="{ name: '휴가유형관리' }"
+                ><i class="i-Plane text-3xl"></i>
+                <p>휴가관리</p>
               </router-link>
             </li>
             <li
@@ -140,8 +144,8 @@ let toggleSubMenu = (e) => {
               <router-link
                 class="nav-item-hold"
                 :to="{ name: '연차촉진문서함' }"
-                ><i class="i-Calendar text-3xl"></i>
-                <p>문서 보관함</p>
+                ><i class="i-File text-3xl"></i>
+                <p>문서관리</p>
               </router-link>
             </li>
             <!-- nav child 있는 애들 -->
@@ -168,6 +172,30 @@ let toggleSubMenu = (e) => {
         }"
         class="sidebar-left-secondary shadow bg-white dark:bg-foreground dark:text-gray-300"
       >
+        <ul
+          class="mb-4 childNav"
+          data-parent="vacation_manage"
+          :class="selectedParentMenu == 'vacation_manage' ? 'block' : 'hidden'"
+        >
+          <li>
+            <router-link :to="{ name: '휴가유형관리'}">
+              <i class="nav-icon i-Plane mr-2"></i>
+              <span class="item-name"> 휴가유형관리</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: '휴가부여관리'}">
+              <i class="nav-icon i-Plane mr-2"></i>
+              <span class="item-name"> 휴가부여관리</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: '휴가요청관리'}">
+            <i class="nav-icon i-Plane mr-2"></i>
+            <span class="item-name"> 휴가요청관리</span>
+            </router-link>
+          </li>
+        </ul>
         <ul
           class="mb-4 childNav"
           data-parent="dashboards"

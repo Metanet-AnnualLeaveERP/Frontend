@@ -22,6 +22,19 @@ export { getMyInfo, getManagerInfo }
 import { login } from './user'
 export { login }
 
+
 // vcTotal
 import { getVcRemainInfo } from './vctype-total'
 export { getVcRemainInfo }
+
+// vcType
+import { getVcTypeList,
+  insertVcTypeList,
+  deleteVcType,
+  updateVcType
+} from './vacation-type'
+export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
+
+// grantedVc
+import { getListGrantedVc } from './vacation-granted'
+export { getListGrantedVc }

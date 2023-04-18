@@ -80,12 +80,39 @@ const routes = [
         ],
       },
       {
-        path: '/admin/main',
+        path: '/admin',
         name: 'AdminMain',
-        component: () => import('@/views/admin/AdminMain.vue'),
+        component: () => import('@/views/admin/index.vue'),
         meta: {
           roles: ['ROLE_ADMIN']
-        }
+        },
+        children: [
+          {
+            path: 'main',
+            name: 'AdminMain',
+            component: () => import('@/views/admin/AdminMain.vue'),   
+          },
+          {
+            path: 'employee',
+            name: '사원관리',
+            component: () => import('@/views/admin/EmployeeList.vue'),
+          }, 
+          {
+            path: 'vacation_manage/type',
+            name: '휴가유형관리',
+            component: () => import('@/views/admin/vacation_manage/VcTypeList.vue')
+          },
+          {
+            path: 'vacation_manage/grant',
+            name: '휴가부여관리',
+            component: () => import('@/views/admin/vacation_manage/GrantedVcList.vue')
+          },
+          {
+            path: 'vacation_manage/request',
+            name: '휴가요청관리',
+            component: () => import('@/views/admin/vacation_manage/RequestVcList.vue')
+          }
+        ],
       },
       {
         path: '/dashboards',
