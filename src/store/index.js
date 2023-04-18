@@ -8,6 +8,7 @@ export default createStore({
     userid: '',
     emp: {},
     empNum: '',
+    mgr: {},
   },
   mutations: {
     setRole(state, role) {
@@ -21,6 +22,9 @@ export default createStore({
     },
     setEmpNum(state, empNum) {
       state.empNum = empNum
+    },
+    setManager(state, mgr) {
+      state.mgr = mgr
     },
   },
   plugins: [

@@ -13,7 +13,7 @@ const detailLoaded = ref(false)
 
 onMounted(async () => {
   await getVcReqDetail(reqId).then((res) => {
-    console.log(res.data)
+    // console.log(res.data)
     detailLoaded.value = true
     detail.value = res.data
   })
