@@ -44,6 +44,14 @@ export const failToast = (text) => {
   })
 }
 
+export const warningAlert = (text) => {
+  Swal.fire({
+    icon: 'warning',
+    title: '경고',
+    text: text,
+  })
+}
+
 export const returnInfoAlert = (text, title) => {
   return Swal.fire({
     icon: 'success',
