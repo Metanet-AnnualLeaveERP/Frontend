@@ -15,12 +15,12 @@ import {
 export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
 
 // EMP
-import { getMyInfo, getManagerInfo } from './emp'
-export { getMyInfo, getManagerInfo }
+import { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin } from './emp'
+export { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin}
 
 // user
-import { login } from './user'
-export { login }
+import { login, disableAccountByAdmin } from './user'
+export { login, disableAccountByAdmin }
 
 // vcTotal
 import { getVcRemainInfo } from './vctype-total'

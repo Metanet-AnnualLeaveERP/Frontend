@@ -1,4 +1,5 @@
 import api from './api'
+import {data} from "autoprefixer";
 
 //login
 export const login = (data) => {
@@ -7,5 +8,14 @@ export const login = (data) => {
     method: 'post',
     data: data,
     withCredentials: true,
+  })
+
+}
+
+export const disableAccountByAdmin = (data) => {
+  return api({
+    url: `/admin/user/disable`,
+    method:'put',
+    data : data
   })
 }
