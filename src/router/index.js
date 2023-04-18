@@ -22,6 +22,7 @@ const routes = [
     redirect: '/sessions/login',
     meta: {
       title: 'Home',
+      roles:[]
     },
     children: [
       {
@@ -38,6 +39,7 @@ const routes = [
             component: () => import('../views/calendar/Calendar.vue'),
           },
         ],
+
       },
       {
         path: '/vacations',
@@ -89,14 +91,19 @@ const routes = [
         children: [
           {
             path: 'main',
-            name: 'AdminMain',
+            name: '관리자메인',
             component: () => import('@/views/admin/AdminMain.vue'),   
           },
           {
-            path: 'employee',
+            path: 'employee/list',
             name: '사원관리',
             component: () => import('@/views/admin/EmployeeList.vue'),
-          }, 
+          },
+          {
+            path: 'employee/detail/:id',
+            name: '사원상세',
+            component: () => import('@/views/admin/EmployeeDetail.vue'),
+          },
           {
             path: 'vacation_manage/type',
             name: '휴가유형관리',
@@ -303,6 +310,9 @@ const routes = [
         path: 'login',
         name: 'login',
         component: () => import('../views/sessions/LogIn.vue'),
+        meta: {
+          roles: [],
+        }
       },
 
       {
@@ -329,11 +339,24 @@ const router = createRouter({
 
   routes,
 })
+
 // 현재 페이지 이름 설정
 router.beforeEach((to, from, next) => {
-  document.title = `${to.name} - ${import.meta.env.VITE_APP_TITLE}`
-  next()
+
+  /* 권한은 로그인 시에만 부여되고 모든 서비스는 로그인한 유저에 한헤서만 접근 가능하다. */
+  const role = store.state.role;
+
+  // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
+  // console.log(to.meta.roles)
+  if (to.meta.roles != '' && !to.meta.roles.includes(role)) {
+    console.log('접근 권한이 없습니다.');
+    // 권한이 없는 유저는 403 에러 페이지로 보낸다
+    return next({name: '404'});
+  } else {
+    return next();
+  }
 })
+
 router.afterEach(() => {
   // Remove initial loading
   const GullPreLoading = document.getElementById('loading_wrap')
