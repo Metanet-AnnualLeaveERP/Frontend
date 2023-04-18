@@ -10,9 +10,11 @@ import {
   createRequest,
   getVcReqList,
   getVcReqDetail,
+  getTeamApprovalList,
   getMyTeamSchedule,
 } from './vacation-request'
-export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
+export { createRequest,getVcReqList, getVcReqDetail ,getTeamApprovalList}
+
 
 // EMP
 import { getMyInfo, getManagerInfo } from './emp'

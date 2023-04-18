@@ -22,6 +22,9 @@ const routes = [
     redirect: '/sessions/login',
     meta: {
       title: 'Home',
+      roles: [
+
+      ]
     },
     children: [
       {
@@ -62,6 +65,7 @@ const routes = [
             name: '휴가신청상세',
             component: () => import('../views/vacations/RequestDetail.vue'),
           },
+
         ],
       },
       {
@@ -93,6 +97,11 @@ const routes = [
             component: () => import('@/views/admin/AdminMain.vue'),   
           },
           {
+            path:'vacations/:id',
+            name:'관리자결재상세',
+            component: ()=>import('@/views/admin/vacation_manage/RequestVcDetail.vue')
+          },
+          {
             path: 'employee',
             name: '사원관리',
             component: () => import('@/views/admin/EmployeeList.vue'),
@@ -111,7 +120,8 @@ const routes = [
             path: 'vacation_manage/request',
             name: '휴가요청관리',
             component: () => import('@/views/admin/vacation_manage/RequestVcList.vue')
-          }
+          },
+
         ],
       },
       {
