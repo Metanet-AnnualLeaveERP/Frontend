@@ -12,6 +12,13 @@ export const login = (data) => {
 
 }
 
+export const logout = () => {
+  return api({
+    url: '/user/logout',
+    method: 'post'
+  })
+}
+
 export const disableAccountByAdmin = (data) => {
   return api({
     url: `/admin/user/disable`,
