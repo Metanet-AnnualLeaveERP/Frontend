@@ -14,6 +14,7 @@ api.interceptors.response.use(
     const status = error.response.status
     switch (status) {
       case 400:
+        console.log(error)
         errorAlert('잘못된 문법입니다.')
         break
       case 401:

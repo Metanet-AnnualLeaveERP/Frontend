@@ -22,9 +22,7 @@ const routes = [
     redirect: '/sessions/login',
     meta: {
       title: 'Home',
-      roles: [
-
-      ]
+      roles: [],
     },
     children: [
       {
@@ -50,6 +48,7 @@ const routes = [
           title: 'Vacations',
         },
         children: [
+          // 휴가 신청 관련
           {
             path: 'request/new',
             name: '휴가신청',
@@ -65,7 +64,39 @@ const routes = [
             name: '휴가신청상세',
             component: () => import('../views/vacations/RequestDetail.vue'),
           },
-
+          // 휴가 취소 관련
+          {
+            path: 'request/list',
+            name: '휴가취소내역',
+            component: () => import('../views/vacations/CancelList.vue'),
+          },
+          {
+            path: 'cancel/detail/:id',
+            name: '휴가취소상세',
+            component: () => import('../views/vacations/CancelDetail.vue'),
+          },
+        ],
+      },
+      {
+        path: '/certificates',
+        name: 'Certificates',
+        component: () => import('../views/annual_promote_doc/index.vue'),
+        meta: {
+          title: 'AnnualPromoteDoc',
+        },
+        children: [
+          {
+            path: 'main',
+            name: '증명서내역',
+            component: () =>
+              import('../views/certificates/CertificateList.vue'),
+          },
+          {
+            path: 'detail/:id',
+            name: '증명서상세',
+            component: () =>
+              import('../views/certificates/CertificateDetail.vue'),
+          },
         ],
       },
       {
@@ -88,13 +119,18 @@ const routes = [
         name: 'AdminMain',
         component: () => import('@/views/admin/index.vue'),
         meta: {
-          roles: ['ROLE_MGR']
+          roles: ['ROLE_ADMIN'],
         },
         children: [
           {
             path: 'main',
-            name: 'AdminMain',
-            component: () => import('@/views/admin/AdminMain.vue'),   
+            name: '관리자메인',
+            component: () => import('@/views/admin/AdminMain.vue'),
+          },
+          {
+            path: 'employee/list',
+            name: '사원관리',
+            component: () => import('@/views/admin/EmployeeList.vue'),
           },
           {
             path:'vacations/:id',
@@ -105,24 +141,32 @@ const routes = [
             }
           },
           {
-            path: 'employee',
-            name: '사원관리',
-            component: () => import('@/views/admin/EmployeeList.vue'),
-          }, 
+            path: 'employee/detail/:id',
+            name: '사원상세',
+            component: () => import('@/views/admin/EmployeeDetail.vue'),
+          },
+          {
+            path: 'employee/register/',
+            name: '직원등록',
+            component: () => import('@/views/admin/EmployeeRegister.vue'),
+          },
           {
             path: 'vacation_manage/type',
             name: '휴가유형관리',
-            component: () => import('@/views/admin/vacation_manage/VcTypeList.vue')
+            component: () =>
+              import('@/views/admin/vacation_manage/VcTypeList.vue'),
           },
           {
             path: 'vacation_manage/grant',
             name: '휴가부여관리',
-            component: () => import('@/views/admin/vacation_manage/GrantedVcList.vue')
+            component: () =>
+              import('@/views/admin/vacation_manage/GrantedVcList.vue'),
           },
           {
             path: 'vacation_manage/request',
             name: '휴가요청관리',
-            component: () => import('@/views/admin/vacation_manage/RequestVcList.vue')
+            component: () =>
+              import('@/views/admin/vacation_manage/RequestVcList.vue'),
           },
           {
             path: 'vacation_manage/request/cancel/:id',
@@ -130,7 +174,6 @@ const routes = [
             component: ()=> import('@/views/admin/vacation_manage/CancelVcDetail.vue')
 
           }
-
         ],
       },
       {
@@ -322,6 +365,9 @@ const routes = [
         path: 'login',
         name: 'login',
         component: () => import('../views/sessions/LogIn.vue'),
+        meta: {
+          roles: [],
+        },
       },
 
       {
@@ -348,11 +394,23 @@ const router = createRouter({
 
   routes,
 })
+
 // 현재 페이지 이름 설정
 router.beforeEach((to, from, next) => {
-  document.title = `${to.name} - ${import.meta.env.VITE_APP_TITLE}`
-  next()
+  /* 권한은 로그인 시에만 부여되고 모든 서비스는 로그인한 유저에 한헤서만 접근 가능하다. */
+  const role = store.state.role
+
+  // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
+  // console.log(to.meta.roles)
+  if (to.meta.roles != '' && !to.meta.roles.includes(role)) {
+    console.log('접근 권한이 없습니다.')
+    // 권한이 없는 유저는 403 에러 페이지로 보낸다
+    return next({ name: '404' })
+  } else {
+    return next()
+  }
 })
+
 router.afterEach(() => {
   // Remove initial loading
   const GullPreLoading = document.getElementById('loading_wrap')

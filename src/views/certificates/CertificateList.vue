@@ -1,17 +1,14 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import { getVcReqList } from '@/api/index.js'
-import store from '@/store/index.js'
 import { onMounted, ref } from 'vue'
-import router from '@/router/index.js'
-import { failToast } from '@/sweetAlert'
+import { getCertificateList } from '@/api/index.js'
+import router from '@/router'
 
 const list = ref({})
 const pagination = ref({})
 const currentPage = ref(1)
-const reqPeriod = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   getList(1)
 })
 
@@ -21,53 +18,28 @@ const getList = async (page) => {
   }
   currentPage.value = page
 
-  await getVcReqList('true', page, 10)
+  await getCertificateList()
     .then((res) => {
-      // console.log(res.data)
-      list.value = res.data.vcReqs
+      console.log(res.data)
+      list.value = res.data.certificates
       pagination.value = res.data.paging
-      // console.log(pagination.value)
     })
     .catch(() => {
       failToast('데이터 로딩에 실패하였습니다.')
     })
 }
 
-const setStatusStyle = (s) => {
-  let style = ''
-  switch (s) {
-    case '자동승인':
-      style = 'bg-info'
-      break
-    case '반려':
-      style = 'bg-danger'
-      break
-    case '승인':
-      style = 'bg-success'
-      break
-    case '관리자 대기중':
-    case '대기중':
-      style = 'bg-warning'
-      break
-    case '취소':
-      style = 'bg-light'
-      break
-    default:
-      style = 'bg-primary'
-      break
-  }
-  return style
-}
-
 const onClickItem = (id) => {
-  // console.log(id)
-  router.push({ name: '휴가신청상세', params: { id: id } })
+  router.push({ name: '증명서상세', params: { id: id } })
 }
 </script>
 
 <template>
   <div class="container mx-auto text-center">
-    <breadcrumbs parentTitle="휴가 신청 내역" subParentTitle="휴가 관리" />
+    <breadcrumbs
+      parentTitle="증명서 발급 내역"
+      subParentTitle="증명서 보관함"
+    />
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12">
         <BaseCard>
@@ -86,22 +58,22 @@ const onClickItem = (id) => {
                       <th
                         class="border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold"
                       >
+                        발급 번호
+                      </th>
+                      <th
+                        class="border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold"
+                      >
                         휴가 유형
                       </th>
                       <th
                         class="border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold"
                       >
-                        휴가 기간
+                        발급 목적
                       </th>
                       <th
                         class="border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold"
                       >
-                        휴가 일수
-                      </th>
-                      <th
-                        class="border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold"
-                      >
-                        승인 상태
+                        발급 일자
                       </th>
                     </tr>
                   </thead>
@@ -110,23 +82,14 @@ const onClickItem = (id) => {
                       class="border-b border-gray-200 dark:border-dark hover:bg-gray-100 cursor-pointer dark:hover:bg-dark"
                       v-for="(item, index) in list"
                       :key="index"
-                      @click="onClickItem(item.reqId)"
+                      @click="onClickItem(item.certId)"
                     >
-                      <td class="py-3">{{ item.vcTypeDto.typeName }}</td>
-                      <td class="py-3" v-if="item.reqDays >= 1">
-                        {{ item.startDate }} - {{ item.endDate }}
-                      </td>
-                      <td class="py-3" v-else>
-                        {{ item.startDate }}
-                      </td>
-                      <td class="py-3">{{ item.reqDays }}</td>
+                      <td class="py-3">{{ item.certId }}</td>
                       <td class="py-3">
-                        <span
-                          class="px-3 py-1 rounded-lg bg-primary dark:text-white text-white text-xs"
-                          :class="setStatusStyle(item.status)"
-                          >{{ item.status }}</span
-                        >
+                        {{ item.vcReqDto.vcTypeDto.typeName }}
                       </td>
+                      <td class="py-3">{{ item.purpose }}</td>
+                      <td class="py-3">{{ item.issuedDate }}</td>
                     </tr>
                   </tbody>
                 </table>

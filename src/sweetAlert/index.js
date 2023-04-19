@@ -17,15 +17,15 @@ export const infoAlert = (text) => {
   })
 }
 
-export const successToast = (text) => {
-  Swal.fire({
+export const successToast = async (text) => {
+  return await Swal.fire({
     icon: 'success',
     text: text,
     showConfirmButton: false,
     timer: 1500,
   })
 }
-1
+
 export const showRequest = (text) => {
   text = text == null ? '요청사항이 없습니다.' : text
   Swal.fire({
@@ -86,16 +86,41 @@ export const showComponentInModal = async (title, component) => {
   })
 }
 
-export const checkInfo = (infoData)=>{
+export const loadingAlert = () => {
+  return Swal.fire({
+    title: '요청 중',
+    html: '잠시만 기다려주세요...',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading()
+    }
+  })
+}
+
+export const inputTextModal = async (title, text, label) => {
+  return await Swal.fire({
+    title: title,
+    text: text,
+    input: 'text',
+    inputLabel: label,
+    showCancelButton: true,
+    inputValidator: (value) => {
+      console.log(value)
+      if (!value) {
+        return value
+      }
+    },
+  })
+}
+export const checkInfo = (infoData)=> {
 
   return Swal.fire({
-    icon:infoData.icon,
-    title:infoData.title,
-    text:infoData.text,
-    showCancelButton:true,
-    confirmButtonColor:"red",
+    icon: infoData.icon,
+    title: infoData.title,
+    text: infoData.text,
+    showCancelButton: true,
+    confirmButtonColor: "red",
     cancelButtonText: infoData.cancelText,
     confirmButtonText: infoData.confirmText,
-
   })
 }

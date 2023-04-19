@@ -129,8 +129,17 @@ let toggleSubMenu = (e) => {
               class="nav-item border-b border-gray-200 dark:border-dark"
             >
               <router-link class="nav-item-hold" :to="{ name: '휴가신청내역' }"
-                ><i class="i-Calendar text-3xl"></i>
-                <p>휴가 신청 내역</p>
+                ><i class="i-Home1 text-3xl"></i>
+                <p>휴가 관리</p>
+              </router-link>
+            </li>
+            <li
+              @mouseenter="toggleSubMenu"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+            >
+              <router-link class="nav-item-hold" :to="{ name: '증명서내역' }"
+                ><i class="i-File-Text--Image text-3xl"></i>
+                <p>증명서 보관함</p>
               </router-link>
             </li>
             <li
@@ -140,7 +149,7 @@ let toggleSubMenu = (e) => {
               <router-link
                 class="nav-item-hold"
                 :to="{ name: '연차촉진문서함' }"
-                ><i class="i-Calendar text-3xl"></i>
+                ><i class="i-Inbox-Empty text-3xl"></i>
                 <p>문서 보관함</p>
               </router-link>
             </li>
