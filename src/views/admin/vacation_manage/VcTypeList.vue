@@ -92,6 +92,7 @@
                       </td>
                       <td style="min-width: 100px" class="py-5">
                         <span v-if="item.description">{{
+
                           item.description
                         }}</span>
                         <span v-else>-</span>
