@@ -2,9 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router/index.js'
-import { getVcReqDetail, getCertificateDetail } from '@/api'
-import VacationRequestCertificate from '@/components/vacations/VacationRequestCertificate.vue'
-import { successToast } from '@/sweetAlert'
+import { getCertificateDetail } from '@/api'
 import html2pdf from 'html2pdf.js'
 // 휴가신청확인서
 import VacationReqConfirmation from '@/components/vacations/VacationReqConfirmation.vue'
@@ -45,12 +43,6 @@ export default {
     // container div를 jpeg로 변환 후 pdf 다운로드
     const downloadPDF = () => {
       const element = pdfContent.value
-      // const filename =
-      //   '휴가확인서_' +
-      //   props.item.vcReqDto.empDto.name +
-      //   '_' +
-      //   props.item.vcReqDto.reqDate +
-      //   '.pdf'
       let filename = ''
       switch (certType.value) {
         case 'request':
@@ -96,10 +88,9 @@ export default {
       propsId,
       pdfContent,
       downloadPDF,
-      onClickBackBtn,
-      onClickPDFBtn,
       certId,
       detail,
+      onClickBackBtn,
     }
   },
 }
@@ -107,10 +98,6 @@ export default {
 // 돌아가기
 const onClickBackBtn = () => {
   router.go(-1)
-}
-
-const onClickPDFBtn = () => {
-  console.log(111111)
 }
 </script>
 

@@ -55,20 +55,14 @@ const routes = [
             component: () => import('../views/vacations/NewRequest.vue'),
           },
           {
-            path: 'request/list',
-            name: '휴가신청내역',
-            component: () => import('../views/vacations/RequestList.vue'),
+            path: 'list',
+            name: '휴가관리',
+            component: () => import('../views/vacations/ListTab.vue'),
           },
           {
             path: 'request/detail/:id',
             name: '휴가신청상세',
             component: () => import('../views/vacations/RequestDetail.vue'),
-          },
-          // 휴가 취소 관련
-          {
-            path: 'cancel/list',
-            name: '휴가취소내역',
-            component: () => import('../views/vacations/CancelList.vue'),
           },
           {
             path: 'cancel/detail/:id',

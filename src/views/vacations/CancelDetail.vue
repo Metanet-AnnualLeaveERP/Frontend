@@ -44,8 +44,8 @@ const onClickIssue = async () => {
     },
   }
   if (p.value != null) {
-    await createCertificate(data).then(() => {
-      successToast('증명서 발급이 완료되었습니다!')
+    await createCertificate(data).then(async () => {
+      await successToast('증명서 발급이 완료되었습니다!')
       router.push({ name: '증명서내역' })
     })
   }
