@@ -27,7 +27,7 @@
                   </BaseBtn>
                 </div>
               </div>
-              <TabGroup>
+              <!-- <TabGroup>
                 <TabList class="flex p-1 space-x-1 dark:bg-dark rounded-xl">
                   <Tab
                     v-for="category in Object.keys(categories)"
@@ -74,7 +74,7 @@
                     </ul>
                   </TabPanel>
                 </TabPanels>
-              </TabGroup>
+              </TabGroup> -->
               <div
                 class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
               >
@@ -236,7 +236,7 @@
                   </div>
                 </nav>
               </div>
-              <!-- 페이징 -->
+              <!-- 페이징 끝 -->
             </div>
           </div>
         </BaseCard>

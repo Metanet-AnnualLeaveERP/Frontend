@@ -125,7 +125,7 @@
               <p class="mt-1 text-sm leading-6 text-gray-600">
                 휴가 유형 이름을 입력해 주세요.
               </p>
-              <div class="mt-2">
+              <div class="mt-2 mb-2">
                 <div
                   class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
                 >
@@ -144,15 +144,15 @@
                 </div>
               </div>
             </div>
-            <fieldset>
+            <fieldset class="mb-2">
               <legend class="text-sm font-semibold leading-6 text-gray-900">
                 유급여부
               </legend>
               <p class="mt-1 text-sm leading-6 text-gray-600">
                 생성하려는 휴가의 유급여부를 선택해 주세요.
               </p>
-              <div class="mt-2 space-y-6">
-                <div class="flex items-center gap-x-3">
+              <div class="flex mt-2">
+                <div class="flex w-1/2 items-center gap-x-3">
                   <input
                     id="pto"
                     name="pto"
@@ -168,7 +168,7 @@
                     >무급</label
                   >
                 </div>
-                <div class="flex items-center gap-x-3">
+                <div class="flex w-1/2 items-center gap-x-3">
                   <input
                     id="push-email"
                     name="pto"
