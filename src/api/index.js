@@ -15,23 +15,24 @@ import {
 export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
 
 // EMP
-import { getMyInfo, getManagerInfo, getListEmpByDeptId } from './emp'
-export { getMyInfo, getManagerInfo, getListEmpByDeptId }
+
+import { getMyInfo, getManagerInfo, getEmpList,getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin } from './emp'
+export { getMyInfo, getManagerInfo, getEmpList,getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin}
 
 // user
-import { login } from './user'
-export { login }
-
+import { login, disableAccountByAdmin } from './user'
+export { login, disableAccountByAdmin }
 
 // vcTotal
 import { getVcRemainInfo } from './vctype-total'
 export { getVcRemainInfo }
 
 // vcType
-import { getVcTypeList,
+import {
+  getVcTypeList,
   insertVcTypeList,
   deleteVcType,
-  updateVcType
+  updateVcType,
 } from './vacation-type'
 export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
 
@@ -42,3 +43,11 @@ export { getListGrantedVc, insertGrantedVc }
 // dept
 import { getListDept } from './dept'
 export { getListDept }
+
+// certificates
+import {
+  getCertificateDetail,
+  getCertificateList,
+  createCertificate,
+} from './certificate'
+export { getCertificateDetail, getCertificateList, createCertificate }

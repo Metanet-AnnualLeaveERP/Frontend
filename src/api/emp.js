@@ -17,10 +17,37 @@ export const getManagerInfo = (id) => {
   })
 }
 
+
 // deptId 로 empList 리턴
 export const getListEmpByDeptId = (id) => {
   return api({
     url: `/admin/dept-emp-info/${id}`,
     method:'get',
+
+// 사용자 리스트
+export const getEmpList = (page, amount, keyword) => {
+  return api({
+    url:`/admin/emp?pageNum=${page}&amount=${amount}&keyword=${keyword}`,
+    // url:'/admin/emp',
+    method: 'get'
+  })
+}
+
+// 사용자 상세 정보
+export const getEmpInfo = (empId) => {
+  return api({
+    url:`/admin/emp/${empId}`,
+    method:'get'
+  })
+
+}
+
+// 사용자 정보 수정(관리자)
+export const modifyEmpInfoByAdmin = (data) => {
+  return api({
+    url : `/admin/emp/modify`,
+    method :'put',
+    data : data
+
   })
 }

@@ -25,7 +25,7 @@ const onClickLoginBtn = () => {
 const movePage = (role) => {
   switch (role) {
     case 'ROLE_ADMIN':
-      router.push({ name: '일정관리' })
+      router.push({ name: '사원관리' })
       break
     case 'ROLE_MGR':
       router.push({ name: '일정관리' })

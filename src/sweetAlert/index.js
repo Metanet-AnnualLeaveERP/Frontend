@@ -94,5 +94,19 @@ export const loadingAlert = () => {
     didOpen: () => {
     Swal.showLoading()
     }
+
+export const inputTextModal = async (title, text, label) => {
+  return await Swal.fire({
+    title: title,
+    text: text,
+    input: 'text',
+    inputLabel: label,
+    showCancelButton: true,
+    inputValidator: (value) => {
+      console.log(value)
+      if (!value) {
+        return value
+      }
+    },
   })
 }
