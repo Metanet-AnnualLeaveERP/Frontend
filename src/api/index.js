@@ -19,8 +19,8 @@ import { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, 
 export { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp}
 
 // user
-import { login, disableAccountByAdmin } from './user'
-export { login, disableAccountByAdmin }
+import { login, logout, disableAccountByAdmin } from './user'
+export { login, logout, disableAccountByAdmin }
 
 // vcTotal
 import { getVcRemainInfo } from './vctype-total'

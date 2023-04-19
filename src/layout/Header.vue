@@ -4,6 +4,9 @@ import { Switch } from '@headlessui/vue'
 import HeaderSearch from '../components/HeaderSearch.vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useStore } from 'vuex'
+import {logout} from "@/api";
+import {returnInfoAlert, failToast} from "@/sweetAlert";
+import router from "@/router";
 
 let store = useStore()
 
@@ -37,6 +40,17 @@ let colorModeSwitch = () => {
         isDarkMode.value = false
         console.log(isDarkMode.value)
     }
+}
+
+const signOut = async () => {
+  await logout().then((res) => {
+    if (res.status === 200) {
+      returnInfoAlert('로그아웃 되었습니다.');
+      router.push({name:'Home'})
+    } else {
+      failToast('잘못된 요청입니다.');
+    }
+  })
 }
 </script>
 
@@ -507,6 +521,7 @@ let colorModeSwitch = () => {
                                 ]"
                                 aria-label="Sign out"
                                 role="button"
+                                @click="signOut"
                             >
                                 Sign Out
                             </button>
