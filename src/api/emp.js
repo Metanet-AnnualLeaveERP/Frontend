@@ -22,7 +22,9 @@ export const getManagerInfo = (id) => {
 export const getListEmpByDeptId = (id) => {
   return api({
     url: `/admin/dept-emp-info/${id}`,
-    method:'get',
+    method: 'get',
+  })
+}
 
 // 사용자 리스트
 export const getEmpList = (page, amount, keyword) => {
@@ -30,7 +32,7 @@ export const getEmpList = (page, amount, keyword) => {
     url:`/admin/emp?pageNum=${page}&amount=${amount}&keyword=${keyword}`,
     // url:'/admin/emp',
     method: 'get'
-  })
+  });
 }
 
 // 사용자 상세 정보
@@ -50,4 +52,15 @@ export const modifyEmpInfoByAdmin = (data) => {
     data : data
 
   })
+
+}
+
+// 직원등록
+export const registerEmp = (data) => {
+  return api({
+    url : `/admin/emp/create`,
+    method :'post',
+    data : data
+  })
+
 }

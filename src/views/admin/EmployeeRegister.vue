@@ -1,24 +1,29 @@
 <template>
+  <div>
   <div style="margin: 2em 0;">
     <span class="text-xl mr-4">
-      <h1>{{ detail.name }}</h1>
+      <h1>직원등록</h1>
     </span>
   </div>
   <BaseCard>
     <div class="grid grid-cols-1 md:grid-cols-2 justify-items-center">
       <div class="w-full flex flex-col">
         <div class="m-4 gap-x-10 flex justify-start align-middle items-center">
-          <span class="text-xl mr-4">사번&nbsp;</span>
-          <input type="text" v-model="detail.userDto.empNum" :class="className.inputName" readonly disabled>
+          <span class="text-xl mr-4">이름&nbsp;</span>
+          <input type="text" v-model="detail.name" :class="className.inputName">
         </div>
-        <div class="m-4 gap-x-1 flex justify-start align-middle items-center">
-          <span class="text-xl mr-4">재직여부</span>
-          <input type="text" v-model="employmentStatus" :class="className.inputName" readonly disabled>
+        <div class="flex flex-col">
+          <div class="m-4 gap-x flex justify-between align-middle items-center">
+          <span class=" text-xl mr-4">전화번호&nbsp;</span>
+          <input type="text" v-model="detail.tel"
+                 placeholder="010-xxxx-xxxx" @blur="checkPhoneNumber" :class="className.inputName" >
+          </div>
+          <div v-if="showMessageHp" class="text-red-500 text-end mr-4">{{ messageHp }}</div>
         </div>
         <div class="m-4 gap-x-10 flex justify-between align-middle items-center">
           <span class="text-xl mr-4">직책&nbsp;</span>
           <div class="flex-1 relative inline-block w-full text-gray-700">
-            <select v-model="detail.deptDto.deptName" :class="['hidden']">
+            <select v-model="detail.position" :class="['hidden']">
               <option value="" disabled selected>직책 선택</option>
               <option value="팀장">팀장</option>
               <option value="사원">사원</option>
@@ -91,43 +96,41 @@
         </div>
       </div>
       <div class="w-full flex flex-col ">
-        <div class="m-4 gap-x-1 flex justify-between align-middle items-center">
-          <span class=" text-xl mr-4">전화번호&nbsp;</span>
-          <input type="text" v-model="detail.tel" :class="className.inputName" disabled>
+        <div class="m-4 flex gap-x-10 justify-between align-middle items-center">
+          <span class="text-xl mr-4">입사일</span>
+          <input type="date" v-model="detail.hireDate" :class="className.inputName">
         </div>
-        <div class="m-4 flex gap-x-2 justify-between align-middle items-center">
-          <span class="text-xl mr-4">입사일&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <input type="text" v-model="detail.hireDate" :class="className.inputName" disabled>
+        <div class="flex flex-col">
+          <div class="m-4 gap-x flex justify-between align-middle items-center">
+            <span class=" text-xl mr-4">개인이메일</span>
+            <input type="text" v-model="detail.pEmail"
+                   placeholder="example@gmail.com" @blur="checkEmail" :class="className.inputName" >
+          </div>
+          <div v-if="showMessageEmail" class="text-red-500 text-end mr-4">{{ messageEmail }}</div>
         </div>
-        <div class="m-4 flex gap-x-1 justify-between align-middle items-center">
-          <span class="text-xl mr-4">사내메일&nbsp;</span>
-          <input type="text" v-model="detail.pEmail" :class="className.inputName" disabled>
-        </div>
-        <div class="m-4 flex gap-x-1 justify-between align-middle items-center">
-          <span class="text-xl mr-4">개인메일&nbsp;</span>
-          <input type="text" v-model="detail.cEmail" :class="className.inputName" disabled>
+        <div class="m-4 gap-x-5 flex justify-start align-middle items-center">
+          <span class="text-xl mr-4">비밀번호</span>
+          <input type="text" v-model="detail.userDto.pwd" :class="className.inputName">
         </div>
       </div>
     </div>
   </BaseCard>
   <div class="flex mt-5 justify-end">
-    <BaseBtn class="bg-primary text-white hover:bg-blue-700" :md="true" @click="modifyInfo">수정하기</BaseBtn>
-    <BaseBtn class="bg-primary text-white ml-5 hover:bg-blue-700" :md="true" @click="disableAccount">비활성화</BaseBtn>
+    <BaseBtn class="bg-primary text-white hover:bg-blue-700" :md="true" @click="validate">등록하기</BaseBtn>
   </div>
-
+  </div>
 </template>
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import router from '@/router/index.js'
 import {useRoute} from "vue-router";
-import {getEmpInfo, modifyEmpInfoByAdmin, disableAccountByAdmin} from "@/api";
+import {registerEmp} from "@/api";
 import BaseCard from "@/components/Base/BaseCard.vue";
 import { failToast, returnInfoAlert } from '@/sweetAlert';
-
 const route = useRoute();
-const empId = route.params.id;
+
 const detail = ref({
-  empId: empId,
+  empId: "",
   name: "",
   hireDate: "",
   position: "",
@@ -139,16 +142,8 @@ const detail = ref({
   },
   userDto: {
     empNum: "",
-    enabled: ""
+    pwd:""
   },
-});
-
-const employmentStatus = ref(detail.value.userDto.enabled === 1 ? '재직중' : '퇴사');
-
-watch(() => detail.value.userDto.enabled, (newValue, oldValue) => {
-  if (newValue !== oldValue) {
-    employmentStatus.value = newValue === 1 ? '재직중' : '퇴사';
-  }
 });
 
 const isOpenDept = ref(false);
@@ -190,35 +185,39 @@ const selectOptionPosition = (option) => {
   toggleDropdownPosition();
 };
 
-onMounted(async () => {
-  console.log(empId);
-
-  await getEmpInfo(empId).then((res) => {
-    console.log(res.data);
-    detail.value = res.data;
-  });
-});
-
-const modifyInfo = async () => {
-  await modifyEmpInfoByAdmin({
-    empId : detail.value.empId,
-    position: detail.value.position,
-    deptDto: detail.value.deptDto
-  })
-      .then((res) => {
-        if (res.status === 200) {
-          returnInfoAlert('정보 수정완료!');
-          router.push({name:'사원관리'});
-        }
-      }).catch(() => {
-        failToast('정보 변경에 실패하였습니다. 다시 시도해주세요.');
-      })
+const validate = () => {
+  if (detail.value.name === '') {
+    failToast('이름을 입력하세요.')
+    return false;
+  }
+  if (!isValidPhoneNumber.value) {
+    failToast('휴대폰 번호를 확인하세요');
+    return false;
+  }
+  if (detail.value.position === '') {
+    failToast('직책을 입력하세요.');
+    return false;
+  }
+  if (detail.value.hireDate === '') {
+    failToast('입사일을 입력하세요.');
+    return false;
+  }
+  if (detail.value.pEmail === '') {
+    failToast('개인이메일을 입력하세요.');
+    return false;
+  }
+  if (detail.value.userDto.pwd === '') {
+    failToast('비밀번호를 입력하세요.');
+    return false;
+  }
+  addMember()
 }
 
-const disableAccount = async () => {
-  await disableAccountByAdmin({
+const addMember = async () => {
+  await registerEmp({
     empDto : {
       empId: detail.value.empId,
+      name: detail.value.name,
       hireDate: detail.value.hireDate,
       position: detail.value.position,
       pEmail: detail.value.pEmail,
@@ -227,19 +226,43 @@ const disableAccount = async () => {
       deptDto : detail.value.deptDto
     },
     userDto : {
-      empNum : detail.value.userDto.empNum
+      empNum : detail.value.userDto.empNum,
+      pwd : detail.value.userDto.pwd
     }
+  }).then((res) => {
+    if (res.status === 200) {
+      returnInfoAlert('등록 완료');
+      router.push({name:'사원관리'});
+    }
+  }).catch(() => {
+    failToast('직원등록에 실패하였습니다. 다시 시도해주세요.')
   })
-      .then((res) => {
-        if (res.status === 200) {
-          returnInfoAlert('비활성화 완료!');
-          router.push({name:'사원관리'});
-        }
-      }).catch(() => {
-        failToast('비활성화에 실패하였습니다. 다시 시도해주세요.');
-      })
 
 }
+
+
+const phoneNumberRegex = /^\d{3}-\d{3,4}-\d{4}$/;
+const isValidPhoneNumber = ref(false);
+const messageHp = ref('');
+const showMessageHp = ref(false);
+
+const checkPhoneNumber = () => {
+  isValidPhoneNumber.value = phoneNumberRegex.test(detail.value.tel);
+  showMessageHp.value = true;
+  messageHp.value = isValidPhoneNumber.value ? '' : '유효한 번호가 아닙니다.';
+}
+
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const isValidEmail = ref(false);
+const messageEmail = ref('');
+const showMessageEmail = ref(false);
+
+const checkEmail = () => {
+  isValidEmail.value = emailRegex.test(detail.value.pEmail);
+  showMessageEmail.value = true;
+  messageEmail.value = isValidEmail.value ? '' : '유효한 이메일이 아닙니다.';
+}
+
 const className = ref({
   inputName: "p-4 pl-10 text-sm text-gray-900 border border-gray-300\n" +
       "rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500\n" +
