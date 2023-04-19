@@ -66,7 +66,7 @@ const routes = [
           },
           // 휴가 취소 관련
           {
-            path: 'request/list',
+            path: 'cancel/list',
             name: '휴가취소내역',
             component: () => import('../views/vacations/CancelList.vue'),
           },
@@ -377,20 +377,20 @@ const router = createRouter({
 })
 
 // 현재 페이지 이름 설정
-router.beforeEach((to, from, next) => {
-  /* 권한은 로그인 시에만 부여되고 모든 서비스는 로그인한 유저에 한헤서만 접근 가능하다. */
-  const role = store.state.role
+// router.beforeEach((to, from, next) => {
+//   /* 권한은 로그인 시에만 부여되고 모든 서비스는 로그인한 유저에 한헤서만 접근 가능하다. */
+//   const role = store.state.role
 
-  // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
-  // console.log(to.meta.roles)
-  if (to.meta.roles != '' && !to.meta.roles.includes(role)) {
-    console.log('접근 권한이 없습니다.')
-    // 권한이 없는 유저는 403 에러 페이지로 보낸다
-    return next({ name: '404' })
-  } else {
-    return next()
-  }
-})
+//   // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
+//   // console.log(to.meta.roles)
+//   if (to.meta.roles != '' && !to.meta.roles.includes(role)) {
+//     console.log('접근 권한이 없습니다.')
+//     // 권한이 없는 유저는 403 에러 페이지로 보낸다
+//     return next({ name: '404' })
+//   } else {
+//     return next()
+//   }
+// })
 
 router.afterEach(() => {
   // Remove initial loading

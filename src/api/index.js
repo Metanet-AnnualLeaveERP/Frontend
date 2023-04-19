@@ -15,8 +15,20 @@ import {
 export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
 
 // EMP
-import { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin } from './emp'
-export { getMyInfo, getManagerInfo, getEmpList, getEmpInfo, modifyEmpInfoByAdmin}
+import {
+  getMyInfo,
+  getManagerInfo,
+  getEmpList,
+  getEmpInfo,
+  modifyEmpInfoByAdmin,
+} from './emp'
+export {
+  getMyInfo,
+  getManagerInfo,
+  getEmpList,
+  getEmpInfo,
+  modifyEmpInfoByAdmin,
+}
 
 // user
 import { login, disableAccountByAdmin } from './user'
@@ -46,3 +58,7 @@ import {
   createCertificate,
 } from './certificate'
 export { getCertificateDetail, getCertificateList, createCertificate }
+
+// 휴가 취소
+import { getCancelDetail, getCancelList, createCancel } from './vacation-cancel'
+export { getCancelDetail, getCancelList, createCancel }

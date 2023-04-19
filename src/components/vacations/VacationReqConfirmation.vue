@@ -1,13 +1,11 @@
 <script>
 import { onMounted, ref } from 'vue'
 import store from '@/store/index.js'
-import { successToast, inputTextModal } from '@/sweetAlert'
-import { createCertificate } from '@/api/index.js'
-import router from '@/router'
+import { getVcReqDetail } from '@/api/index.js'
 export default {
   props: {
-    item: {
-      type: Object,
+    id: {
+      // type: Number,
       required: true,
     },
   },
@@ -18,17 +16,25 @@ export default {
     const endDate = ref('')
     // 나의 상사
     const manager = store.state.mgr
+    const item = ref([])
+    const loading = ref(false)
 
-    onMounted(() => {
-      console.log(props.item)
-      const typeId = props.item.vcTypeDto.typeId
-      if (props.item.reqDays <= 1 && (typeId == 3 || typeId == 2)) {
+    onMounted(async () => {
+      await getVcReqDetail(props.id).then((res) => {
+        console.log(res.data)
+
+        item.value = res.data
+        loading.value = true
+      })
+
+      const typeId = item.value.vcTypeDto.typeId
+      if (item.value.reqDays <= 1 && (typeId == 3 || typeId == 2)) {
         alHalfType.value = true
       }
 
       // Date 객체로 변환
-      const start = new Date(props.item.startDate)
-      const end = new Date(props.item.endDate)
+      const start = new Date(item.value.startDate)
+      const end = new Date(item.value.endDate)
 
       // 월, 일을 두 자리 숫자로 표현
       const startMonth = String(start.getMonth() + 1).padStart(2, '0')
@@ -42,39 +48,21 @@ export default {
       endDate.value = `${start.getFullYear()}년 ${endMonth}월 ${endDay}일`
     })
 
-    const onClickIssue = async () => {
-      const title = '증명서 발급'
-      const text = '발급 목적을 입력해 주세요'
-      const inputLabel = 'ex) 인사팀 제출용, 개인 보관용 등'
-      const p = await inputTextModal(title, text, inputLabel)
-      const data = {
-        purpose: p.value,
-        vcReqDto: {
-          reqId: props.item.reqId,
-        },
-      }
-      if (p.value != null) {
-        await createCertificate(data).then(() => {
-          successToast('증명서 발급이 완료되었습니다!')
-          router.push({ name: '증명서내역' })
-        })
-      }
-    }
-
     return {
       alHalfType,
       startDate,
       endDate,
       manager,
-      onClickIssue,
+      // onClickIssue,
+      item,
+      loading,
     }
   },
 }
 </script>
-
 <template>
-  <div class="container mx-auto">
-    <div ref="pdfContent" class="text-center text-sm">
+  <div class="container mx-auto" v-if="loading">
+    <div class="text-center text-sm">
       <table
         class="__se_tbl"
         style="
@@ -108,7 +96,7 @@ export default {
               colspan="2"
               class="dext_table_border_t dext_table_border_r dext_table_border_b dext_table_border_l bg-white dark:bg-foreground dark:text-white"
             >
-              휴가 확인서
+              휴가 요청 확인서
             </td>
           </tr>
           <tr class="h-12">
@@ -523,14 +511,6 @@ export default {
           </tr>
         </tbody>
       </table>
-    </div>
-    <div class="flex justify-end mt-7">
-      <BaseBtn
-        class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        @click="onClickIssue"
-      >
-        증명서 발급
-      </BaseBtn>
     </div>
   </div>
 </template>
