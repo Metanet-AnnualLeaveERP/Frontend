@@ -1,9 +1,115 @@
 <template>
+  <div>
   <div class="container mx-auto text-center">
     <breadcrumbs parentTitle="사원 내역" subParentTitle="사원 관리" />
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12">
         <BaseCard>
+          <div class="flex flex-row-reverse items-center align-middle">
+          <div class="relative w-fit text-gray-600 search-bar mx-3 ">
+            <input
+                class="bg-purple-50 bg-gray-100 dark:bg-dark border-transparent h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
+                placeholder="이름검색"
+                v-model="keywordName"
+            />
+            <button
+                role="button"
+                class="absolute right-0 top-0 mt-2 mr-4 focus:outline-none"
+                @click="searchName"
+            >
+              <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-gray-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+              >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="m-4 gap-x-10 w-1/4">
+            <div class="relative text-gray-700">
+              <select v-model="keywordActive" :class="['hidden']" >
+                <option value="전체">전체</option>
+                <option value="재직자" selected>재직자</option>
+                <option value="퇴사자">퇴사자</option>
+                <!-- 추가적인 직책은 여기에 작성 -->
+              </select>
+              <div class="relative w-full grid grid-cols-1 right-0">
+                <div
+                    class="bg-white w-full  rounded-md shadow-md w-full border border-gray-300 px-3 py-2 text-gray-700 font-medium h-full cursor-pointer select-none"
+                    @click="toggleDropdown">
+                  <div class="flex items-center justify-between">
+                    <span v-if="keywordActive" class="text-base">{{ keywordActive }}</span>
+                    <span v-else class="text-gray-400 italic">전체</span>
+                    <svg class="w-5 h-5 fill-current text-gray-400" viewBox="0 0 20 20">
+                      <path d="M6 8l4 4 4-4"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div v-show="isOpen"
+                     class="absolute top-11 left-0 right-0 z-10 bg-white rounded-md shadow-md
+        border border-gray-300 px-3 py-2 text-gray-700 font-medium cursor-pointer">
+                  <div class="flex flex-col space-y-2">
+                    <option v-for="(option, index) in options" :value="option.value" :key="index"
+                            :class="['py-2', 'hover:bg-gray-100', 'cursor-pointer']"
+                            @click="selectOption(option)">
+                      {{ option.text }}
+                    </option>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="m-4 gap-x-10 flex justify-between align-middle items-center w-full">
+            <div class="flex-1 relative inline-block w-full text-gray-700">
+              <select v-model="keywordDept" :class="['hidden']">
+                <option value="전체" selected>부서 선택</option>
+                <option value="개발팀">개발팀</option>
+                <option value="인사팀">인사팀</option>
+                <option value="재무팀">재무팀</option>
+                <option value="디자인팀">디자인팀</option>
+                <option value="법무팀">법무팀</option>
+                <option value="IT팀">IT팀</option>
+                <option value="영상팀">영상팀</option>
+                <option value="서비스팀">서비스팀</option>
+                <option value="미래전략팀">미래전략팀</option>
+                <!-- 추가적인 부서는 여기에 작성 -->
+              </select>
+              <div class="relative w-1/4 grid grid-cols-1 right-0">
+                <div
+                    class="bg-white rounded-md shadow-md w-full border border-gray-300 px-3 py-2 text-gray-700 font-medium h-full cursor-pointer select-none"
+                    @click="toggleDropdownDept">
+                  <div class="flex items-center justify-between">
+                    <span v-if="keywordDept" class="text-base">{{ keywordDept }}</span>
+                    <span v-else class="text-gray-400 italic">부서 선택</span>
+                    <svg class="w-5 h-5 fill-current text-gray-400" viewBox="0 0 20 20">
+                      <path d="M6 8l4 4 4-4"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div v-show="isOpenDept"
+                     class="absolute top-11 left-0 right-0 z-10 bg-white rounded-md shadow-md border border-gray-300 px-3 py-2 text-gray-700 font-medium cursor-pointer">
+                  <div class="flex flex-col space-y-2">
+                    <option v-for="(option, index) in optionsDept" :value="option.value" :key="index"
+                            :class="['py-2', 'hover:bg-gray-100', 'cursor-pointer']" @click="selectOptionDept(option)">
+                      {{ option.text }}
+                    </option>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="grid grid-cols-1 justify-items-end mb-5">
+            <BaseBtn class="bg-primary text-white hover:bg-blue-700" :md="true" @click="addMember">직원등록</BaseBtn>
+          </div>
           <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
             <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
               <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
@@ -143,12 +249,15 @@
                     </div>
                   </div>
                 </nav>
+
               </div>
+
             </div>
           </div>
         </BaseCard>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -156,37 +265,99 @@
 import {getEmpList, } from '@/api'
 import {onMounted, ref} from 'vue'
 import router from '@/router/index.js'
+import { failToast } from '@/sweetAlert';
+import HeaderSearch from '@/components/HeaderSearch.vue'
 
 const empList = ref([]);
 const pagination = ref({});
 const currentPage = ref(1);
+const keywordActive = ref('');
+const keywordName = ref('');
 const keyword = ref('');
+const keywordDept = ref('');
+const isOpenDept = ref(false);
+const optionsDept = [
+  {value: "전체", text: "전체"},
+  {value: "개발팀", text: "개발팀"},
+  {value: "인사팀", text: "인사팀"},
+  {value: "재무팀", text: "재무팀"},
+  {value: "영업팀", text: "영업팀"},
+  {value: "디지인팀", text: "디지인팀"},
+  {value: "법무팀", text: "법무팀"},
+  {value: "IT팀", text: "IT팀"},
+  {value: "영상팀", text: "영상팀"},
+  {value: "서비스팀", text: "서비스팀"},
+  {value: "미래전략팀", text: "미래전략팀"},
+];
+const isOpen = ref(false);
+const options = [
+  {value: "전체", text: "전체"},
+  {value: "재직자", text: "재직자"},
+  {value: "퇴사자", text: "퇴사자"}
+];
+
+const toggleDropdown = () => {
+  isOpenDept.value = false;
+  isOpen.value = !isOpen.value;
+};
+
+const selectOption = (option) => {
+  keywordActive.value = option.value;
+  toggleDropdown();
+  getList(currentPage.value);
+};
+
 onMounted(() => {
-  getList(1)
+  keywordActive.value = '재직자';
+  keywordDept.value = '전체';
+  getList(1);
 });
 
+const toggleDropdownDept = () => {
+  isOpen.value = false;
+  isOpenDept.value = !isOpenDept.value;
+};
+
+const selectOptionDept = (option) => {
+  keywordDept.value = option.value;
+  toggleDropdownDept();
+  getList(currentPage.value)
+};
+
+const searchName = () => {
+  getList(currentPage.value);
+}
 const getList = async (page) => {
   // if (page > pagination.value.endPage || page < pagination.value.startPage) {
   //   return ;
   // }
   currentPage.value = page;
-
+  keyword.value = keywordDept.value + ',';
+  if (keywordName.value === '') {
+    keyword.value += '이름,';
+  } else {
+    keyword.value += keywordName.value + ',';
+  }
+  keyword.value += keywordActive.value;
   await getEmpList(page, 10, keyword.value)
       .then((res) => {
-        console.log(res.data.empList)
-
         empList.value = res.data.empList;
         pagination.value = res.data.paging;
 
-      })
-      .catch(() => {
+      }).catch(() => {
         failToast('데이터 로딩에 실패했습니다.')
       });
+
 }
 
 const onClickView = (empId) => {
   router.push({ name: '사원상세', params: { id:empId } })
 }
+
+const addMember = () => {
+  router.push({name: '직원등록'})
+}
+
 
 </script>
 

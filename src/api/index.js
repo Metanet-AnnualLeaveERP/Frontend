@@ -19,20 +19,24 @@ import {
   getMyInfo,
   getManagerInfo,
   getEmpList,
+  getListEmpByDeptId,
   getEmpInfo,
   modifyEmpInfoByAdmin,
+  registerEmp,
 } from './emp'
 export {
   getMyInfo,
   getManagerInfo,
   getEmpList,
+  getListEmpByDeptId,
   getEmpInfo,
   modifyEmpInfoByAdmin,
+  registerEmp,
 }
 
 // user
-import { login, disableAccountByAdmin } from './user'
-export { login, disableAccountByAdmin }
+import { login, logout, disableAccountByAdmin } from './user'
+export { login, logout, disableAccountByAdmin }
 
 // vcTotal
 import { getVcRemainInfo } from './vctype-total'
@@ -48,8 +52,12 @@ import {
 export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
 
 // grantedVc
-import { getListGrantedVc } from './vacation-granted'
-export { getListGrantedVc }
+import { getListGrantedVc, insertGrantedVc } from './vacation-granted'
+export { getListGrantedVc, insertGrantedVc }
+
+// dept
+import { getListDept } from './dept'
+export { getListDept }
 
 // certificates
 import {

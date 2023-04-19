@@ -18,7 +18,7 @@ export const infoAlert = (text) => {
 }
 
 export const successToast = async (text) => {
-  await Swal.fire({
+  return await Swal.fire({
     icon: 'success',
     text: text,
     showConfirmButton: false,
@@ -83,6 +83,17 @@ export const showComponentInModal = async (title, component) => {
     willClose: () => {
       app.unmount()
     },
+  })
+}
+
+export const loadingAlert = () => {
+  return Swal.fire({
+    title: '요청 중',
+    html: '잠시만 기다려주세요...',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading()
+    }
   })
 }
 
