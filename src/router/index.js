@@ -127,6 +127,14 @@ const routes = [
             component: () => import('@/views/admin/EmployeeList.vue'),
           },
           {
+            path:'vacations/:id',
+            name:'관리자결재상세',
+            component: ()=>import('@/views/admin/vacation_manage/RequestVcDetail.vue'),
+            meta:{
+              roles:['ROLE_MGR']
+            }
+          },
+          {
             path: 'employee/detail/:id',
             name: '사원상세',
             component: () => import('@/views/admin/EmployeeDetail.vue'),
@@ -154,7 +162,28 @@ const routes = [
             component: () =>
               import('@/views/admin/vacation_manage/RequestVcList.vue'),
           },
+          {
+            path: 'vacation_manage/request/cancel/:id',
+            name: '휴가취소상세',
+            component: ()=> import('@/views/admin/vacation_manage/CancelVcDetail.vue')
+
+          }
         ],
+      },
+      {
+        path: '/employee',
+        name: 'employeeMain',
+        component: () => import('@/views/employee/index.vue'),
+        meta: {
+          roles: ['ROLE_EMP', 'ROLE_MANAGER'],
+        },
+        children: [
+          {
+            path: 'myInfo',
+            name: '내정보',
+            component: () => import('@/views/employee/myInfo.vue'),
+          }
+        ]
       },
       {
         path: '/dashboards',

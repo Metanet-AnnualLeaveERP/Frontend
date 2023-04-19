@@ -21,6 +21,7 @@ api.interceptors.response.use(
         errorAlert('등록되지 않은 정보입니다.')
         break
       case 403:
+        console.log(error)
         errorAlert('접근 권한이 없습니다.')
         break
       case 404:

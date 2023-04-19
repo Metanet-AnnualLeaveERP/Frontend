@@ -10,15 +10,19 @@ import {
   createRequest,
   getVcReqList,
   getVcReqDetail,
+  getTeamApprovalList,
   getMyTeamSchedule,
   getEntireRemainVcTo,
+  approvalProcess,
 } from './vacation-request'
 export {
   createRequest,
   getVcReqList,
   getVcReqDetail,
+  getTeamApprovalList,
   getMyTeamSchedule,
   getEntireRemainVcTo,
+  approvalProcess,
 }
 
 // EMP
@@ -30,6 +34,7 @@ import {
   getEmpInfo,
   modifyEmpInfoByAdmin,
   registerEmp,
+  modifyEmpInfo,
 } from './emp'
 export {
   getMyInfo,
@@ -39,6 +44,7 @@ export {
   getEmpInfo,
   modifyEmpInfoByAdmin,
   registerEmp,
+  modifyEmpInfo,
 }
 
 // user
@@ -75,5 +81,17 @@ import {
 export { getCertificateDetail, getCertificateList, createCertificate }
 
 // 휴가 취소
-import { getCancelDetail, getCancelList, createCancel } from './vacation-cancel'
-export { getCancelDetail, getCancelList, createCancel }
+import {
+  getCancelDetail,
+  getCancelList,
+  createCancel,
+  getCancelApproval,
+  getCancelApprovalList,
+} from './vacation-cancel'
+export {
+  getCancelDetail,
+  getCancelList,
+  createCancel,
+  getCancelApproval,
+  getCancelApprovalList,
+}

@@ -28,12 +28,19 @@ export const getVcReqList = (p, pno, a) => {
 
 // 휴가 신청 하나 상세 조회
 export const getVcReqDetail = (id) => {
+  console.log(id)
   return api({
     url: `/vacations/${id}`,
     method: 'get',
   })
 }
 
+export const getTeamApprovalList = (cri) => {
+  return api({
+    url: `/manager/vacations/approval?pageNum=${cri.pageNum}&amount=10&keyword=${cri.keyword}`,
+    method: 'GET',
+  })
+}
 // 팀원 휴가 승인내역 조회 (캘린더용)
 export const getMyTeamSchedule = () => {
   return api({
@@ -47,5 +54,17 @@ export const getEntireRemainVcTo = () => {
   return api({
     url: '/vacations/remain-to',
     method: 'get',
+  })
+}
+
+export const approvalProcess = (reqId, status, comment = null) => {
+  console.log(reqId, status, comment)
+  return api({
+    url: `/manager/vacations/confirm/${reqId}`,
+    params: {
+      status: status,
+      comment: comment,
+    },
+    method: 'PUT',
   })
 }
