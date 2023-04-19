@@ -88,7 +88,7 @@ const routes = [
         name: 'AdminMain',
         component: () => import('@/views/admin/index.vue'),
         meta: {
-          roles: ['ROLE_ADMIN']
+          roles: ['ROLE_MGR']
         },
         children: [
           {
@@ -99,7 +99,10 @@ const routes = [
           {
             path:'vacations/:id',
             name:'관리자결재상세',
-            component: ()=>import('@/views/admin/vacation_manage/RequestVcDetail.vue')
+            component: ()=>import('@/views/admin/vacation_manage/RequestVcDetail.vue'),
+            meta:{
+              roles:['ROLE_MGR']
+            }
           },
           {
             path: 'employee',
@@ -121,6 +124,12 @@ const routes = [
             name: '휴가요청관리',
             component: () => import('@/views/admin/vacation_manage/RequestVcList.vue')
           },
+          {
+            path: 'vacation_manage/request/cancel/:id',
+            name: '휴가취소상세',
+            component: ()=> import('@/views/admin/vacation_manage/CancelVcDetail.vue')
+
+          }
 
         ],
       },

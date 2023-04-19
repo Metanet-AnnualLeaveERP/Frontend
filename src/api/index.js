@@ -41,3 +41,8 @@ export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType}
 // grantedVc
 import { getListGrantedVc } from './vacation-granted'
 export { getListGrantedVc }
+
+
+//CancelApproval
+import {getCancelApproval,getCancelApprovalList} from "@/api/vacation-cancel";
+export {getCancelApproval,getCancelApprovalList}
