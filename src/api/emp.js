@@ -17,6 +17,13 @@ export const getManagerInfo = (id) => {
   })
 }
 
+
+// deptId 로 empList 리턴
+export const getListEmpByDeptId = (id) => {
+  return api({
+    url: `/admin/dept-emp-info/${id}`,
+    method:'get',
+
 // 사용자 리스트
 export const getEmpList = (page, amount, keyword) => {
   return api({
@@ -41,6 +48,7 @@ export const modifyEmpInfoByAdmin = (data) => {
     url : `/admin/emp/modify`,
     method :'put',
     data : data
+
   })
 
 }
