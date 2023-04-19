@@ -5,7 +5,7 @@ import router from '@/router/index.js'
 import {approvalProcess, getVcReqDetail} from "@/api";
 import BaseBtn from "@/components/Base/BaseBtn.vue";
 import {setStatusStyle} from "@/views/admin/vacation_manage/StatusStyle";
-import {checkConfirm} from "@/sweetAlert";
+import {checkConfirm, checkInfo, successToast} from "@/sweetAlert";
 
 const route = useRoute();
 const reqId = route.params.id;
@@ -17,30 +17,45 @@ getVcReqDetail(reqId).then((res) => {
   res.data.reqDate = res.data.reqDate.replaceAll("-", '.').slice(2);
   req.value = res.data
 })
-const warning= ref();
-const approvalCancel = (data) => {
+const warning = ref();
+const approvalCancel = () => {
   const size = comments.value.length;
+  const infoData = {
+    icon: "info",
+    title: "휴가반려 처리",
+    text: "정말로 휴가를 반려하시겠습니까?\n" +
+        "반려시 되돌릴 수 없습니다.",
+    cancelText: "돌아가기",
+    confirmText: "반려하기",
+  }
   if (size >= 10 && size <= 100) {
-    approvalProcess(req.value?.reqId, '반려', comments.value).then((res) => {
-      console.log(res)
+    checkInfo(infoData).then((check) => {
+      if (check.isConfirmed) {
+        approvalProcess(reqId, '반려', comments.value).then((res) => {
+          console.log(res)
+        })
+      }
     })
+
   } else {
     warning.value = true;
   }
 }
-const onChangeText=()=>{
-  warning.value=false;
-}
 const approvalSuccess = () => {
   checkConfirm("휴가요청 처리", "휴가 요청을 처리하시겠습니까?").then((data) => {
-    approvalProcess(req.value?.reqId, '승인', '1').then((res) => {
-      console.log(res)
-    })
+    if (data.isConfirmed) {
+      approvalProcess(reqId, '승인', '').then((res) => {
+        successToast(res.data)
+      })
+    }
   })
 }
 // 돌아가기
 const onClickBackBtn = () => {
   router.go(-1)
+}
+const onChangeText = () => {
+  warning.value = false;
 }
 </script>
 
@@ -66,7 +81,7 @@ const onClickBackBtn = () => {
               No. {{ req?.reqId }}
             </div>
             <div class="text-1xl lg:text-1xl ">
-              [요청일자] {{ req.reqDate }}
+              [요청일자] {{ req?.reqDate }}
             </div>
             <div>
               <base-btn :class="setStatusStyle(req?.status)"

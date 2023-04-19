@@ -72,12 +72,12 @@ const selectOptionPosition = (option) => {
   <div>
   <TabGroup>
     <TabList class="bg-primary rounded-lg pl-3 py-1">
-      <Tab class="mr-12 bg-transparent hover:text-black text-white text-2xl"
-           :class=" check ? 'bg-purple-200 rounded-sm' : null" @click="check = true">
-        휴가 내역
+      <Tab class="mr-12 hover:text-black text-white text-2xl py-1 "
+           :class=" check ? 'bg-white text-black rounded-md' : 'bg-transparent'" @click="check = true">
+        결재 요청 리스트
       </Tab>
-      <Tab class="mr-12  bg-transparent  hover:text-black text-white text-2xl"
-           :class="check ? null : 'bg-purple-200 rounded-sm'" @click="check = false">결재내역
+      <Tab class="mr-12 hover:text-black text-white text-2xl py-1"
+           :class="check ? 'bg-transparent' : 'bg-white text-black rounded-md'  " @click="check = false">취소 요청 리스트
       </Tab>
     </TabList>
     <TabPanels class="mt-4">

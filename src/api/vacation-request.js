@@ -53,7 +53,6 @@ export const getMyTeamSchedule = () => {
 
 export const approvalProcess=(reqId,status,comment=null)=>{
   console.log(reqId,status,comment)
-  // return null;
   return api({
     url:`/manager/vacations/confirm/${reqId}`,
     params:{
