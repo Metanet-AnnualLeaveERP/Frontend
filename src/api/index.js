@@ -11,8 +11,15 @@ import {
   getVcReqList,
   getVcReqDetail,
   getMyTeamSchedule,
+  getEntireRemainVcTo,
 } from './vacation-request'
-export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
+export {
+  createRequest,
+  getVcReqList,
+  getVcReqDetail,
+  getMyTeamSchedule,
+  getEntireRemainVcTo,
+}
 
 // EMP
 import {

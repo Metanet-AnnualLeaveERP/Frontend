@@ -41,3 +41,11 @@ export const getMyTeamSchedule = () => {
     method: 'get',
   })
 }
+
+/*부서별 잔여 TO (모든 팀원의 휴가들을 날짜별로 to에서 차감)*/
+export const getEntireRemainVcTo = () => {
+  return api({
+    url: '/vacations/remain-to',
+    method: 'get',
+  })
+}
