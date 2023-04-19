@@ -328,9 +328,9 @@ const searchName = () => {
   getList(currentPage.value);
 }
 const getList = async (page) => {
-  if (page > pagination.value.endPage || page < pagination.value.startPage) {
-    return ;
-  }
+  // if (page > pagination.value.endPage || page < pagination.value.startPage) {
+  //   return ;
+  // }
   currentPage.value = page;
   keyword.value = keywordDept.value + ',';
   if (keywordName.value === '') {

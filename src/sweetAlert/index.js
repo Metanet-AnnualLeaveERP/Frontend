@@ -92,8 +92,10 @@ export const loadingAlert = () => {
     html: '잠시만 기다려주세요...',
     allowOutsideClick: false,
     didOpen: () => {
-    Swal.showLoading()
+      Swal.showLoading()
     }
+  })
+}
 
 export const inputTextModal = async (title, text, label) => {
   return await Swal.fire({
