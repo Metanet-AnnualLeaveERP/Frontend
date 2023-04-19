@@ -157,6 +157,21 @@ const routes = [
         ],
       },
       {
+        path: '/employee',
+        name: 'employeeMain',
+        component: () => import('@/views/employee/index.vue'),
+        meta: {
+          roles: ['ROLE_EMP', 'ROLE_MANAGER'],
+        },
+        children: [
+          {
+            path: 'myInfo',
+            name: '내정보',
+            component: () => import('@/views/employee/myInfo.vue'),
+          }
+        ]
+      },
+      {
         path: '/dashboards',
         name: 'Dashboards',
         component: () => import('../views/dashboards/index.vue'),

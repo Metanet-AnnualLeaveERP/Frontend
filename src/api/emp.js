@@ -38,7 +38,7 @@ export const getEmpList = (page, amount, keyword) => {
 // 사용자 상세 정보
 export const getEmpInfo = (empId) => {
   return api({
-    url:`/admin/emp/${empId}`,
+    url:`/emp/${empId}`,
     method:'get'
   })
 
@@ -62,5 +62,13 @@ export const registerEmp = (data) => {
     method :'post',
     data : data
   })
+}
 
+// 사용자 정보 수정(사용자)
+export const modifyEmpInfo = (data) => {
+  return api({
+    url : '/emp/modify',
+    method : 'put',
+    data : data
+  })
 }
