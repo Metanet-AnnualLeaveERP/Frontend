@@ -181,7 +181,7 @@ import {
 } from '@/api/index.js'
 import store from '@/store/index.js'
 import { showComponentInModal } from '@/sweetAlert'
-import VacationStatistics from '@/components/VacationStatistics.vue'
+import VacationStatistics from '@/components/vacations/VacationStatistics.vue'
 
 const todayDate = computed(() => {
   const today = new Date()

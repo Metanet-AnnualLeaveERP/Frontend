@@ -60,8 +60,8 @@ export const returnInfoAlert = (text, title) => {
   })
 }
 
-export const checkConfirm = (title, content) => {
-  return Swal.fire({
+export const checkConfirm = async (title, content) => {
+  return await Swal.fire({
     icon: 'question',
     text: content,
     showCancelButton: true,

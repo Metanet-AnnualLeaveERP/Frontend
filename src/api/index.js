@@ -18,8 +18,8 @@ export { createRequest,getVcReqList, getVcReqDetail ,getTeamApprovalList,getMyTe
 
 
 // EMP
-import { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp } from './emp'
-export { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp}
+import { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp,modifyEmpInfo } from './emp'
+export { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp,modifyEmpInfo}
 
 // user
 import { login, logout, disableAccountByAdmin } from './user'
@@ -54,7 +54,6 @@ import {
 } from './certificate'
 export { getCertificateDetail, getCertificateList, createCertificate }
 
-
-//CancelApproval
-import {getCancelApproval,getCancelApprovalList} from "@/api/vacation-cancel";
-export {getCancelApproval,getCancelApprovalList}
+// 휴가 취소
+import { getCancelDetail, getCancelList, createCancel,getCancelApproval,getCancelApprovalList } from './vacation-cancel'
+export { getCancelDetail, getCancelList, createCancel,getCancelApproval,getCancelApprovalList }
