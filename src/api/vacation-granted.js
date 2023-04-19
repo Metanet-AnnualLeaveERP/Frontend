@@ -31,7 +31,7 @@ export const insertGrantedVc = (data) => {
 }
 
 // 휴가부여 삭제
-export const deleteGrnatedVc = (id) => {
+export const deleteGrantedVc = (id) => {
   return api({
     url:`/admin/vacations/granted/${id}`,
     method:'delete',

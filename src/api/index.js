@@ -40,9 +40,9 @@ export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
 import { getListGrantedVc, 
   insertGrantedVc,
   getGrantedVcDetail,
-  deleteGrnatedVc
+  deleteGrantedVc
  } from './vacation-granted'
-export { getListGrantedVc, insertGrantedVc, getGrantedVcDetail, deleteGrnatedVc }
+export { getListGrantedVc, insertGrantedVc, getGrantedVcDetail, deleteGrantedVc }
 
 // dept
 import { getListDept } from './dept'

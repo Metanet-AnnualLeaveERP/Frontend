@@ -1,10 +1,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getGrantedVcDetail, deleteGrantedVc } from '@/api'
+import { getGrantedVcDetail, deleteGrantedVc} from '@/api'
 import router from '@/router/index.js'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import { checkConfirm } from '@/sweetAlert'
+import { checkConfirm, successToast } from '@/sweetAlert'
 
 const route = useRoute()
 const gvId = route.params.id
@@ -25,9 +25,22 @@ const onClickBackBtn = () => {
 }
 
 // 삭제하기
-// const onclickDeleteBtn = () => {
-//   deleteGrantedVc(gvId)
-// }
+let confirmFlag = null;
+const onClickDeleteBtn = async () => {
+  confirmFlag = await checkConfirm('해당 내역을 삭제할까요?', 
+  '삭제 시엔 부여일수만큼 전부 삭제됩니다!')
+  console.log(confirmFlag.isConfirmed)
+  if(confirmFlag == null){
+    return;
+  } else if(confirmFlag.isConfirmed){
+    deleteGrantedVc(gvId).then( (res => {
+      console.log(res)
+      successToast('삭제가 성공하였습니다.')
+      router.go(-1)
+    }))
+  }
+}
+
 </script>
 <template>
   <div class="container mx-auto max-w-screen-lg w-2/5">
@@ -93,7 +106,7 @@ const onClickBackBtn = () => {
             </BaseBtn>
             <BaseBtn 
               class="text-white bg-danger mr-2"
-              @click="onclickDeleteBtn"
+              @click="onClickDeleteBtn"
               > 부여내역삭제 </BaseBtn>
             <!-- <BaseBtn class="bg-success text-white mr-2"> 증명서 출력 </BaseBtn> -->
             <!-- 시간 나면... -->

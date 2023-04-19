@@ -262,7 +262,7 @@ const typeData = ref({
   description: '',
 })
 
-// 조회내역 출력
+// 휴가타입 출력
 onMounted(() => {
   getList(1)
 })
