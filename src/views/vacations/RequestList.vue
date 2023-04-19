@@ -1,5 +1,4 @@
 <script setup>
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import { getVcReqList } from '@/api/index.js'
 import store from '@/store/index.js'
 import { onMounted, ref } from 'vue'
@@ -67,7 +66,6 @@ const onClickItem = (id) => {
 
 <template>
   <div class="container mx-auto text-center">
-    <breadcrumbs parentTitle="휴가 신청 내역" subParentTitle="휴가 관리" />
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12">
         <BaseCard>

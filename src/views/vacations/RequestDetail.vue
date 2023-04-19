@@ -2,19 +2,20 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router/index.js'
-import { getVcReqDetail, download } from '@/api'
-import VacationReqConfirmation from '@/components/VacationReqConfirmation.vue'
-import { successToast } from '@/sweetAlert'
+import { getVcReqDetail, download, createCertificate } from '@/api'
+import VacationReqConfirmation from '@/components/vacations/VacationReqConfirmation.vue'
+import { successToast, inputTextModal } from '@/sweetAlert'
+import store from '@/store'
 
 const route = useRoute()
 const reqId = route.params.id
 const detail = ref({})
-const detailLoaded = ref(false)
+const loading = ref(false)
 
 onMounted(async () => {
   await getVcReqDetail(reqId).then((res) => {
     // console.log(res.data)
-    detailLoaded.value = true
+    loading.value = true
     detail.value = res.data
   })
 })
@@ -61,6 +62,29 @@ const onClickDownloadBtn = async () => {
   })
 }
 
+// 증명서 발급
+const onClickIssue = async () => {
+  const title = '휴가 요청 증명서 발급'
+  const text = '발급 목적을 입력해 주세요'
+  const inputLabel = 'ex) 인사팀 제출용, 개인 보관용 등'
+  const p = await inputTextModal(title, text, inputLabel)
+  const data = {
+    purpose: p.value,
+    vcReqDto: {
+      reqId: detail.value.reqId,
+    },
+    empDto: {
+      empId: store.state.emp.empId,
+    },
+  }
+  if (p.value != null) {
+    await createCertificate(data).then(async () => {
+      await successToast('증명서 발급이 완료되었습니다!')
+      router.push({ name: '증명서내역' })
+    })
+  }
+}
+
 // 돌아가기
 const onClickBackBtn = () => {
   router.go(-1)
@@ -71,8 +95,8 @@ const onClickBackBtn = () => {
   <div>
     <BaseCard>
       <!-- axios response 후 props 넘기기 위해 v-if 설정  -->
-      <div v-if="detailLoaded">
-        <VacationReqConfirmation :item="detail" />
+      <div v-if="loading">
+        <VacationReqConfirmation :id="reqId" />
       </div>
     </BaseCard>
     <div class="flex justify-end mt-5">
@@ -82,6 +106,12 @@ const onClickBackBtn = () => {
         @click="onClickDownloadBtn"
       >
         첨부파일 다운로드
+      </BaseBtn>
+      <BaseBtn
+        class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        @click="onClickIssue"
+      >
+        증명서 발급
       </BaseBtn>
       <BaseBtn
         class="mr-3 text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
