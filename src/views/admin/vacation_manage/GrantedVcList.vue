@@ -118,6 +118,7 @@
                       class="hover:bg-gray-100 cursor-pointer dark:hover:bg-dark"
                       v-for="(item, index) in list"
                       :key="index"
+                      @click="onClickItem(item.vcId)"
                     >
                       <td style="min-width: 100px" class="py-5 px-4">
                         {{ item.vcId }}
@@ -418,10 +419,12 @@ import {
 } from '@/api/index.js'
 import { onMounted, ref } from 'vue'
 import { successToast, loadingAlert, failToast } from '@/sweetAlert'
+import router from '@/router/index.js'
 
 // for TapGroup
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+
 let categories = ref({
   연차휴가: [
     {
@@ -540,6 +543,12 @@ const getVcType = async () => {
     const filteredList = res.data.filter((item) => item.typeName !== '연차')
     vcTypeList.value = filteredList // 연차 제외한 항목만 선택리스트에 담음
     gvData.value.vcTypeDto.typeId = vcTypeList.value[0].typeId // 초기값
+  })
+}
+
+// 상세페이지 이동
+const onClickItem = (id) => {
+  router.push({ name: '휴가부여상세', params: { id:id}
   })
 }
 </script>

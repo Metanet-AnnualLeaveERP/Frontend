@@ -93,7 +93,9 @@ export const loadingAlert = () => {
     allowOutsideClick: false,
     didOpen: () => {
     Swal.showLoading()
-    }
+    },
+  })
+}
 
 export const inputTextModal = async (title, text, label) => {
   return await Swal.fire({

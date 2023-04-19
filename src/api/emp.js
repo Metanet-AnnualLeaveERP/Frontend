@@ -23,6 +23,8 @@ export const getListEmpByDeptId = (id) => {
   return api({
     url: `/admin/dept-emp-info/${id}`,
     method:'get',
+  })
+}
 
 // 사용자 리스트
 export const getEmpList = (page, amount, keyword) => {

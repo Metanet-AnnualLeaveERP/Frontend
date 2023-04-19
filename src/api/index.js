@@ -37,8 +37,12 @@ import {
 export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
 
 // grantedVc
-import { getListGrantedVc, insertGrantedVc } from './vacation-granted'
-export { getListGrantedVc, insertGrantedVc }
+import { getListGrantedVc, 
+  insertGrantedVc,
+  getGrantedVcDetail,
+  deleteGrnatedVc
+ } from './vacation-granted'
+export { getListGrantedVc, insertGrantedVc, getGrantedVcDetail, deleteGrnatedVc }
 
 // dept
 import { getListDept } from './dept'
