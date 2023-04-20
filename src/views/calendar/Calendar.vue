@@ -243,14 +243,16 @@ onMounted(async () => {
     list.forEach((e) => {
       // console.log(e)
       const id = '1' + Math.random().toString(36).substring(2, 11) // gives an random id
-      state.items.push({
-        id: id,
-        startDate: e.startDate,
-        endDate: e.endDate,
-        title: e.vcTypeDto.typeName,
-        tooltip: 'mine',
-        classes: ['my-vacation'],
-      })
+      if (e.status != '취소') {
+        state.items.push({
+          id: id,
+          startDate: e.startDate,
+          endDate: e.endDate,
+          title: e.vcTypeDto.typeName,
+          tooltip: 'mine',
+          classes: ['my-vacation'],
+        })
+      }
     })
   })
 

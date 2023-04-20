@@ -271,14 +271,9 @@ const reqData = reactive({
   empDto: {
     empId: store.state.emp.empId,
   },
-  // filePath: null,
-  // empId: null,
 })
 
 const loading = ref(false)
-
-// 잔여 TO
-// const remainVcTo = ref([])
 
 // 휴가 유형
 const vcTypeNames = ref([])
@@ -332,7 +327,7 @@ watch(
     // 연차
     if (newValue == 1) {
       selectedVcType.value = '연차'
-      remainDays.value = vcTypeRemains.value.annual.remainDays
+      remainDays.value = vcTypeRemains?.value?.annual?.remainDays
     } else {
       vcTypeRemains.value.reward.forEach((e) => {
         if (newValue == e.vcTypeDto.typeId) {
