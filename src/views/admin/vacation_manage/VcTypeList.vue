@@ -92,7 +92,6 @@
                       </td>
                       <td style="min-width: 100px" class="py-5">
                         <span v-if="item.description">{{
-
                           item.description
                         }}</span>
                         <span v-else>-</span>
@@ -196,14 +195,17 @@
               <div>
                 <div class="mt-2 space-y-6">
                   <input
+                    v-model="typeData.maxGrantedDays"
                     type="text"
                     name="region"
                     id="region"
                     autocomplete="address-level1"
-                    class=" rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
-                <span class="text-sm text-gray-400">*미입력 시 기본값은 365일입니다</span>
+                <span class="text-sm text-gray-400"
+                  >*미입력 시 기본값은 365일입니다</span
+                >
               </div>
             </fieldset>
 
@@ -268,14 +270,10 @@ onMounted(() => {
   getList(1)
 })
 const getList = async () => {
-  await getVcTypeList()
-    .then((res) => {
-      console.log(res.data)
-      list.value = res.data
-    })
-    .catch(() => {
-      failToast('데이터 로딩에 실패했습니다.')
-    })
+  await getVcTypeList().then((res) => {
+    console.log(res.data)
+    list.value = res.data
+  })
 }
 
 // 신청
@@ -284,11 +282,8 @@ const onSubmit = () => {
   insertVcTypeList(typeData.value).then((res) => {
     console.log(res)
     successToast('휴가유형 생성이 완료되었습니다.')
-  }).catch(() => {
-      failToast('오류가 발생했습니다.')
-    })
+  })
 }
 </script>
 
-<style>
-</style>
+<style></style>
