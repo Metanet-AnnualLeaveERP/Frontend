@@ -35,6 +35,7 @@ const onClickItem = (id) => {
 </script>
 
 <template>
+<div>
   <div class="container mx-auto text-center">
     <breadcrumbs
       parentTitle="증명서 발급 내역"
@@ -195,4 +196,5 @@ const onClickItem = (id) => {
       </div>
     </div>
   </div>
+</div>
 </template>

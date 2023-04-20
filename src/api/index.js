@@ -54,3 +54,9 @@ import {
   createCertificate,
 } from './certificate'
 export { getCertificateDetail, getCertificateList, createCertificate }
+
+// anp-doc
+import{ getListAnpDoc,
+  getAnpDocDetail 
+} from './anp-doc'
+export { getListAnpDoc, getAnpDocDetail }
