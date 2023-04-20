@@ -27,7 +27,7 @@
                   </BaseBtn>
                 </div>
               </div>
-              <TabGroup>
+              <!-- <TabGroup>
                 <TabList class="flex p-1 space-x-1 dark:bg-dark rounded-xl">
                   <Tab
                     v-for="category in Object.keys(categories)"
@@ -74,7 +74,7 @@
                     </ul>
                   </TabPanel>
                 </TabPanels>
-              </TabGroup>
+              </TabGroup> -->
               <div
                 class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
               >
@@ -118,6 +118,7 @@
                       class="hover:bg-gray-100 cursor-pointer dark:hover:bg-dark"
                       v-for="(item, index) in list"
                       :key="index"
+                      @click="onClickItem(item.vcId)"
                     >
                       <td style="min-width: 100px" class="py-5 px-4">
                         {{ item.vcId }}
@@ -236,7 +237,7 @@
                   </div>
                 </nav>
               </div>
-              <!-- 페이징 -->
+              <!-- 페이징 끝 -->
             </div>
           </div>
         </BaseCard>
@@ -249,7 +250,8 @@
       class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-700 bg-opacity-50"
     >
       <div class="w-1/2 p-6 mx-4 bg-white rounded-md shadow-xl flex">
-        <div class="w-2/3 mr-4">
+        <!-- <div class="w-2/3 mr-4"> -->
+        <div class="w-full mr-4">
           <!--왼쪽 영역-->
           <div class="flex items-center justify-between">
             <h3 class="text-2xl font-bold">임의 휴가 부여</h3>
@@ -392,8 +394,8 @@
             </div>
           </form>
         </div>
-        <div class="w-2/3 bg-gray-100 text-right">
-          <!-- 오른쪽 영역 -->
+        <!-- 오른쪽 영역 -->
+        <!-- <div class="w-2/3 bg-gray-100 text-right">
           <label
             for="types"
             class="mb-2 text-4xl font-bold text-gray-900 dark:text-white"
@@ -401,7 +403,7 @@
           </label>
           <div>뭔가 허전해서 채우면 좋겠다.</div>
           <div>뭔가 허전해서 채우면 좋겠다.</div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- 휴가생성 모달창 끝-->
@@ -418,10 +420,12 @@ import {
 } from '@/api/index.js'
 import { onMounted, ref } from 'vue'
 import { successToast, loadingAlert, failToast } from '@/sweetAlert'
+import router from '@/router/index.js'
 
 // for TapGroup
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+
 let categories = ref({
   연차휴가: [
     {
@@ -540,6 +544,12 @@ const getVcType = async () => {
     const filteredList = res.data.filter((item) => item.typeName !== '연차')
     vcTypeList.value = filteredList // 연차 제외한 항목만 선택리스트에 담음
     gvData.value.vcTypeDto.typeId = vcTypeList.value[0].typeId // 초기값
+  })
+}
+
+// 상세페이지 이동
+const onClickItem = (id) => {
+  router.push({ name: '휴가부여상세', params: { id:id}
   })
 }
 </script>

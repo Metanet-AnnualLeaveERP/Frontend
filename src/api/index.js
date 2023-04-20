@@ -65,8 +65,12 @@ import {
 export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
 
 // grantedVc
-import { getListGrantedVc, insertGrantedVc } from './vacation-granted'
-export { getListGrantedVc, insertGrantedVc }
+import { getListGrantedVc, 
+  insertGrantedVc,
+  getGrantedVcDetail,
+  deleteGrantedVc
+ } from './vacation-granted'
+export { getListGrantedVc, insertGrantedVc, getGrantedVcDetail, deleteGrantedVc }
 
 // dept
 import { getListDept } from './dept'
@@ -79,6 +83,12 @@ import {
   createCertificate,
 } from './certificate'
 export { getCertificateDetail, getCertificateList, createCertificate }
+
+// anp-doc
+import{ getListAnpDoc,
+  getAnpDocDetail 
+} from './anp-doc'
+export { getListAnpDoc, getAnpDocDetail }
 
 // 휴가 취소
 import {
