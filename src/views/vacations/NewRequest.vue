@@ -444,7 +444,7 @@ const onClickDay = (d) => {
   // 잔여 TO 계산
   const format = formatDate(d)
   const result = state.remainVcTo.find((item) => item.date === format)
-  if (result && result.remainTO == 1) {
+  if (result && result.remainTO == 0) {
     const formatKorean = formatDateToKorean(d)
     warningAlert(
       formatKorean + '에는 TO가 가득 찼습니다. 다른 날을 선택해 주세요.'
@@ -503,7 +503,7 @@ const finishSelection = (dateRange) => {
 
     const format = formatDate(date)
     const result = state.remainVcTo.find((item) => item.date === format)
-    if (result && result.remainTO == 1) {
+    if (result && result.remainTO == 0) {
       // 여러 date 중 하나라도 잔여 TO가 없는 날이 있다면 버튼을 disable 하고 반복 검사 종료
 
       const formatKorean = formatDateToKorean(date)
