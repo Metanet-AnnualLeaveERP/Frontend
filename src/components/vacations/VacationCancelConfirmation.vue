@@ -18,6 +18,7 @@ export default {
     const startDateFormat = ref('')
     const endDateFormat = ref('')
     const reqDateFormat = ref('')
+    const cancelReqDateFormat = ref('')
 
     // 나의 상사
     const manager = store.state.mgr
@@ -51,6 +52,7 @@ export default {
       startDateFormat.value = formatDateToKorean(item.value.vcReqDto.startDate)
       endDateFormat.value = formatDateToKorean(item.value.vcReqDto.endDate)
       reqDateFormat.value = formatDateToKorean(item.value.vcReqDto.reqDate)
+      cancelReqDateFormat.value = formatDateToKorean(item.value.cancelReqDate)
     })
 
     return {
@@ -58,6 +60,7 @@ export default {
       startDateFormat,
       endDateFormat,
       reqDateFormat,
+      cancelReqDateFormat,
       manager,
       loading,
       item,
@@ -518,7 +521,7 @@ export default {
               class="bg-white dark:bg-foreground dark:text-white text-left"
               style="padding: 3px; border: 0px solid black; width: 700px"
             >
-              {{ item.cancelReqDate }}
+              {{ cancelReqDateFormat }}
             </td>
           </tr>
           <tr class="h-4">

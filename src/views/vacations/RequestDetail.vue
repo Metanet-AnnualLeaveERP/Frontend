@@ -79,7 +79,7 @@ const onClickCancel = async () => {
   }
   await createCancel(reqId, data).then(async (res) => {
     await successToast('휴가 취소 신청이 완료되었습니다!')
-    router.push({ name: '휴가취소내역' })
+    router.push({ name: '휴가관리' })
   })
 }
 
