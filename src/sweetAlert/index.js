@@ -112,3 +112,15 @@ export const inputTextModal = async (title, text, label) => {
     },
   })
 }
+export const checkInfo = (infoData)=> {
+
+  return Swal.fire({
+    icon: infoData.icon,
+    title: infoData.title,
+    text: infoData.text,
+    showCancelButton: true,
+    confirmButtonColor: "red",
+    cancelButtonText: infoData.cancelText,
+    confirmButtonText: infoData.confirmText,
+  })
+}

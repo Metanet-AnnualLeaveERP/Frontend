@@ -55,20 +55,14 @@ const routes = [
             component: () => import('../views/vacations/NewRequest.vue'),
           },
           {
-            path: 'request/list',
-            name: '휴가신청내역',
-            component: () => import('../views/vacations/RequestList.vue'),
+            path: 'list',
+            name: '휴가관리',
+            component: () => import('../views/vacations/ListTab.vue'),
           },
           {
             path: 'request/detail/:id',
             name: '휴가신청상세',
             component: () => import('../views/vacations/RequestDetail.vue'),
-          },
-          // 휴가 취소 관련
-          {
-            path: 'request/list',
-            name: '휴가취소내역',
-            component: () => import('../views/vacations/CancelList.vue'),
           },
           {
             path: 'cancel/detail/:id',
@@ -133,6 +127,14 @@ const routes = [
             component: () => import('@/views/admin/EmployeeList.vue'),
           },
           {
+            path:'vacations/:id',
+            name:'관리자결재상세',
+            component: ()=>import('@/views/admin/vacation_manage/RequestVcDetail.vue'),
+            meta:{
+              roles:['ROLE_MGR']
+            }
+          },
+          {
             path: 'employee/detail/:id',
             name: '사원상세',
             component: () => import('@/views/admin/EmployeeDetail.vue'),
@@ -167,6 +169,12 @@ const routes = [
               import('@/views/admin/vacation_manage/RequestVcList.vue'),
           },
           {
+            path: 'vacation_manage/request/cancel/:id',
+            name: '휴가취소상세',
+            component: ()=> import('@/views/admin/vacation_manage/CancelVcDetail.vue')
+
+          },
+          {
             path: 'anpdoc_manage',
             name: '연차촉진관리',
             component: () => 
@@ -178,7 +186,23 @@ const routes = [
             component: () =>
               import('@/views/admin/AnpDocDetail.vue'),
           },
+          
         ],
+      },
+      {
+        path: '/employee',
+        name: 'employeeMain',
+        component: () => import('@/views/employee/index.vue'),
+        meta: {
+          roles: ['ROLE_EMP', 'ROLE_MANAGER'],
+        },
+        children: [
+          {
+            path: 'myInfo',
+            name: '내정보',
+            component: () => import('@/views/employee/myInfo.vue'),
+          }
+        ]
       },
       {
         path: '/dashboards',
@@ -401,20 +425,20 @@ const router = createRouter({
 })
 
 // 현재 페이지 이름 설정
-router.beforeEach((to, from, next) => {
-  /* 권한은 로그인 시에만 부여되고 모든 서비스는 로그인한 유저에 한헤서만 접근 가능하다. */
-  const role = store.state.role
+// router.beforeEach((to, from, next) => {
+//   /* 권한은 로그인 시에만 부여되고 모든 서비스는 로그인한 유저에 한헤서만 접근 가능하다. */
+//   const role = store.state.role
 
-  // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
-  // console.log(to.meta.roles)
-  if (to.meta.roles != '' && !to.meta?.roles?.includes(role)) {
-    console.log('접근 권한이 없습니다.')
-    // 권한이 없는 유저는 403 에러 페이지로 보낸다
-    return next({ name: '404' })
-  } else {
-    return next()
-  }
-})
+//   // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
+//   // console.log(to.meta.roles)
+//   if (to.meta.roles != '' && !to.meta.roles.includes(role)) {
+//     console.log('접근 권한이 없습니다.')
+//     // 권한이 없는 유저는 403 에러 페이지로 보낸다
+//     return next({ name: '404' })
+//   } else {
+//     return next()
+//   }
+// })
 
 router.afterEach(() => {
   // Remove initial loading

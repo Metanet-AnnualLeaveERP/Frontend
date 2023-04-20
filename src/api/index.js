@@ -10,13 +10,16 @@ import {
   createRequest,
   getVcReqList,
   getVcReqDetail,
+  getTeamApprovalList,
   getMyTeamSchedule,
+  approvalProcess
 } from './vacation-request'
-export { createRequest, getVcReqList, getVcReqDetail, getMyTeamSchedule }
+export { createRequest,getVcReqList, getVcReqDetail ,getTeamApprovalList,getMyTeamSchedule,approvalProcess}
+
 
 // EMP
-import { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp } from './emp'
-export { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp}
+import { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp,modifyEmpInfo } from './emp'
+export { getMyInfo, getManagerInfo, getEmpList, getListEmpByDeptId, getEmpInfo, modifyEmpInfoByAdmin, registerEmp,modifyEmpInfo}
 
 // user
 import { login, logout, disableAccountByAdmin } from './user'
@@ -33,7 +36,7 @@ import {
   deleteVcType,
   updateVcType,
 } from './vacation-type'
-export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
+export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType}
 
 // grantedVc
 import { getListGrantedVc, 
@@ -60,3 +63,6 @@ import{ getListAnpDoc,
   getAnpDocDetail 
 } from './anp-doc'
 export { getListAnpDoc, getAnpDocDetail }
+// 휴가 취소
+import { getCancelDetail, getCancelList, createCancel,getCancelApproval,getCancelApprovalList } from './vacation-cancel'
+export { getCancelDetail, getCancelList, createCancel,getCancelApproval,getCancelApprovalList }

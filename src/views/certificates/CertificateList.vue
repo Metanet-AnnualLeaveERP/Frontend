@@ -3,10 +3,12 @@ import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import { onMounted, ref } from 'vue'
 import { getCertificateList } from '@/api/index.js'
 import router from '@/router'
+import { failToast } from '@/sweetAlert'
 
 const list = ref({})
 const pagination = ref({})
 const currentPage = ref(1)
+const certType = ref([])
 
 onMounted(async () => {
   getList(1)
@@ -20,13 +22,24 @@ const getList = async (page) => {
 
   await getCertificateList()
     .then((res) => {
-      console.log(res.data)
+      // console.log(res.data)
       list.value = res.data.certificates
       pagination.value = res.data.paging
+      checkCertType() // 증명서 타입 검사
     })
     .catch(() => {
       failToast('데이터 로딩에 실패하였습니다.')
     })
+}
+
+const checkCertType = () => {
+  list.value.forEach((element) => {
+    if (element.cancelDto) {
+      certType.value.push({ id: element.certId, type: '휴가 취소 확인서' })
+    } else if (element.vcReqDto) {
+      certType.value.push({ id: element.certId, type: '휴가 신청 확인서' })
+    }
+  })
 }
 
 const onClickItem = (id) => {
@@ -64,7 +77,7 @@ const onClickItem = (id) => {
                       <th
                         class="border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold"
                       >
-                        휴가 유형
+                        발급 유형
                       </th>
                       <th
                         class="border-b dark:border-dark dark:text-gray-300 pb-3 mb-3 text-gray-500 font-semibold"
@@ -86,9 +99,7 @@ const onClickItem = (id) => {
                       @click="onClickItem(item.certId)"
                     >
                       <td class="py-3">{{ item.certId }}</td>
-                      <td class="py-3">
-                        {{ item.vcReqDto.vcTypeDto.typeName }}
-                      </td>
+                      <td class="py-3">{{ certType[index].type }}</td>
                       <td class="py-3">{{ item.purpose }}</td>
                       <td class="py-3">{{ item.issuedDate }}</td>
                     </tr>

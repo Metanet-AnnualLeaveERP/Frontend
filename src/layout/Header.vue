@@ -52,6 +52,11 @@ const signOut = async () => {
     }
   })
 }
+
+const empId = store.state.emp.empId;
+const moveMyPage = (empId) => {
+  router.push({name:'내정보', params: { id:empId }});
+}
 </script>
 
 <template>
@@ -493,8 +498,9 @@ const signOut = async () => {
                                 ]"
                                 aria-label="Account Settings"
                                 role="button"
+                                @click="moveMyPage(empId)"
                             >
-                                Account Settings
+                                내 정보
                             </button>
                         </MenuItem>
                         <MenuItem v-slot="{ active }">
@@ -523,7 +529,7 @@ const signOut = async () => {
                                 role="button"
                                 @click="signOut"
                             >
-                                Sign Out
+                                로그아웃
                             </button>
                         </MenuItem>
                     </div>
