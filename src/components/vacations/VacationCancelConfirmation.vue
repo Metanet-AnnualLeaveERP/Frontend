@@ -417,7 +417,7 @@ export default {
                 width: 700px;
                 height: 22px;
               "
-              v-if="item.vcReqDto.reqDays >= 1"
+              v-if="item.vcReqDto.reqDays > 1"
             >
               {{ startDate }} - {{ endDate }}
             </td>

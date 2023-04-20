@@ -417,7 +417,7 @@ export default {
                 width: 700px;
                 height: 22px;
               "
-              v-if="item.reqDays >= 1"
+              v-if="item.reqDays > 1"
             >
               {{ startDate }} - {{ endDate }}
             </td>
@@ -433,7 +433,7 @@ export default {
               "
               v-else
             >
-              {{ item.startDate }} - {{ item?.endDate }}
+              {{ startDate }}
             </td>
           </tr>
           <tr class="h-4">
