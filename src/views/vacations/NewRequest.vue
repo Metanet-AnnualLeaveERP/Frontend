@@ -380,7 +380,10 @@ const formatDate = (date) => {
 }
 
 // yyyy년 mm월 dd일로 포맷 변경하는 메소드
-const formatDateToKorean = (date) => {
+const formatDateToKorean = (d) => {
+  // Date 객체로 변환
+  const date = new Date(d)
+
   // 월, 일을 두 자리 숫자로 표현
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
