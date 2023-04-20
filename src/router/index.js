@@ -106,6 +106,9 @@ const routes = [
             name: '연차촉진문서함',
             component: () => import('../views/annual_promote_doc/AnpList.vue'),
           },
+          {
+            path: ''
+          }
         ],
       },
       {
@@ -175,20 +178,32 @@ const routes = [
             component: ()=> 
             import('@/views/admin/vacation_manage/CancelVcDetail.vue')
           },
+        ],
+      },
+      {
+        path: '/anp',
+        name:'anpMain',
+        component: () => import('@/views/annual_promote_doc/index.vue'),
+        children:[
           {
-            path: 'anpdoc_manage',
+            path: '/list',
             name: '연차촉진관리',
-            component: () => 
-              import('@/views/admin/AnpDocList.vue'),
+            component: () =>
+              import('@/views/annual_promote_doc/AnpList.vue'),
           },
           {
-            path: 'anpdoc_manage/:id',
+            path: '/list/:id',
             name: '촉진요청서상세',
             component: () =>
               import('@/views/admin/AnpDocDetail.vue'),
           },
-          
-        ],
+          {
+            path: '/use-plan/:id',
+            name: '연차사용계획서',
+            component: () => 
+              import('@/views/annual_promote_doc/UsePlan.vue'),
+          }
+        ]
       },
       {
         path: '/employee',

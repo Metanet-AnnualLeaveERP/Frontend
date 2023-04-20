@@ -9,4 +9,11 @@ export const getListUsePlan = () => {
   })
 }
 
-// export const get
+// 사용계획서 입력
+export const insertUsePlan = (data) =>{
+  return api ({
+    url: 'useplan/list',
+    method: 'post',
+    data: data
+  })
+}
