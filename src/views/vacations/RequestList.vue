@@ -22,7 +22,7 @@ const getList = async (page) => {
 
   await getVcReqList('true', page, 10)
     .then((res) => {
-      // console.log(res.data)
+      console.log(res.data)
       list.value = res.data.vcReqs
       pagination.value = res.data.paging
       // console.log(pagination.value)

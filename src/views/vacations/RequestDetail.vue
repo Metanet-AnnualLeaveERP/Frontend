@@ -2,7 +2,12 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router/index.js'
-import { getVcReqDetail, download, createCertificate } from '@/api'
+import {
+  getVcReqDetail,
+  download,
+  createCertificate,
+  createCancel,
+} from '@/api'
 import VacationReqConfirmation from '@/components/vacations/VacationReqConfirmation.vue'
 import { successToast, inputTextModal } from '@/sweetAlert'
 import store from '@/store'
@@ -11,21 +16,22 @@ const route = useRoute()
 const reqId = route.params.id
 const detail = ref({})
 const loading = ref(false)
+const showCancelBtn = ref(false)
 
 onMounted(async () => {
   await getVcReqDetail(reqId).then((res) => {
     // console.log(res.data)
     loading.value = true
     detail.value = res.data
+    // 상태가 반려/취소가 아닐 때만 취소 신청이 가능하도록 설정
+    if (detail.value.status != '반려' && detail.value.status != '취소') {
+      showCancelBtn.value = true
+    }
   })
 })
 
 // 파일 다운로드
 const onClickDownloadBtn = async () => {
-  // 테스트용
-  // const filePath =
-  //   'd:\\ALE_downloaded_files\\2023_04_14\\7d6f8f04-914e-40fe-a572-03c0e440ef55.zip'
-
   // db에 저장된 vcReq의 filePath
   const filePath = detail.value.filePath
 
@@ -48,7 +54,7 @@ const onClickDownloadBtn = async () => {
     const link = document.createElement('a')
     link.href = fileUrl
     link.setAttribute('download', name) // 파일 이름
-    link.style.cssText = 'display:none' // 보이지 않도록 설정
+    link.style.cssText = 'display:none' // a 태그가 보이지 않도록 css 설정
 
     // 링크를 body에 추가하고 강제로 click 이벤트를 발생시켜 파일 다운로드를 실행
     document.body.appendChild(link)
@@ -59,6 +65,21 @@ const onClickDownloadBtn = async () => {
     window.URL.revokeObjectURL(fileUrl)
 
     successToast('등록하신 첨부파일을 다운로드합니다.')
+  })
+}
+
+// 휴가 취소 신청
+const onClickCancel = async () => {
+  const title = '휴가 취소 신청'
+  const text = '취소 사유를 입력해 주세요'
+  const inputLabel = '휴가 시작일이 지났을 경우 자동 취소 처리됩니다.'
+  const comm = await inputTextModal(title, text, inputLabel)
+  const data = {
+    reqComm: comm.value,
+  }
+  await createCancel(reqId, data).then(async (res) => {
+    await successToast('휴가 취소 신청이 완료되었습니다!')
+    router.push({ name: '휴가취소내역' })
   })
 }
 
@@ -112,6 +133,13 @@ const onClickBackBtn = () => {
         @click="onClickIssue"
       >
         증명서 발급
+      </BaseBtn>
+      <BaseBtn
+        v-if="showCancelBtn"
+        class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        @click="onClickCancel"
+      >
+        취소 신청
       </BaseBtn>
       <BaseBtn
         class="mr-3 text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
