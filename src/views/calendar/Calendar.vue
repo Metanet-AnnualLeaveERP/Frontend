@@ -276,12 +276,12 @@ onMounted(async () => {
     console.log('google calendar api called')
 
     const list = res.data.items
-    list.forEach((e) => {
+    list.forEach((e, index) => {
       const description = e.description.substr(0, 3) // 공휴일 or 기념일
       let bgStyle = description == '공휴일' ? 'holiday' : 'anniversary'
 
       state.items.push({
-        id: '1' + Math.random().toString(36).substring(2, 11), // gives an random id
+        id: 'h' + index + 1, // 공휴일은 고정 아이디 부여
         startDate: e.start.date,
         // endDate: e.end.date,  // 없어도 될 듯
         title: e.summary,
@@ -367,7 +367,10 @@ const clickTestAddItem = () => {
 }
 
 const onClickRequestBtn = () => {
-  router.push({ name: '휴가신청' })
+  router.push({
+    name: '휴가신청',
+    query: { items: JSON.stringify(state.items) },
+  })
 }
 </script>
 

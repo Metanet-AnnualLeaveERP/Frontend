@@ -93,7 +93,7 @@ export const loadingAlert = () => {
     allowOutsideClick: false,
     didOpen: () => {
       Swal.showLoading()
-    }
+    },
   })
 }
 

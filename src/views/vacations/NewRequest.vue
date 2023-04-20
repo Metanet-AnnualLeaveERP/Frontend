@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="loading">
     <div class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-info">
       <span class="inline-block align-middle mr-8">
         <b class="capitalize">휴가 신청</b>
@@ -82,7 +82,9 @@
                 >요청 시간</label
               >
               <!-- 휴가 선택일 보이게 설정 -->
-              <div>{{ state.selectedDays }}</div>
+              <div class="">선택 일자: {{ state.selectedDays }}</div>
+              <!-- 해당 일자의 잔여 TO가 0이면 -->
+              <!-- <div class=""></div> -->
 
               <!-- 연차에 한해서만 보이게 설정 / 연차를 하루만 쓸 때 -->
               <!-- 연차(1) or 반차(0.5) -->
@@ -190,6 +192,8 @@
             </div>
             <div id="btn-wrapper" class="flex justify-between mb-5">
               <BaseBtn
+                disabled
+                id="submitBtn"
                 type="submit"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
@@ -216,11 +220,17 @@ import {
   CalendarMath,
 } from 'vue-simple-calendar'
 import { onMounted, reactive, computed, ref, watch } from 'vue'
-import { getHolidays } from '@/api/calendar-api.js'
-import { createRequest, getVcRemainInfo } from '@/api/index.js'
+import {
+  createRequest,
+  getVcRemainInfo,
+  getEntireRemainVcTo,
+} from '@/api/index.js'
 import store from '@/store/index.js'
 import { warningAlert, successToast } from '@/sweetAlert'
 import router from '@/router/index.js'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const thisMonth = (d, h, m) => {
   const t = new Date()
@@ -246,6 +256,7 @@ const state = reactive({
   useDefaultTheme: true,
   selectedDays: '',
   items: [],
+  remainVcTo: [],
 })
 
 const reqData = reactive({
@@ -263,6 +274,11 @@ const reqData = reactive({
   // filePath: null,
   // empId: null,
 })
+
+const loading = ref(false)
+
+// 잔여 TO
+// const remainVcTo = ref([])
 
 // 휴가 유형
 const vcTypeNames = ref([])
@@ -296,19 +312,17 @@ const themeClasses = computed(() => ({
   'theme-default': state.useDefaultTheme,
 }))
 
-// 여기서 TO랑 공휴일을 아예 회색으로 칠해 버리기
+// 잔여 TO가 0인 경우 회색으로 색칠하는 date css 추가
 const myDateClasses = () => {
   const o = {}
+  state.remainVcTo.forEach((e) => {
+    // console.log(e)
+    if (e.remainTO == 0) {
+      o[e.date] = ['bg-gray-200']
+    }
+  })
 
-  // const theFirst = thisMonth(1)
-  // const ides = [2, 4, 6, 9].includes(theFirst.getMonth()) ? 15 : 13
-  // const idesDate = thisMonth(ides)
-  // o[CalendarMath.isoYearMonthDay(idesDate)] = ['ides']
-  // o[CalendarMath.isoYearMonthDay(thisMonth(21))] = [
-  //   'do-you-remember',
-  //   'the-21st',
-  // ]
-  // return o
+  return o
 }
 
 // 타입이 바뀔 때마다 잔여일 계산
@@ -357,28 +371,36 @@ watch(
   }
 )
 
+// yyyy-mm-dd로 Date 객체 포맷 변경하는 메소드
+const formatDate = (date) => {
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+// yyyy년 mm월 dd일로 포맷 변경하는 메소드
+const formatDateToKorean = (date) => {
+  // 월, 일을 두 자리 숫자로 표현
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  // 변환된 문자열 생성
+  return `${date.getFullYear()}년 ${month}월 ${day}일`
+}
+
 onMounted(async () => {
+  const queryItems = JSON.parse(route.query.items)
+  // console.log(queryItems)
+  state.items = queryItems
+
   state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
   state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 
-  await getHolidays().then((res) => {
-    console.log('google calendar api called')
-
-    const list = res.data.items
-    console.log
-    list.forEach((e) => {
-      const description = e.description.substr(0, 3) // 공휴일 or 기념일
-      let bgStyle = description == '공휴일' ? 'holiday' : 'anniversary'
-
-      state.items.push({
-        id: '1' + Math.random().toString(36).substring(2, 11), // gives an random id
-        startDate: e.start.date,
-        // endDate: e.end.date,  // 없어도 될 듯
-        title: e.summary,
-        tooltip: description,
-        classes: [bgStyle],
-      })
-    })
+  await getEntireRemainVcTo().then((res) => {
+    console.log(res.data)
+    state.remainVcTo = res.data
+    // myDateClasses()
   })
 
   // vcType 조회
@@ -391,10 +413,13 @@ onMounted(async () => {
         name: e.vcTypeDto.typeName,
       })
     })
+    loading.value = true
+
     // console.log(vcTypeNames.value)
     // console.log(vcTypeRemains.value)
   })
 })
+
 // 특정 날짜 하루 선택
 const onClickDay = (d) => {
   state.selectionStart = undefined
@@ -410,6 +435,19 @@ const onClickDay = (d) => {
   // 연차/반차 select box 활성화
   if (reqData.vcTypeDto.typeId == 1) {
     document.getElementById('alTypes').disabled = false
+  }
+
+  // 잔여 TO 계산
+  const format = formatDate(d)
+  const result = state.remainVcTo.find((item) => item.date === format)
+  if (result && result.remainTO == 1) {
+    const formatKorean = formatDateToKorean(d)
+    warningAlert(
+      formatKorean + '에는 TO가 가득 찼습니다. 다른 날을 선택해 주세요.'
+    )
+    document.getElementById('submitBtn').disabled = true
+  } else {
+    document.getElementById('submitBtn').disabled = false
   }
 }
 
@@ -447,6 +485,41 @@ const finishSelection = (dateRange) => {
 
   // 연차/반차 select box 비활성화
   document.getElementById('alTypes').disabled = true
+
+  // 두 날짜 사이의 일수 계산
+  const startDate = formatDate(state.selectionStart)
+  const endDate = formatDate(state.selectionEnd)
+  const diff = getDateDiff(startDate, endDate)
+
+  // 일수만큼 반복문을 돌리면서 해당 날짜의 잔여 TO 계산
+  for (let i = 0; i < diff; i++) {
+    const date = new Date(state.selectionStart.getTime()) // 현재 날짜와 시간을 복사한 Date 객체 생성
+    date.setDate(state.selectionStart.getDate() + i) // 현재 날짜에 i일을 더한 값을 구함
+    // console.log(date) // 더한 날짜 출력
+
+    const format = formatDate(date)
+    const result = state.remainVcTo.find((item) => item.date === format)
+    if (result && result.remainTO == 1) {
+      // 여러 date 중 하나라도 잔여 TO가 없는 날이 있다면 버튼을 disable 하고 반복 검사 종료
+
+      const formatKorean = formatDateToKorean(date)
+      warningAlert(
+        formatKorean + '에는 TO가 가득 찼습니다. 다른 날을 선택해 주세요.'
+      )
+      document.getElementById('submitBtn').disabled = true
+      break
+    } else {
+      document.getElementById('submitBtn').disabled = false
+    }
+  }
+
+  // 신청일이 오늘보다 이전 날짜이면 신청 못하도록 버튼 막음
+  const today = new Date()
+  if (reqData.startDate < today) {
+    document.getElementById('submitBtn').disabled = true
+  } else {
+    document.getElementById('submitBtn').disabled = false
+  }
 }
 
 const clickTestAddItem = () => {
