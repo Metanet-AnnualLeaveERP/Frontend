@@ -39,8 +39,7 @@ export default {
 
     onMounted(async () => {
       await getCancelDetail(props.id).then((res) => {
-        console.log(res.data)
-
+        // console.log(res.data)
         item.value = res.data
         loading.value = true
       })
@@ -56,8 +55,9 @@ export default {
 
     return {
       alHalfType,
-      startDate,
-      endDate,
+      startDateFormat,
+      endDateFormat,
+      reqDateFormat,
       manager,
       loading,
       item,
