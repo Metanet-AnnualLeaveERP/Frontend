@@ -22,7 +22,6 @@ const routes = [
     redirect: '/sessions/login',
     meta: {
       title: 'Home',
-      roles: [],
     },
     children: [
       {
@@ -32,6 +31,7 @@ const routes = [
         redirect: '/schedule/main',
         meta: {
           title: 'Schedule',
+          roles: ['ROLE_MGR', 'ROLE_EMP'],
         },
         children: [
           {
@@ -48,6 +48,7 @@ const routes = [
         redirect: '/vacations/list',
         meta: {
           title: 'Vacations',
+          roles: ['ROLE_MGR', 'ROLE_EMP'],
         },
         children: [
           // 휴가 신청 관련
@@ -79,7 +80,8 @@ const routes = [
         component: () => import('../views/annual_promote_doc/index.vue'),
         redirect: '/certificates/main',
         meta: {
-          title: 'AnnualPromoteDoc',
+          title: 'Certificates',
+          roles: ['ROLE_MGR', 'ROLE_EMP'],
         },
         children: [
           {
@@ -103,6 +105,7 @@ const routes = [
         redirect: '/anp-docs/main',
         meta: {
           title: 'AnnualPromoteDoc',
+          roles: ['ROLE_ADMIN', 'ROLE_MGR', 'ROLE_EMP'],
         },
         children: [
           {
@@ -186,7 +189,7 @@ const routes = [
         component: () => import('@/views/employee/index.vue'),
         redirect: '/employee/myInfo',
         meta: {
-          roles: ['ROLE_EMP', 'ROLE_MANAGER'],
+          roles: ['ROLE_EMP', 'ROLE_MGR'],
         },
         children: [
           {
@@ -210,24 +213,25 @@ const routes = [
         path: 'login',
         name: 'login',
         component: () => import('../views/sessions/LogIn.vue'),
-        meta: {
-          roles: [],
-        },
+        roles: ['anonymous'],
       },
       {
         path: '403',
         name: '403',
         component: () => import('../views/sessions/403.vue'),
+        roles: ['anonymous', 'ROLE_ADMIN', 'ROLE_MGR', 'ROLE_EMP'],
       },
       {
         path: '404',
         name: '404',
         component: () => import('../views/sessions/404.vue'),
+        roles: ['anonymous', 'ROLE_ADMIN', 'ROLE_MGR', 'ROLE_EMP'],
       },
       {
         path: 'forgot',
         name: 'forgot',
         component: () => import('../views/sessions/Forgot.vue'),
+        roles: ['anonymous'],
       },
     ],
   },
@@ -250,13 +254,9 @@ router.beforeEach((to, from, next) => {
   const role = store.state.role
 
   // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
-  // console.log(to.meta.roles)
-  if (
-    to?.meta?.roles &&
-    to?.meta?.roles != '' &&
-    to?.meta?.roles?.length === 0 &&
-    !to?.meta?.roles?.includes(role)
-  ) {
+  console.log(to.meta.roles)
+
+  if (to.meta.roles && !to?.meta?.roles?.includes(role)) {
     console.log('접근 권한이 없습니다.')
     // 권한이 없는 유저는 403 에러 페이지로 보낸다
     return next({ name: '403' })

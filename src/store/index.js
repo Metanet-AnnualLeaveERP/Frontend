@@ -4,7 +4,7 @@ import largeSidebar from './modules/largeSidebar'
 
 export default createStore({
   state: {
-    role: '',
+    role: 'anonymous',
     emp: {},
     empNum: '',
     mgr: {},
