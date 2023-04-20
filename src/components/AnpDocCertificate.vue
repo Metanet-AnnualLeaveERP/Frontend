@@ -1,7 +1,7 @@
 <script>
 import { onMounted, ref } from 'vue'
 import store from '@/store/index.js'
-import router from '@/router'
+import html2pdf from 'html2pdf.js'
 export default {
   props: {
     item: {
@@ -17,9 +17,8 @@ export default {
     const manager = store.state.mgr
     
 
-    onMounted(() => {
+    onMounted(async() => {
       console.log(props.item)
-      //usedAnv = props.item.totalAnv - props.item.usedAnv // 사용연차
 
       // 날짜 출력을 위한 변환
       // Date 객체로 변환
@@ -46,9 +45,9 @@ export default {
       const element = pdfContent.value
       const filename =
         '연차촉진요청서_' +
-        props.item.vcReqDto.empDto.name +
+        props.item.empDto.name + 
         '_' +
-        props.item.vcReqDto.reqDate +
+        props.item.occurDate +
         '.pdf'
       const options = {
         filename: filename,
@@ -71,7 +70,6 @@ export default {
     
 
     return {
-      //usedAnv,
       startDate,
       expiredDateToStr,
       downloadPDF,
@@ -265,7 +263,7 @@ export default {
             <td style="border: 1px solid black">{{ item.anvOccurDate }}
             ~ {{ item.anvOccurDate }}</td>
             <td style="border: 1px solid black">{{item.totalAnv}}</td>
-            <td :model="usedAnv"></td>
+            <td style="border: 1px solid black">{{ item.totalAnv - item.remainAnv}}</td>
             <td style="border: 1px solid black"> {{item.remainAnv}} </td>
           </tr>
         </table>
@@ -359,13 +357,13 @@ export default {
       </div>
     </div>
 
-    <!-- <div class="flex justify-end mt-7">
+    <div class="flex justify-end mt-7">
       <BaseBtn
         class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         @click="downloadPDF"
       >
         PDF 다운로드하기
       </BaseBtn>
-    </div> -->
+    </div>
   </div>
 </template>

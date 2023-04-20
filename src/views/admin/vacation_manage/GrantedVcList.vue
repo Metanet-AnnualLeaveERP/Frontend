@@ -250,7 +250,8 @@
       class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-700 bg-opacity-50"
     >
       <div class="w-1/2 p-6 mx-4 bg-white rounded-md shadow-xl flex">
-        <div class="w-2/3 mr-4">
+        <!-- <div class="w-2/3 mr-4"> -->
+        <div class="w-full mr-4">
           <!--왼쪽 영역-->
           <div class="flex items-center justify-between">
             <h3 class="text-2xl font-bold">임의 휴가 부여</h3>
@@ -393,8 +394,8 @@
             </div>
           </form>
         </div>
-        <div class="w-2/3 bg-gray-100 text-right">
-          <!-- 오른쪽 영역 -->
+        <!-- 오른쪽 영역 -->
+        <!-- <div class="w-2/3 bg-gray-100 text-right">
           <label
             for="types"
             class="mb-2 text-4xl font-bold text-gray-900 dark:text-white"
@@ -402,7 +403,7 @@
           </label>
           <div>뭔가 허전해서 채우면 좋겠다.</div>
           <div>뭔가 허전해서 채우면 좋겠다.</div>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- 휴가생성 모달창 끝-->

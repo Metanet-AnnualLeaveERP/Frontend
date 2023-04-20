@@ -39,7 +39,10 @@ const onClickItem = (docId) => {
 <template>
   <div>
     <div class="container mx-auto text-center">
-      <breadcrumbs parentTitle="문서관리" subParentTitle="연차촉진문서" />
+      <breadcrumbs parentTitle="문서관리" subParentTitle="연차촉진문서" 
+        style="font-weight: bold;
+        font-size: 1.2em;"
+      />
       <div class="grid grid-cols-12 gap-5">
         <div class="col-span-12">
           <BaseCard>
@@ -97,7 +100,7 @@ const onClickItem = (docId) => {
                         <!--발송일자-->
                         <td class="py-3">{{ item?.anvOccurDate }}</td>
                         <!--연차만료일자-->
-                        <td class="py-3">작성완료 || 미작성</td>
+                        <td class="py-3">{{ item?.plan === 0 ? '미작성' : '작성' }}</td>
                         <!--계획서 작성 여부-->
                       </tr>
                     </tbody>
