@@ -400,8 +400,9 @@ onMounted(async () => {
   state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
   state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 
+  // 부서의 잔여 TO 조회
   await getEntireRemainVcTo().then((res) => {
-    console.log(res.data)
+    // console.log(res.data)
     state.remainVcTo = res.data
     // myDateClasses()
   })
@@ -602,8 +603,8 @@ const onSubmit = () => {
     appendFile()
   }
 
-  console.log(1111)
-  console.log(reqData)
+  // console.log(1111)
+  // console.log(reqData)
 
   createRequest(formData.value).then(() => {
     successToast('휴가 신청이 완료되었습니다.')

@@ -38,7 +38,7 @@ const onClickDownloadBtn = async () => {
   const encodedFilePath = encodeURIComponent(filePath)
 
   await download(encodedFilePath).then((response) => {
-    console.log(response)
+    console.log('파일 경로 : ' + response)
     // 응답 헤더에서 파일 이름을 가져옴
     const name = response.headers['content-disposition']
       .split('filename=')[1]

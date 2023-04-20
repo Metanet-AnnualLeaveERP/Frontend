@@ -38,8 +38,7 @@ export default {
 
     onMounted(async () => {
       await getVcReqDetail(props.id).then((res) => {
-        console.log(res.data)
-
+        // console.log(res.data)
         item.value = res.data
         loading.value = true
       })
