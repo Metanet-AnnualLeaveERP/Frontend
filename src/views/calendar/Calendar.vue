@@ -232,9 +232,31 @@ const myDateClasses = () => {
   const o = {}
 }
 
+const holidaySize = ref(0)
+
 onMounted(async () => {
   state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
   state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
+
+  await getHolidays().then((res) => {
+    console.log('google calendar api called')
+
+    const list = res.data.items
+    list.forEach((e, index) => {
+      const description = e.description.substr(0, 3) // 공휴일 or 기념일
+      let bgStyle = description == '공휴일' ? 'holiday' : 'anniversary'
+      state.items.push({
+        id: index, // 공휴일은 고정 아이디 부여
+        startDate: e.start.date,
+        // endDate: e.end.date,  // 없어도 될 듯
+        title: e.summary,
+        tooltip: description,
+        classes: [bgStyle],
+      })
+      holidaySize.value = index
+    })
+    console.log(holidaySize.value)
+  })
 
   // 로그인한 사용자의 휴가 리스트
   await getVcReqList('false').then((res) => {
@@ -274,25 +296,6 @@ onMounted(async () => {
     })
   })
 
-  await getHolidays().then((res) => {
-    console.log('google calendar api called')
-
-    const list = res.data.items
-    list.forEach((e, index) => {
-      const description = e.description.substr(0, 3) // 공휴일 or 기념일
-      let bgStyle = description == '공휴일' ? 'holiday' : 'anniversary'
-
-      state.items.push({
-        id: 'h' + index + 1, // 공휴일은 고정 아이디 부여
-        startDate: e.start.date,
-        // endDate: e.end.date,  // 없어도 될 듯
-        title: e.summary,
-        tooltip: description,
-        classes: [bgStyle],
-      })
-    })
-  })
-
   // 내 emp 정보 조회
   await getMyInfo().then((res) => {
     store.commit('setEmp', res.data)
@@ -306,6 +309,8 @@ onMounted(async () => {
       store.commit('setManager', res.data)
     })
   }
+
+  console.log(state.items)
 })
 
 const onClickCheckBtn = () => {
@@ -371,7 +376,10 @@ const clickTestAddItem = () => {
 const onClickRequestBtn = () => {
   router.push({
     name: '휴가신청',
-    query: { items: JSON.stringify(state.items) },
+    query: {
+      items: JSON.stringify(state.items),
+      holidaySize: holidaySize.value,
+    },
   })
 }
 </script>
