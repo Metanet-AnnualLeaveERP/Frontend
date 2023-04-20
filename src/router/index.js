@@ -254,8 +254,6 @@ router.beforeEach((to, from, next) => {
   const role = store.state.role
 
   // 이동할 페이지의 권한이 현재 로그인한 유저의 권한을 포함하지 않는 경우
-  console.log(to.meta.roles)
-
   if (to.meta.roles && !to?.meta?.roles?.includes(role)) {
     console.log('접근 권한이 없습니다.')
     // 권한이 없는 유저는 403 에러 페이지로 보낸다
