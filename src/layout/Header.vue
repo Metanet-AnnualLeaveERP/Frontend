@@ -69,7 +69,7 @@ const moveMyPage = (empId) => {
       <div class="logo flex justify-center">
         <img
           class="h-16 w-16 mr-6 ml-3"
-          src="/images/logo.png"
+          src="/images/MetaVC-logo.png"
           alt="logo"
           srcset=""
         />
