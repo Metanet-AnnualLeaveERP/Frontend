@@ -28,18 +28,17 @@ export const getVcReqList = (p, pno, a) => {
 
 // 휴가 신청 하나 상세 조회
 export const getVcReqDetail = (id) => {
-  console.log(id)
+  // console.log(id)
   return api({
     url: `/vacations/${id}`,
     method: 'get',
   })
 }
 
-export const getTeamApprovalList=(cri)=>{
-
+export const getTeamApprovalList = (cri) => {
   return api({
-    url:`/manager/vacations/approval?pageNum=${cri.pageNum}&amount=10&keyword=${cri.keyword}`,
-    method:'GET'
+    url: `/manager/vacations/approval?pageNum=${cri.pageNum}&amount=10&keyword=${cri.keyword}`,
+    method: 'GET',
   })
 }
 // 팀원 휴가 승인내역 조회 (캘린더용)
@@ -50,15 +49,22 @@ export const getMyTeamSchedule = () => {
   })
 }
 
-
-export const approvalProcess=(reqId,status,comment=null)=>{
-  console.log(reqId,status,comment)
+/*부서별 잔여 TO (모든 팀원의 휴가들을 날짜별로 to에서 차감)*/
+export const getEntireRemainVcTo = () => {
   return api({
-    url:`/manager/vacations/confirm/${reqId}`,
-    params:{
+    url: '/vacations/remain-to',
+    method: 'get',
+  })
+}
+
+export const approvalProcess = (reqId, status, comment = null) => {
+  console.log(reqId, status, comment)
+  return api({
+    url: `/manager/vacations/confirm/${reqId}`,
+    params: {
       status: status,
-      comment: comment
+      comment: comment,
     },
-    method:"PUT"
+    method: 'PUT',
   })
 }
