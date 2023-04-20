@@ -265,7 +265,7 @@ const reqData = reactive({
   vcTypeDto: {
     typeId: '',
   },
-  reqDays: '',
+  reqDays: 0,
   comments: '',
   status: '',
   empDto: {
@@ -539,10 +539,15 @@ const clickTestAddItem = () => {
 
 // 휴가 유형 선택 시
 const onChangeTypes = (e) => {
+  // 연차
   if (e.target.value == 1) {
     reqTarget.value = '자동승인'
   } else {
-    reqTarget.value = manager.name + ' ' + manager.position
+    if (store.state.emp.position == '사원') {
+      reqTarget.value = manager.name + ' ' + manager.position
+    } else {
+      reqTarget.value = '인사팀장'
+    }
   }
 
   if (reqData.reqDays == 1 && e.target.value == 1) {
