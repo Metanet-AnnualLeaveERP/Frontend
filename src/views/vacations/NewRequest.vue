@@ -271,14 +271,9 @@ const reqData = reactive({
   empDto: {
     empId: store.state.emp.empId,
   },
-  // filePath: null,
-  // empId: null,
 })
 
 const loading = ref(false)
-
-// 잔여 TO
-// const remainVcTo = ref([])
 
 // 휴가 유형
 const vcTypeNames = ref([])
@@ -332,7 +327,7 @@ watch(
     // 연차
     if (newValue == 1) {
       selectedVcType.value = '연차'
-      remainDays.value = vcTypeRemains.value.annual.remainDays
+      remainDays.value = vcTypeRemains?.value?.annual?.remainDays
     } else {
       vcTypeRemains.value.reward.forEach((e) => {
         if (newValue == e.vcTypeDto.typeId) {
@@ -392,6 +387,8 @@ const formatDateToKorean = (d) => {
   return `${date.getFullYear()}년 ${month}월 ${day}일`
 }
 
+const holidaySize = route.query.holidaySize
+
 onMounted(async () => {
   const queryItems = JSON.parse(route.query.items)
   // console.log(queryItems)
@@ -444,7 +441,7 @@ const onClickDay = (d) => {
   // 잔여 TO 계산
   const format = formatDate(d)
   const result = state.remainVcTo.find((item) => item.date === format)
-  if (result && result.remainTO == 1) {
+  if (result && result.remainTO == 0) {
     const formatKorean = formatDateToKorean(d)
     warningAlert(
       formatKorean + '에는 TO가 가득 찼습니다. 다른 날을 선택해 주세요.'
@@ -453,6 +450,8 @@ const onClickDay = (d) => {
   } else {
     document.getElementById('submitBtn').disabled = false
   }
+
+  minusHolidayFromReqDays()
 }
 
 const onClickItem = (e) => {
@@ -503,7 +502,7 @@ const finishSelection = (dateRange) => {
 
     const format = formatDate(date)
     const result = state.remainVcTo.find((item) => item.date === format)
-    if (result && result.remainTO == 1) {
+    if (result && result.remainTO == 0) {
       // 여러 date 중 하나라도 잔여 TO가 없는 날이 있다면 버튼을 disable 하고 반복 검사 종료
 
       const formatKorean = formatDateToKorean(date)
@@ -524,6 +523,8 @@ const finishSelection = (dateRange) => {
   } else {
     document.getElementById('submitBtn').disabled = false
   }
+
+  minusHolidayFromReqDays()
 }
 
 const clickTestAddItem = () => {
@@ -577,6 +578,12 @@ const getDateDiff = (d1, d2) => {
   return Math.abs(diffDate / (1000 * 60 * 60 * 24)) + 1 // 밀리세컨 * 초 * 분 * 시 = 일
 }
 
+const addDays = (date, days) => {
+  const newDate = new Date(date)
+  newDate.setDate(newDate.getDate() + days)
+  return newDate
+}
+
 /*===========휴가 신청 api 호출============*/
 const file = ref(null)
 const formData = ref(null)
@@ -603,13 +610,33 @@ const onSubmit = () => {
     appendFile()
   }
 
-  // console.log(1111)
-  // console.log(reqData)
-
   createRequest(formData.value).then(() => {
     successToast('휴가 신청이 완료되었습니다.')
     router.go(-1)
   })
+}
+
+// 신청 날짜 중 공휴일이 있는지 검사
+const minusHolidayFromReqDays = () => {
+  var cnt = 0
+  for (let i = 1; i <= holidaySize; i++) {
+    if (state.items[i].tooltip === '공휴일') {
+      let date = new Date(state.items[i].startDate)
+      // console.log(reqData.endDate)
+      const endD = new Date(reqData.endDate)
+
+      const newEndDate = addDays(reqData.endDate, 1)
+
+      if (reqData.startDate <= date && date <= newEndDate) {
+        console.log(new Date(state.items[i].startDate))
+        cnt++
+      }
+    }
+  }
+  console.log(reqData.endDate)
+  console.log(cnt)
+  console.log(reqData.reqDays)
+  reqData.reqDays = reqData.reqDays - cnt
 }
 
 /*===========파일 관련============*/

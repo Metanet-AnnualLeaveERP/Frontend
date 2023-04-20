@@ -128,9 +128,9 @@ let toggleSubMenu = (e) => {
               @mouseenter="toggleSubMenu"
               class="nav-item border-b border-gray-200 dark:border-dark"
             >
-              <router-link class="nav-item-hold" :to="{ name: '휴가신청내역' }"
+              <router-link class="nav-item-hold" :to="{ name: '휴가관리' }"
                 ><i class="i-Calendar text-3xl"></i>
-                <p>휴가 신청 내역</p>
+                <p>휴가 관리</p>
               </router-link>
             </li>
             <li
