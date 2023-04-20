@@ -121,7 +121,7 @@ let toggleSubMenu = (e) => {
             >
               <router-link class="nav-item-hold" :to="{ name: '일정관리' }"
                 ><i class="i-Calendar text-3xl"></i>
-                <p>팀장사이드바테스트</p>
+                <p>캘린더</p>
               </router-link>
             </li>
             <li
@@ -129,8 +129,26 @@ let toggleSubMenu = (e) => {
               class="nav-item border-b border-gray-200 dark:border-dark"
             >
               <router-link class="nav-item-hold" :to="{ name: '휴가관리' }"
-                ><i class="i-Calendar text-3xl"></i>
+                ><i class="i-Home1 text-3xl"></i>
                 <p>휴가 관리</p>
+              </router-link>
+            </li>
+            <li
+              @mouseenter="toggleSubMenu"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+            >
+              <router-link class="nav-item-hold" :to="{ name: '휴가요청관리' }"
+                ><i class="i-Plane text-3xl"></i>
+                <p>결재 관리</p>
+              </router-link>
+            </li>
+            <li
+              @mouseenter="toggleSubMenu"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+            >
+              <router-link class="nav-item-hold" :to="{ name: '증명서내역' }"
+                ><i class="i-File-Text--Image text-3xl"></i>
+                <p>증명서 보관함</p>
               </router-link>
             </li>
             <li
@@ -140,46 +158,12 @@ let toggleSubMenu = (e) => {
               <router-link
                 class="nav-item-hold"
                 :to="{ name: '연차촉진문서함' }"
-                ><i class="i-Calendar text-3xl"></i>
+                ><i class="i-Inbox-Empty text-3xl"></i>
                 <p>문서 보관함</p>
               </router-link>
             </li>
-            <!-- nav child 있는 애들 -->
-            <li
-              @mouseenter="toggleSubMenu"
-              class="nav-item border-b border-gray-200 dark:border-dark"
-              :class="selectedParentMenu == 'dashboards' ? 'active' : ''"
-              data-item="dashboards"
-              :data-submenu="true"
-            >
-              <a class="nav-item-hold">
-                <i class="i-Bar-Chart text-3xl"></i>
-                <p>Dashboard</p>
-              </a>
-            </li>
           </ul>
         </perfect-scrollbar>
-      </div>
-      <!-- sidebar childs -->
-      <div
-        :class="{
-          open: store.state.largeSidebar.sidebarToggleProperties
-            .isSecondarySideNavOpen,
-        }"
-        class="sidebar-left-secondary shadow bg-white dark:bg-foreground dark:text-gray-300"
-      >
-        <ul
-          class="mb-4 childNav"
-          data-parent="dashboards"
-          :class="selectedParentMenu == 'dashboards' ? 'block' : 'hidden'"
-        >
-          <li>
-            <router-link :to="{ name: 'dashboard-version-one' }">
-              <i class="nav-icon i-Clock mr-2"></i>
-              <span class="item-name"> Version One </span>
-            </router-link>
-          </li>
-        </ul>
       </div>
     </div>
 
