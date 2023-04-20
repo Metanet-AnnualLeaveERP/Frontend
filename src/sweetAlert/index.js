@@ -1,16 +1,16 @@
 import Swal from 'sweetalert2'
 import { createApp } from 'vue'
 
-export const errorAlert = (text) => {
-  Swal.fire({
+export const errorAlert = async (text) => {
+  return await Swal.fire({
     icon: 'error',
     title: 'ERROR',
     text: text,
   })
 }
 
-export const infoAlert = (text) => {
-  Swal.fire({
+export const infoAlert = async (text) => {
+  return await Swal.fire({
     icon: 'info',
     title: '알림',
     text: text,
@@ -26,17 +26,17 @@ export const successToast = async (text) => {
   })
 }
 
-export const showRequest = (text) => {
+export const showRequest = async (text) => {
   text = text == null ? '요청사항이 없습니다.' : text
-  Swal.fire({
+  return await Swal.fire({
     icon: 'info',
     title: '요청사항',
     text: text,
   })
 }
 
-export const failToast = (text) => {
-  Swal.fire({
+export const failToast = async (text) => {
+  return await Swal.fire({
     icon: 'error',
     title: text,
     showConfirmButton: false,
@@ -44,16 +44,16 @@ export const failToast = (text) => {
   })
 }
 
-export const warningAlert = (text) => {
-  Swal.fire({
+export const warningAlert = async (text) => {
+  return await Swal.fire({
     icon: 'warning',
     title: '경고',
     text: text,
   })
 }
 
-export const returnInfoAlert = (text, title) => {
-  return Swal.fire({
+export const returnInfoAlert = async (text, title) => {
+  return await Swal.fire({
     icon: 'success',
     title: title,
     text: text,
@@ -112,14 +112,13 @@ export const inputTextModal = async (title, text, label) => {
     },
   })
 }
-export const checkInfo = (infoData)=> {
-
-  return Swal.fire({
+export const checkInfo = async (infoData) => {
+  return await Swal.fire({
     icon: infoData.icon,
     title: infoData.title,
     text: infoData.text,
     showCancelButton: true,
-    confirmButtonColor: "red",
+    confirmButtonColor: 'red',
     cancelButtonText: infoData.cancelText,
     confirmButtonText: infoData.confirmText,
   })
