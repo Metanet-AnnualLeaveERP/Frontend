@@ -169,27 +169,6 @@ let toggleSubMenu = (e) => {
           </ul>
         </perfect-scrollbar>
       </div>
-      <!-- sidebar childs -->
-      <div
-        :class="{
-          open: store.state.largeSidebar.sidebarToggleProperties
-            .isSecondarySideNavOpen,
-        }"
-        class="sidebar-left-secondary shadow bg-white dark:bg-foreground dark:text-gray-300"
-      >
-        <ul
-          class="mb-4 childNav"
-          data-parent="dashboards"
-          :class="selectedParentMenu == 'dashboards' ? 'block' : 'hidden'"
-        >
-          <li>
-            <router-link :to="{ name: 'dashboard-version-one' }">
-              <i class="nav-icon i-Clock mr-2"></i>
-              <span class="item-name"> Version One </span>
-            </router-link>
-          </li>
-        </ul>
-      </div>
     </div>
 
     <div

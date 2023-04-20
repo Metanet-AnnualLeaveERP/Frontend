@@ -42,7 +42,6 @@ https://ui-lib.com/ ) */
 // import { useStore } from 'vuex'
 import store from '@/store/index.js'
 import Header from './Header.vue'
-import Sidebar from './Sidebar.vue'
 import Footer from './Footer.vue'
 
 import AdminSidebar from './AdminSidebar.vue'
@@ -50,12 +49,9 @@ import ManagerSidebar from './ManagerSidebar.vue'
 import EmpSidebar from './EmpSidebar.vue'
 import { onBeforeMount, ref } from 'vue'
 
-// let store = useStore()
 const role = ref('')
 onBeforeMount(() => {
   role.value = store.state.role
-  // console.log(11111)
-  // console.log(role.value)
 })
 </script>
 
