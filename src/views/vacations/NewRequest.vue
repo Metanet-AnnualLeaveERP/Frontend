@@ -380,7 +380,10 @@ const formatDate = (date) => {
 }
 
 // yyyy년 mm월 dd일로 포맷 변경하는 메소드
-const formatDateToKorean = (date) => {
+const formatDateToKorean = (d) => {
+  // Date 객체로 변환
+  const date = new Date(d)
+
   // 월, 일을 두 자리 숫자로 표현
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
@@ -397,8 +400,9 @@ onMounted(async () => {
   state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
   state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 
+  // 부서의 잔여 TO 조회
   await getEntireRemainVcTo().then((res) => {
-    console.log(res.data)
+    // console.log(res.data)
     state.remainVcTo = res.data
     // myDateClasses()
   })
@@ -599,8 +603,8 @@ const onSubmit = () => {
     appendFile()
   }
 
-  console.log(1111)
-  console.log(reqData)
+  // console.log(1111)
+  // console.log(reqData)
 
   createRequest(formData.value).then(() => {
     successToast('휴가 신청이 완료되었습니다.')

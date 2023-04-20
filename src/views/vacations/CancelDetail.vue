@@ -17,8 +17,6 @@ onMounted(async () => {
     // console.log(res.data)
     loading.value = true
     detail.value = res.data
-    console.log(11111)
-    console.log(detail.value)
   })
 })
 

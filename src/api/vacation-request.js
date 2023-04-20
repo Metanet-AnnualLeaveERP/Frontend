@@ -28,7 +28,7 @@ export const getVcReqList = (p, pno, a) => {
 
 // 휴가 신청 하나 상세 조회
 export const getVcReqDetail = (id) => {
-  console.log(id)
+  // console.log(id)
   return api({
     url: `/vacations/${id}`,
     method: 'get',

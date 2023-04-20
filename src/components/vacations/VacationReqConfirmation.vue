@@ -12,17 +12,33 @@ export default {
 
   setup(props) {
     const alHalfType = ref(false)
-    const startDate = ref('')
-    const endDate = ref('')
+
+    // yyyy년 mm월 dd일 포맷
+    const startDateFormat = ref('')
+    const endDateFormat = ref('')
+    const reqDateFormat = ref('')
+
     // 나의 상사
     const manager = store.state.mgr
     const item = ref([])
     const loading = ref(false)
 
+    // yyyy년 mm월 dd일로 포맷 변경하는 메소드
+    const formatDateToKorean = (d) => {
+      // Date 객체로 변환
+      const date = new Date(d)
+
+      // 월, 일을 두 자리 숫자로 표현
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+
+      // 변환된 문자열 생성
+      return `${date.getFullYear()}년 ${month}월 ${day}일`
+    }
+
     onMounted(async () => {
       await getVcReqDetail(props.id).then((res) => {
-        console.log(res.data)
-
+        // console.log(res.data)
         item.value = res.data
         loading.value = true
       })
@@ -32,28 +48,17 @@ export default {
         alHalfType.value = true
       }
 
-      // Date 객체로 변환
-      const start = new Date(item.value.startDate)
-      const end = new Date(item.value.endDate)
-
-      // 월, 일을 두 자리 숫자로 표현
-      const startMonth = String(start.getMonth() + 1).padStart(2, '0')
-      const startDay = String(start.getDate()).padStart(2, '0')
-
-      const endMonth = String(end.getMonth() + 1).padStart(2, '0')
-      const endDay = String(end.getDate()).padStart(2, '0')
-
-      // 변환된 문자열 생성
-      startDate.value = `${start.getFullYear()}년 ${startMonth}월 ${startDay}일`
-      endDate.value = `${start.getFullYear()}년 ${endMonth}월 ${endDay}일`
+      startDateFormat.value = formatDateToKorean(item.value.startDate)
+      endDateFormat.value = formatDateToKorean(item.value.endDate)
+      reqDateFormat.value = formatDateToKorean(item.value.reqDate)
     })
 
     return {
       alHalfType,
-      startDate,
-      endDate,
+      startDateFormat,
+      endDateFormat,
+      reqDateFormat,
       manager,
-      // onClickIssue,
       item,
       loading,
     }
@@ -302,7 +307,7 @@ export default {
                         border: 0px solid black;
                       "
                     >
-                      {{ item.reqDate }}
+                      {{ reqDateFormat }}
                     </td>
                   </tr>
                   <tr></tr>
@@ -417,9 +422,9 @@ export default {
                 width: 700px;
                 height: 22px;
               "
-              v-if="item.reqDays >= 1"
+              v-if="item.reqDays > 1"
             >
-              {{ startDate }} - {{ endDate }}
+              {{ startDateFormat }} - {{ endDateFormat }}
             </td>
             <td
               class="bg-white dark:bg-foreground dark:text-white"
@@ -433,7 +438,7 @@ export default {
               "
               v-else
             >
-              {{ item.startDate }} - {{ item?.endDate }}
+              {{ startDateFormat }}
             </td>
           </tr>
           <tr class="h-4">
