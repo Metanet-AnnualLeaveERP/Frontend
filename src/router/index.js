@@ -45,7 +45,7 @@ const routes = [
         path: '/vacations',
         name: 'Vacations',
         component: () => import('../views/vacations/index.vue'),
-        redirect: '/vacations/list',
+        redirect: '/vacations/main',
         meta: {
           title: 'Vacations',
           roles: ['ROLE_MGR', 'ROLE_EMP'],
