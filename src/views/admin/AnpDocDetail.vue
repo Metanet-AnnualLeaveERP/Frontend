@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import router from '@/router/index.js'
 import { getAnpDocDetail } from '@/api'
 import AnpDocCertificate from '@/components/AnpDocCertificate.vue'
-import { successToast } from '@/sweetAlert'
 
 const route = useRoute()
 const docId = route.params.id
