@@ -121,7 +121,7 @@ let toggleSubMenu = (e) => {
             >
               <router-link class="nav-item-hold" :to="{ name: '사원관리' }"
                 ><i class="i-MaleFemale text-3xl"></i>
-                <p>사원관리</p>
+                <p>사원 관리</p>
               </router-link>
             </li>
             <!-- nav child 있는 애 -->
@@ -133,8 +133,17 @@ let toggleSubMenu = (e) => {
               :data-submenu="true"
             >
               <router-link class="nav-item-hold" :to="{ name: '휴가유형관리' }"
+                ><i class="i-Home1 text-3xl"></i>
+                <p>휴가 관리</p>
+              </router-link>
+            </li>
+            <li
+              @mouseenter="toggleSubMenu"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+            >
+              <router-link class="nav-item-hold" :to="{ name: '휴가요청관리' }"
                 ><i class="i-Plane text-3xl"></i>
-                <p>휴가관리</p>
+                <p>결재 관리</p>
               </router-link>
             </li>
             <li
@@ -145,21 +154,8 @@ let toggleSubMenu = (e) => {
                 class="nav-item-hold"
                 :to="{ name: '연차촉진관리' }"
                 ><i class="i-File text-3xl"></i>
-                <p>문서관리</p>
+                <p>연차 촉진</p>
               </router-link>
-            </li>
-            <!-- nav child 있는 애들 -->
-            <li
-              @mouseenter="toggleSubMenu"
-              class="nav-item border-b border-gray-200 dark:border-dark"
-              :class="selectedParentMenu == 'dashboards' ? 'active' : ''"
-              data-item="dashboards"
-              :data-submenu="true"
-            >
-              <a class="nav-item-hold">
-                <i class="i-Bar-Chart text-3xl"></i>
-                <p>Dashboard</p>
-              </a>
             </li>
           </ul>
         </perfect-scrollbar>
@@ -178,33 +174,15 @@ let toggleSubMenu = (e) => {
           :class="selectedParentMenu == 'vacation_manage' ? 'block' : 'hidden'"
         >
           <li>
-            <router-link :to="{ name: '휴가유형관리'}">
+            <router-link :to="{ name: '휴가유형관리' }">
               <i class="nav-icon i-Plane mr-2"></i>
-              <span class="item-name"> 휴가유형관리</span>
+              <span class="item-name"> 휴가 유형 관리</span>
             </router-link>
           </li>
           <li>
-            <router-link :to="{ name: '휴가부여관리'}">
+            <router-link :to="{ name: '휴가부여관리' }">
               <i class="nav-icon i-Plane mr-2"></i>
-              <span class="item-name"> 휴가부여관리</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: '휴가요청관리'}">
-            <i class="nav-icon i-Plane mr-2"></i>
-            <span class="item-name"> 휴가요청관리</span>
-            </router-link>
-          </li>
-        </ul>
-        <ul
-          class="mb-4 childNav"
-          data-parent="dashboards"
-          :class="selectedParentMenu == 'dashboards' ? 'block' : 'hidden'"
-        >
-          <li>
-            <router-link :to="{ name: 'dashboard-version-one' }">
-              <i class="nav-icon i-Clock mr-2"></i>
-              <span class="item-name"> Version One </span>
+              <span class="item-name"> 휴가 부여 관리</span>
             </router-link>
           </li>
         </ul>

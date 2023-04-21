@@ -46,14 +46,13 @@ const movePage = (role) => {
         <div class="">
           <img
             class="fill-current text-primary mx-auto"
-            width="80"
-            height="80"
+            width="100"
+            height="100"
             viewBox="0 0 80 80"
             fill="none"
-            src="/landing-page/app.png"
+            src="/images/MetaVC-logo.png"
           />
           <div class="text-center mb-3">
-            <p class="text-primary font-semibold text-xl">Vacation ERP</p>
             <p class="text-gray-600 font-semibold">로그인을 해 주세요.</p>
           </div>
           <form action="">

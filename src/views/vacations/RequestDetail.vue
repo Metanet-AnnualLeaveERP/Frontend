@@ -72,14 +72,14 @@ const onClickDownloadBtn = async () => {
 const onClickCancel = async () => {
   const title = '휴가 취소 신청'
   const text = '취소 사유를 입력해 주세요'
-  const inputLabel = '휴가 시작일이 지났을 경우 자동 취소 처리됩니다.'
+  const inputLabel = '휴가 시작일이 지나지 않았을 경우 자동 취소 처리됩니다.'
   const comm = await inputTextModal(title, text, inputLabel)
   const data = {
     reqComm: comm.value,
   }
   await createCancel(reqId, data).then(async (res) => {
     await successToast('휴가 취소 신청이 완료되었습니다!')
-    router.push({ name: '휴가취소내역' })
+    router.push({ name: '휴가관리' })
   })
 }
 
