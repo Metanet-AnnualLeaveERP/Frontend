@@ -48,8 +48,8 @@ export {
 }
 
 // user
-import { login, logout, disableAccountByAdmin,checkEmail } from './user'
-export { login, logout, disableAccountByAdmin,checkEmail}
+import { login, logout, disableAccountByAdmin,checkEmailAndPwd } from './user'
+export { login, logout, disableAccountByAdmin,checkEmailAndPwd}
 
 // vcTotal
 import { getVcRemainInfo } from './vctype-total'

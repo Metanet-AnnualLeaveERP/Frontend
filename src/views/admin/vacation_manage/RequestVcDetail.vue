@@ -30,10 +30,12 @@ const approvalCancel = () => {
   const infoData = {
     icon: "info",
     title: "휴가반려 처리",
+    cancelType: true,
     text: "정말로 휴가를 반려하시겠습니까?\n" +
         "반려시 되돌릴 수 없습니다.",
     cancelText: "돌아가기",
     confirmText: "반려하기",
+    confirmColor:"red",
   }
   if (size >= 10 && size <= 100) {
     checkInfo(infoData).then((check) => {

@@ -28,10 +28,12 @@ export const disableAccountByAdmin = (data) => {
 }
 
 
-export const checkEmail=(email)=>{
+export const checkEmailAndPwd=(info)=>{
   return api({
     url:'/user/check',
     method:"GET",
-    params: {email: email}
+    params: {email: info.email,
+      empNum:info.empNum
+    }
   })
 }
