@@ -35,6 +35,9 @@ const movePage = (role) => {
       break
   }
 }
+const moveSearchPwd=()=>{
+  router.push({name:'forgot'});
+}
 </script>
 
 <template>
@@ -91,6 +94,7 @@ const movePage = (role) => {
             </div>
             <div class="flex justify-center">
               <a class="text-primary font-bold hover:text-primary-700" href="#"
+                 @click.prevent="moveSearchPwd"
                 >비밀번호를 잊으셨나요?</a
               >
             </div>
