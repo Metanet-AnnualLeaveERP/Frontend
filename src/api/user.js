@@ -26,3 +26,14 @@ export const disableAccountByAdmin = (data) => {
     data : data
   })
 }
+
+
+export const checkEmailAndPwd=(info)=>{
+  return api({
+    url:'/user/check',
+    method:"GET",
+    params: {email: info.email,
+      empNum:info.empNum
+    }
+  })
+}
