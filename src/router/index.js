@@ -177,6 +177,12 @@ const routes = [
             component: () =>
               import('@/views/admin/vacation_manage/GrantedVcList.vue'),
           },
+          {
+            path: 'vacation_manage/grant:id',
+            name: '휴가부여상세',
+            component: () =>
+              import('@/views/admin/vacation_manage/GrantedVcDetail.vue'),
+          },
         ],
       },
       {
