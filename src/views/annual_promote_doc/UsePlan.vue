@@ -215,7 +215,9 @@
                   <td style="border: 1px solid black">
                     {{ detail.totalAnv - detail.remainAnv }}
                   </td>
-                  <td style="border: 1px solid black">{{ detail.remainAnv }}</td>
+                  <td style="border: 1px solid black">
+                    {{ detail.remainAnv }}
+                  </td>
                 </tr>
               </table>
 
@@ -226,7 +228,7 @@
                 >
                   통지받은 “미사용 연차유급휴가일수”및“휴가사용 계획서 제출"에
                   의거하여 아래와 같이 본인의 미사용 연차유급휴가 사용시기를
-                  지정하여 통보 드립니다.
+                  지정하여 전달 드립니다.
                 </td>
               </tr>
               <!-- 사용리스트 -->
@@ -247,7 +249,10 @@
                   <td style="border: 1px solid black">사용일수</td>
                 </tr>
                 <!-- 기존에 작성이력이 있으면 여기에 표시 -->
-                <tr v-for="(item, index) in previousDateList.usePlanList" :key="index">
+                <tr
+                  v-for="(item, index) in previousDateList.usePlanList"
+                  :key="index"
+                >
                   <td style="border: 1px solid black">
                     {{ item?.startDate }}
                   </td>
@@ -270,39 +275,55 @@
                   </td>
                 </tr>
               </table>
-              <div>
-            <form @submit.prevent="addDate">
-              <label for="startDate">휴가출발일자선택:</label>
-              <input
-                v-model="startDate"
-                type="date"
-                id="startDate"
-                name="startDate"
-              />
-              <label for="endDate">휴가종료일자선택:</label>
-              <input
-                v-model="endDate"
-                type="date"
-                id="endDate"
-                name="endDate"
-              />
-              <BaseBtn
-                class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                type="submit"
+              <div
+                v-if="showDiv"
               >
-                날짜 추가하기
-              </BaseBtn>
+                <form @submit.prevent="addDate">
+                  <div class="mb-4">
+                    <label
+                      for="date"
+                      class="mb-2 font-bold text-gray-900 dark:text-white"
+                      >휴가출발일자 선택 </label
+                    >
+                    <input
+                      type="date"
+                      id="startDate"
+                      name="startDate"
+                      class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      v-model="startDate"
+                      required
+                    />
+                    <label
+                      for="date"
+                      class="mb-2 font-bold text-gray-900 dark:text-white"
+                      >휴가종료일자 선택 </label
+                    >
+                    <input
+                      type="date"
+                      id="endDate"
+                      name="endDate"
+                      class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      v-model="endDate"
+                      required
+                    />
+                  </div>
 
-              <div class="flex justify-center mt-7">
-                <BaseBtn
-                  class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  @click="saveDates"
-                >
-                  날짜 저장하기
-                </BaseBtn>
+                  <div class="flex justify-center mt-7">
+                    <BaseBtn
+                    class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    type="submit"
+                  >
+                    날짜 추가하기
+                  </BaseBtn>
+                    <BaseBtn
+                      class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      @click="saveDates"
+                    >
+                      날짜 저장하기
+                    </BaseBtn>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
               <!-- 사용리스트 끝-->
 
               <tr class="h-12">
@@ -375,8 +396,29 @@
               발급일자: {{ detail?.occurDate }} &nbsp;|
             </span>
           </div>
-          <!-- 하단 증명서 발급 정보 끝-->
         </div>
+        <!-- 하단 증명서 발급 정보 끝-->
+      </div>
+      <!-- PDF container 끝 -->
+      <div class="flex justify-end mt-5">
+        <BaseBtn
+          class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          @click="toggleDiv"
+        >
+          휴가 추가하기
+        </BaseBtn>
+        <BaseBtn
+          class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          @click="downloadPDF"
+        >
+          PDF 다운로드하기
+        </BaseBtn>
+        <BaseBtn
+          class="mr-3 text-white bg-light hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary dark:focus:ring-blue-800"
+          @click="onClickBackBtn"
+        >
+          돌아가기
+        </BaseBtn>
       </div>
     </div>
   </div>
@@ -387,6 +429,8 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { insertUsePlan, getAnpDocDetail, getListUsePlan } from '@/api/index.js'
 import { successToast, failToast } from '@/sweetAlert'
+import router from '@/router/index.js'
+import html2pdf from 'html2pdf.js'
 
 export default {
   setup() {
@@ -419,7 +463,6 @@ export default {
 
     // 연차사용계획 저장리스트
     const dateList = ref([]) // 저장하는 리스트
-
     const addDate = () => {
       const calculateDiffInDays = () => {
         const start = new Date(startDate.value)
@@ -452,6 +495,41 @@ export default {
         })
     }
 
+    // container div를 jpeg로 변환 후 pdf 다운로드
+    const pdfContent = ref(null)
+    const downloadPDF = () => {
+      const element = pdfContent.value
+      const filename = '연차사용계획서_.pdf'
+      const options = {
+        filename: filename,
+        margin: [5, 0, 5, 0], // top, right, bottom, left 마진 여백
+        image: { type: 'jpeg', quality: 2 },
+        html2canvas: {
+          // html2canvas 옵션
+          useCORS: true, // 영역 안에 로컬 이미지를 삽입 할 때 옵션 필요
+          scrollY: 0, // 스크롤 이슈 때문에 필수
+          scale: 3, // browsers device pixel ratio
+          dpi: 1000,
+          letterRendering: true,
+          //useCORS를 true로 설정 시 반드시 allowTaint를 false 처리 해주어야함
+          allowTaint: false,
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      }
+      html2pdf().from(element).set(options).save()
+    }
+
+    // 돌아가기
+    const onClickBackBtn = () => {
+      router.go(-1)
+    }
+
+    // 휴가 추가 버튼
+    const showDiv = ref(false);
+    const toggleDiv = () => {
+      showDiv.value = !showDiv.value;
+    };
+
     return {
       onMounted,
       startDate,
@@ -460,7 +538,11 @@ export default {
       addDate,
       saveDates,
       detail,
-      previousDateList
+      previousDateList,
+      onClickBackBtn,
+      downloadPDF,
+      showDiv,
+      toggleDiv
     }
   },
 }
