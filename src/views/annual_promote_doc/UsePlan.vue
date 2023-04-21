@@ -250,7 +250,7 @@
                 </tr>
                 <!-- 기존에 작성이력이 있으면 여기에 표시 -->
                 <tr
-                  v-for="(item, index) in previousDateList.usePlanList"
+                  v-for="(item, index) in previousDateList"
                   :key="index"
                 >
                   <td style="border: 1px solid black">

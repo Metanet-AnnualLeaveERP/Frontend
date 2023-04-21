@@ -152,7 +152,7 @@ let toggleSubMenu = (e) => {
             >
               <router-link
                 class="nav-item-hold"
-                :to="{ name: '연차촉진관리' }"
+                :to="{ name: '연차촉진문서함' }"
                 ><i class="i-File text-3xl"></i>
                 <p>연차 촉진</p>
               </router-link>

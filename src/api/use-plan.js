@@ -2,12 +2,13 @@
 import api from './api'
 
 // 사용계획서 조회
-export const getListUsePlan = () => {
+export const getListUsePlan = (id) => {
   return api ({
-    url:'useplan',
+    url:`useplan/datelist/${id}`,
     method: 'get',
   })
 }
+
 
 // 사용계획서 입력
 export const insertUsePlan = (data) =>{

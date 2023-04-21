@@ -112,9 +112,34 @@ const routes = [
             path: 'main',
             name: '연차촉진문서함',
             component: () => import('../views/annual_promote_doc/AnpList.vue'),
+          },
+          {
+            path: '/anp-docs/list/:id',
+            name: '촉진요청서상세',
+            component: () =>
+              import('@/views/admin/AnpDocDetail.vue'),
+          },
+          {
+            path: '/anp-docs/use-plan/:id',
+            name: '연차사용계획서',
+            component: () => 
+              import('@/views/annual_promote_doc/UsePlan.vue'),
           }
         ],
       },
+      // {
+      //   path: '/anp',
+      //   name:'anpMain',
+      //   component: () => import('@/views/annual_promote_doc/index.vue'),
+      //   children:[
+      //     {
+      //       path: '/list',
+      //       name: '연차촉진관리',
+      //       component: () =>
+      //         import('@/views/annual_promote_doc/AnpList.vue'),
+      //     },
+      //   ]
+      // },
       {
         path: '/admin',
         name: 'AdminMain',
@@ -176,31 +201,6 @@ const routes = [
             import('@/views/admin/vacation_manage/CancelVcDetail.vue')
           },
         ],
-      },
-      {
-        path: '/anp',
-        name:'anpMain',
-        component: () => import('@/views/annual_promote_doc/index.vue'),
-        children:[
-          {
-            path: '/list',
-            name: '연차촉진관리',
-            component: () =>
-              import('@/views/annual_promote_doc/AnpList.vue'),
-          },
-          {
-            path: '/list/:id',
-            name: '촉진요청서상세',
-            component: () =>
-              import('@/views/vacation_manage/RequestVcDetail.vue'),
-          },
-          {
-            path: '/use-plan/:id',
-            name: '연차사용계획서',
-            component: () => 
-              import('@/views/annual_promote_doc/UsePlan.vue'),
-          }
-        ]
       },
       {
         path: '/employee',
