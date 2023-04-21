@@ -117,8 +117,8 @@ export const checkInfo = async (infoData) => {
     icon: infoData.icon,
     title: infoData.title,
     text: infoData.text,
-    showCancelButton: true,
-    confirmButtonColor: 'red',
+    showCancelButton: infoData.cancelType,
+    confirmButtonColor: infoData.confirmColor,
     cancelButtonText: infoData.cancelText,
     confirmButtonText: infoData.confirmText,
   })
