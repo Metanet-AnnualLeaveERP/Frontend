@@ -1,11 +1,12 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import { onMounted, ref } from 'vue'
-import { getListAnpDoc,
+import {
+  getListAnpDoc,
   getListDept,
   getListEmpByDeptId,
   getAnnualLeaveByEmpId,
-  insertAnpDoc
+  insertAnpDoc,
 } from '@/api/index.js'
 import router from '@/router'
 import { successToast, loadingAlert, failToast } from '@/sweetAlert'
@@ -44,7 +45,6 @@ const onClickItem = (docId) => {
 //Modal
 const isOpen = ref(false)
 
-
 //부서 데이터 로딩
 const getListDpt = async () => {
   await getListDept()
@@ -81,8 +81,8 @@ const annualLeaveInfo = ref([])
 const anpData = ref({
   totalAnv: '',
   usedAnv: '',
-  remainAnv:'',
-  anvOccurDate:'',
+  remainAnv: '',
+  anvOccurDate: '',
   empDto: {
     empId: '',
   },
@@ -91,16 +91,15 @@ const anpData = ref({
 const onChangeNames = async (e) => {
   selectedEmpId.value = e.target.value // 사원번호
   anpData.value.empDto.empId = selectedEmpId.value
-  console.log('선택된 emp::'+selectedEmpId.value)
+  console.log('선택된 emp::' + selectedEmpId.value)
   const id = selectedEmpId.value
-  await getAnnualLeaveByEmpId(id)
-    .then((res) => {
-      annualLeaveInfo.value = res.data
-      anpData.value.totalAnv = annualLeaveInfo.value.vcDays
-      anpData.value.remainAnv = annualLeaveInfo.value.remainDays
-      anpData.value.usedAnv = anpData.value.totalAnv - anpData.value.remainAnv
-      anpData.value.anvOccurDate = annualLeaveInfo.value.grantedDate
-    })
+  await getAnnualLeaveByEmpId(id).then((res) => {
+    annualLeaveInfo.value = res.data
+    anpData.value.totalAnv = annualLeaveInfo.value.vcDays
+    anpData.value.remainAnv = annualLeaveInfo.value.remainDays
+    anpData.value.usedAnv = anpData.value.totalAnv - anpData.value.remainAnv
+    anpData.value.anvOccurDate = annualLeaveInfo.value.grantedDate
+  })
   console.log('현재 anpData 저장값:' + anpData.value.anvOccurDate)
 }
 //문서 생성
@@ -113,15 +112,15 @@ const onSubmit = async () => {
     loadingAlert().close()
   })
 }
-
 </script>
 
 <template>
   <div>
     <div class="container mx-auto text-center">
-      <breadcrumbs parentTitle="문서관리" subParentTitle="연차촉진문서" 
-        style="font-weight: bold;
-        font-size: 1.2em;"
+      <breadcrumbs
+        parentTitle="문서관리"
+        subParentTitle="연차촉진문서"
+        style="font-weight: bold; font-size: 1.2em"
       />
       <div class="grid grid-cols-12 gap-5">
         <div class="col-span-12">
@@ -132,17 +131,19 @@ const onSubmit = async () => {
               <div
                 class="dataTable-wrapper dataTable-loading no-footer fixed-columns"
               >
-              <div class="dataTable-top px-0 py-3">
-                <div class="dataTable-dropdown float-right mb-4">
-                  <BaseBtn
-                    rounded
-                    class="border border-primary text-primary hover:bg-primary hover:text-white"
-                    @click="isOpen = true"
-                  >
-                    <strong>+촉진 문서 추가하기</strong>
-                  </BaseBtn>
+                <div class="dataTable-top px-0 py-3">
+                  <div class="dataTable-dropdown float-right mb-4">
+                    <BaseBtn
+                      rounded
+                      class="border border-primary text-primary hover:bg-primary hover:text-white"
+                      @click="isOpen = true"
+                    >
+                      <strong>+촉진 문서 추가하기</strong>
+                    </BaseBtn>
+                  </div>
                 </div>
-              </div>
+                
+
                 <div
                   class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
                 >
@@ -191,7 +192,9 @@ const onSubmit = async () => {
                         <!--발송일자-->
                         <td class="py-3">{{ item?.anvOccurDate }}</td>
                         <!--연차만료일자-->
-                        <td class="py-3">{{ item?.plan === 0 ? '미작성' : '작성' }}</td>
+                        <td class="py-3">
+                          {{ item?.plan === 0 ? '미작성' : '작성' }}
+                        </td>
                         <!--계획서 작성 여부-->
                       </tr>
                     </tbody>
@@ -322,6 +325,7 @@ const onSubmit = async () => {
                   @change="onChangeTypes($event)"
                   class="mt-1 block w-full mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
+                  <option disabled selected value="">--부서 선택--</option>
                   <option
                     v-for="(item, index) in deptList"
                     :key="index"
@@ -381,6 +385,5 @@ const onSubmit = async () => {
       </div>
     </div>
     <!-- 문서생성 모달창 끝-->
-
   </div>
 </template>
