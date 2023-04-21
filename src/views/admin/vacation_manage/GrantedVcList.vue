@@ -27,54 +27,6 @@
                   </BaseBtn>
                 </div>
               </div>
-              <!-- <TabGroup>
-                <TabList class="flex p-1 space-x-1 dark:bg-dark rounded-xl">
-                  <Tab
-                    v-for="category in Object.keys(categories)"
-                    as="template"
-                    :key="category"
-                    v-slot="{ selected }"
-                  >
-                    <button
-                      role="button"
-                      :class="[
-                        'px-3 py-1 text-sm leading-5  rounded-lg',
-                        'focus:outline-none',
-                        selected
-                          ? 'bg-primary text-white shadow'
-                          : 'text-gray-700 hover:bg-white/[0.12] hover:text-primary text-primary',
-                      ]"
-                    >
-                      {{ category }}
-                    </button>
-                  </Tab>
-                </TabList>
-
-                <TabPanels class="mt-2">
-                  <TabPanel
-                    v-for="(posts, idx) in Object.values(categories)"
-                    :key="idx"
-                    :class="[]"
-                  >
-                    <ul>
-                      <li
-                        v-for="post in posts"
-                        :key="post.id"
-                        class="relative p-3 rounded-md hover:bg-coolGray-100"
-                      >
-                        <h3 class="text-md font-medium leading-5">
-                          {{ post.title }}
-                        </h3>
-                        <ul class="flex mt-1 space-x-1">
-                          {{
-                            post.data
-                          }}
-                        </ul>
-                      </li>
-                    </ul>
-                  </TabPanel>
-                </TabPanels>
-              </TabGroup> -->
               <div
                 class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
               >
@@ -422,25 +374,6 @@ import { onMounted, ref } from 'vue'
 import { successToast, loadingAlert, failToast } from '@/sweetAlert'
 import router from '@/router/index.js'
 
-// for TapGroup
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
-import Breadcrumbs from '@/components/Breadcrumbs.vue'
-
-let categories = ref({
-  연차휴가: [
-    {
-      id: 1,
-      title: '연차휴가',
-    },
-  ],
-  기타휴가: [
-    {
-      id: 1,
-      title: '기타휴가',
-    },
-  ],
-})
-// for TapGroup
 const list = ref({})
 const pagination = ref({})
 const currentPage = ref(1)

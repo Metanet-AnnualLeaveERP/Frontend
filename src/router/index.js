@@ -111,13 +111,14 @@ const routes = [
           {
             path: 'main',
             name: '연차촉진문서함',
-            component: () => import('../views/annual_promote_doc/AnpList.vue'),
+            component: () => 
+              import('@/views/annual_promote_doc/AnpList.vue'),
           },
           {
             path: '/anp-docs/list/:id',
             name: '촉진요청서상세',
             component: () =>
-              import('@/views/admin/AnpDocDetail.vue'),
+              import('@/views/annual_promote_doc/AnpDocDetail.vue'),
           },
           {
             path: '/anp-docs/use-plan/:id',

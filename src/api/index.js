@@ -68,9 +68,10 @@ export { getVcTypeList, insertVcTypeList, deleteVcType, updateVcType }
 import { getListGrantedVc, 
   insertGrantedVc,
   getGrantedVcDetail,
-  deleteGrantedVc
+  deleteGrantedVc,
+  getAnnualLeaveByEmpId
  } from './vacation-granted'
-export { getListGrantedVc, insertGrantedVc, getGrantedVcDetail, deleteGrantedVc }
+export { getListGrantedVc, insertGrantedVc, getGrantedVcDetail, deleteGrantedVc, getAnnualLeaveByEmpId }
 
 // dept
 import { getListDept } from './dept'
@@ -86,9 +87,10 @@ export { getCertificateDetail, getCertificateList, createCertificate }
 
 // anp-doc
 import{ getListAnpDoc,
-  getAnpDocDetail 
+  getAnpDocDetail,
+  insertAnpDoc 
 } from './anp-doc'
-export { getListAnpDoc, getAnpDocDetail }
+export { getListAnpDoc, getAnpDocDetail, insertAnpDoc }
 
 // 휴가 취소
 import {

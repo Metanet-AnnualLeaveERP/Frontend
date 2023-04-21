@@ -12,6 +12,13 @@ export const getListGrantedVc =(p, a) => {
     },
   })
 }
+// empId 로 해당 직원 연차내역 조회
+export const getAnnualLeaveByEmpId = (id) => {
+  return api ({
+    url:`/admin/vacations/granted-annual/${id}`,
+    method:`get`,
+  })
+}
 
 // 휴가신청 상세조회
 export const getGrantedVcDetail = (id) => {

@@ -154,7 +154,7 @@ let toggleSubMenu = (e) => {
                 class="nav-item-hold"
                 :to="{ name: '연차촉진문서함' }"
                 ><i class="i-File text-3xl"></i>
-                <p>연차 촉진</p>
+                <p>문서 관리</p>
               </router-link>
             </li>
           </ul>
