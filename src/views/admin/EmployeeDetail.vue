@@ -21,7 +21,7 @@
             <select v-model="detail.deptDto.deptName" :class="['hidden']">
               <option value="" disabled selected>직책 선택</option>
               <option value="팀장">팀장</option>
-              <option value="사원">사원</option>
+              <option value="팀원">팀원</option>
               <!-- 추가적인 직책은 여기에 작성 -->
             </select>
             <div class="relative">
@@ -167,7 +167,7 @@ const optionsDept = [
 const isOpenPosition = ref(false);
 const optionsPosition = [
   {value: "팀장", text: "팀장"},
-  {value: "사원", text: "사원"},
+  {value: "팀원", text: "팀원"},
 ];
 
 const toggleDropdownDept = () => {
