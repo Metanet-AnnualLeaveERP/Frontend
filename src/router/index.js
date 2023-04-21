@@ -112,9 +112,6 @@ const routes = [
             path: 'main',
             name: '연차촉진문서함',
             component: () => import('../views/annual_promote_doc/AnpList.vue'),
-          },
-          {
-            path: ''
           }
         ],
       },
