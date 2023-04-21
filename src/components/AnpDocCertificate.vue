@@ -2,6 +2,9 @@
 import { onMounted, ref } from 'vue'
 import store from '@/store/index.js'
 import html2pdf from 'html2pdf.js'
+import router from '@/router'
+
+
 export default {
   props: {
     item: {
@@ -15,7 +18,7 @@ export default {
     const pdfContent = ref(null)
     // 나의 상사
     const manager = store.state.mgr
-    
+    const docId = props.item.docId
 
     onMounted(async() => {
       console.log(props.item)
@@ -68,6 +71,10 @@ export default {
       html2pdf().from(element).set(options).save()
     }
     
+    const onClickCreatePlan = () =>{
+      const docId = props.item.docId;
+      router.push({ name : '연차사용계획서', params: { id:docId}})
+    }
 
     return {
       startDate,
@@ -75,6 +82,7 @@ export default {
       downloadPDF,
       pdfContent,
       manager,
+      onClickCreatePlan
     }
   },
 }
@@ -363,6 +371,13 @@ export default {
         @click="downloadPDF"
       >
         PDF 다운로드하기
+      </BaseBtn>
+
+      <BaseBtn
+        class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        @click="onClickCreatePlan"
+      >
+        사용계획서
       </BaseBtn>
     </div>
   </div>

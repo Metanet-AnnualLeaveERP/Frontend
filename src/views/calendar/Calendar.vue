@@ -255,7 +255,6 @@ onMounted(async () => {
       })
       holidaySize.value = index
     })
-    console.log(holidaySize.value)
   })
 
   // 로그인한 사용자의 휴가 리스트
@@ -309,8 +308,6 @@ onMounted(async () => {
       store.commit('setManager', res.data)
     })
   }
-
-  console.log(state.items)
 })
 
 const onClickCheckBtn = () => {

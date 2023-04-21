@@ -105,3 +105,11 @@ export {
   getCancelApproval,
   getCancelApprovalList,
 }
+
+//use-plan
+import {
+  insertUsePlan, getListUsePlan
+} from './use-plan'
+export{
+  insertUsePlan, getListUsePlan
+}
