@@ -18,7 +18,7 @@ const onClickLoginBtn = () => {
     store.commit('setRole', res.headers.role)
     store.commit('setEmpNum', res.headers.empnum)
     movePage(res.headers.role)
-  })
+  }).catch((e)=>console.log('sdsss'))
 }
 
 // 임시

@@ -65,7 +65,7 @@ const onClickItem = (id) => {
 </script>
 
 <template>
-  <div class="container mx-auto text-center">
+  <div class="text-center">
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12">
         <BaseCard>

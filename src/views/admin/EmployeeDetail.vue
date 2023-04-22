@@ -191,10 +191,8 @@ const selectOptionPosition = (option) => {
 };
 
 onMounted(async () => {
-  console.log(empId);
 
   await getEmpInfo(empId).then((res) => {
-    console.log(res.data);
     detail.value = res.data;
   });
 });

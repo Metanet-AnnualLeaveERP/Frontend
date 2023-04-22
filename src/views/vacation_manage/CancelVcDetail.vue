@@ -31,10 +31,24 @@ const cancelApprovalSuccess = () => {
     cancelId: cancelId,
     vcStatus: vcStatus,
   }
-
   approvalCancelSuccess(data).then((res) => {
+    successToast(res.data).then((toast)=>{
+
+    })
+    getCancelVC()
+  })
+}
+
+const onClickapprovalCancel=()=>{
+  const params = {
+    cancelId:cancelId,
+    vcStatus:'반려',
+    comments:comments.value,
+  }
+  approvalCancelSuccess(params).then((res)=>{
     successToast(res.data)
     getCancelVC()
+    openModal.value =false;
   })
 }
 // 돌아가기
@@ -44,6 +58,8 @@ const onClickBackBtn = () => {
 const onChangeText = () => {
   warning.value = false
 }
+
+
 </script>
 
 <template>
@@ -214,7 +230,7 @@ const onChangeText = () => {
               />
             </div>
             <BaseBtn
-              @click="null"
+              @click="onClickapprovalCancel"
               rounded
               class="border border-danger text-danger hover:bg-danger hover:text-white mr-3"
               type="button"
@@ -308,7 +324,7 @@ const onChangeText = () => {
               />
             </div>
             <BaseBtn
-              @click="null"
+              @click="onClickapprovalCancel"
               rounded
               class="border border-danger text-danger hover:bg-danger hover:text-white mr-3"
               type="button"

@@ -1,130 +1,6 @@
 <template>
-  <div id="default-calendar">
-    <div class="calendar-controls">
-      <BaseCard>
-        <div class="text-xl font-bold mb-3">캘린더 설정</div>
-
-        <div class="items-center mb-4">
-          <label class="font-semibold">표시 기간 설정</label>
-          <div class="mt-1">
-            <select
-              v-model="state.displayPeriodUom"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-              <option value="month">월 단위</option>
-              <option value="week">주 단위</option>
-              <option value="year">연 단위</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="items-center mb-4">
-          <label class="font-semibold">표시 개월 수</label>
-          <div class="mt-1">
-            <select
-              v-model="state.displayPeriodCount"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-              <option :value="1">1개월</option>
-              <option :value="2">2개월</option>
-              <option :value="3">3개월</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="items-center mb-4">
-          <label class="font-semibold">주 시작 요일</label>
-          <div class="mt-1">
-            <select
-              v-model="state.startingDayOfWeek"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-              <option
-                v-for="(d, index) in dayNames"
-                :key="index"
-                :value="index"
-              >
-                {{ d }}
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <div class="mb-2">
-            <label class="font-semibold">기타 설정</label>
-          </div>
-
-          <div class="flex items-center mb-4">
-            <input
-              v-model="state.useTodayIcons"
-              type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >Use icon for today's period</label
-            >
-          </div>
-          <div class="flex items-center mb-4">
-            <input
-              v-model="state.displayWeekNumbers"
-              type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >주 번호 표시하기</label
-            >
-          </div>
-
-          <div class="flex items-center mb-4">
-            <input
-              v-model="state.showTimes"
-              type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >일정에 시간 표시하기</label
-            >
-          </div>
-          <div class="items-center mb-4">
-            <input
-              v-model="state.useDefaultTheme"
-              type="checkbox"
-              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-            <label
-              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >캘린더 CSS 적용</label
-            >
-          </div>
-        </div>
-
-        <div class="mt-10">
-          <div class="text-center">
-            <label class="font-semibold"> {{ todayDate }} 기준</label>
-          </div>
-          <div class="flex justify-center mt-2">
-            <BaseBtn
-              class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
-              @click="onClickCheckBtn"
-              >휴가 정보 확인하기</BaseBtn
-            >
-          </div>
-        </div>
-
-        <div class="flex justify-center mt-5">
-          <BaseBtn
-            class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
-            @click="onClickRequestBtn"
-            >휴가 신청하기</BaseBtn
-          >
-        </div>
-      </BaseCard>
-    </div>
-    <div class="calendar-parent">
+  <div id="default-calendar" class="flex flex-col lg:flex-row gap-10">
+    <div class="calendar-parent w-full">
       <CalendarView
         :items="state.items"
         :show-date="state.showDate"
@@ -158,6 +34,130 @@
           />
         </template>
       </CalendarView>
+    </div>
+    <div class="calendar-controls lg:w-1/3 w-full">
+      <BaseCard>
+        <div class="text-xl font-bold mb-3">캘린더 설정</div>
+
+        <div class="items-center mb-4">
+          <label class="font-semibold">표시 기간 설정</label>
+          <div class="mt-1">
+            <select
+                v-model="state.displayPeriodUom"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="month">월 단위</option>
+              <option value="week">주 단위</option>
+              <option value="year">연 단위</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="items-center mb-4">
+          <label class="font-semibold">표시 개월 수</label>
+          <div class="mt-1">
+            <select
+                v-model="state.displayPeriodCount"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option :value="1">1개월</option>
+              <option :value="2">2개월</option>
+              <option :value="3">3개월</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="items-center mb-4">
+          <label class="font-semibold">주 시작 요일</label>
+          <div class="mt-1">
+            <select
+                v-model="state.startingDayOfWeek"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option
+                  v-for="(d, index) in dayNames"
+                  :key="index"
+                  :value="index"
+              >
+                {{ d }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div class="mb-2">
+            <label class="font-semibold">기타 설정</label>
+          </div>
+
+          <div class="flex items-center mb-4">
+            <input
+                v-model="state.useTodayIcons"
+                type="checkbox"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Use icon for today's period</label
+            >
+          </div>
+          <div class="flex items-center mb-4">
+            <input
+                v-model="state.displayWeekNumbers"
+                type="checkbox"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >주 번호 표시하기</label
+            >
+          </div>
+
+          <div class="flex items-center mb-4">
+            <input
+                v-model="state.showTimes"
+                type="checkbox"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >일정에 시간 표시하기</label
+            >
+          </div>
+          <div class="items-center mb-4">
+            <input
+                v-model="state.useDefaultTheme"
+                type="checkbox"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+            <label
+                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >캘린더 CSS 적용</label
+            >
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <div class="text-center">
+            <label class="font-semibold"> {{ todayDate }} 기준</label>
+          </div>
+          <div class="flex justify-center mt-2">
+            <BaseBtn
+                class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
+                @click="onClickCheckBtn"
+            >휴가 정보 확인하기</BaseBtn
+            >
+          </div>
+        </div>
+
+        <div class="flex justify-center mt-5">
+          <BaseBtn
+              class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
+              @click="onClickRequestBtn"
+          >휴가 신청하기</BaseBtn
+          >
+        </div>
+      </BaseCard>
     </div>
   </div>
 </template>
@@ -382,5 +382,28 @@ const onClickRequestBtn = () => {
 </script>
 
 <style>
-@import '@/assets/css/default-calendar.css';
+.cv-item {
+  text-align: center;
+  border-radius: 0.5em;
+  font-weight: 600;
+}
+
+/* my custom */
+.holiday {
+  background-color: #ef4444 !important;
+  color: white;
+}
+
+.anniversary {
+  background-color: #ccffcc !important;
+}
+
+.my-vacation {
+  background-color: #99CCFF !important;
+}
+
+.team-vacation {
+  background-color: #CCCCFF !important;
+}
+
 </style>
