@@ -22,7 +22,6 @@ const getList = async (page) => {
 
   await getListAnpDoc()
     .then((res) => {
-      console.log(res.data)
       importedAnpDocsList.value = res.data.anpDocs
       pagination.value = res.data.paging
     })

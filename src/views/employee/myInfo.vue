@@ -1,10 +1,10 @@
 <template>
   <div>
-  <div style="margin: 2em 0;">
-    <span class="text-xl mr-4">
-      <h1>{{ detail.name }}</h1>
-    </span>
+  <div class="flex flex-row justify-between my-10">
+    <span class="text-4xl">사원정보 |</span>
+    <span class="text-4xl mr-4">{{ detail.name }}님의 개인정보수정</span>
   </div>
+    <hr class="my-10">
   <BaseCard>
     <div class="grid grid-cols-1 md:grid-cols-2 justify-items-center">
       <div class="w-full flex flex-col">

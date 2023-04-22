@@ -177,6 +177,12 @@ const routes = [
             component: () =>
               import('@/views/admin/vacation_manage/GrantedVcList.vue'),
           },
+          {
+            path: 'vacation_manage/grant/:id',
+            name: '휴가부여상세',
+            component: () =>
+                import('@/views/admin/vacation_manage/GrantedVcDetail.vue'),
+          },
         ],
       },
       {
@@ -195,10 +201,16 @@ const routes = [
               import('@/views/vacation_manage/RequestVcList.vue'),
           },
           {
+            path:'request/approval/:id',
+            name:'관리자결재상세',
+            component : ()=>
+                import("@/views/vacation_manage/RequestVcDetail.vue")
+          },
+          {
             path: 'request/cancel/:id',
             name: '관리자휴가취소상세',
             component: ()=> 
-            import('@/views/admin/vacation_manage/CancelVcDetail.vue')
+            import('@/views/vacation_manage/CancelVcDetail.vue')
           },
         ],
       },

@@ -20,16 +20,14 @@ export default {
         >
           메타넷 디지털 (주)
         </div>
-        <p
-          class="bg-white text-gray-500 dark:bg-foreground text-left dark:text-white flex justify-center"
-        >
+        <p class="bg-white pb-5 text-gray-500 dark:bg-foreground text-left dark:text-white flex justify-center">
           본 확인서는 발급기관의 전자적 확인을 거쳐 발급한 증명서입니다.
         </p>
         <div
-          class="bg-white text-gray-500 dark:bg-foreground text-left dark:text-white flex justify-center"
+          class="bg-white text-gray-500 dark:bg-foreground text-left dark:text-white flex justify-center pb-3"
         >
           <span class="mr-2"> 발급번호: {{ item.certId }} &nbsp;| </span>
-          <span class="mr-2"> 발급일자: {{ item.issuedDate }} &nbsp;| </span>
+          <span class="mr-2 "> 발급일자: {{ item.issuedDate }} &nbsp;| </span>
           <span> 발급목적: {{ item.purpose }} </span>
         </div>
       </div>
