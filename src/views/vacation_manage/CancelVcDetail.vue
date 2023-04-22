@@ -70,12 +70,13 @@ const onChangeText = () => {
       @click="onClickBackBtn"
       >돌아가기
     </BaseBtn>
-    <BaseCard class="h-full">
+
+    <BaseCard class="h-full ">
       <div
         class="flex flex-col md:flex-row justify-evenly justify-items-center items-center"
       >
-        <div class="w-2/3 md:w-5/6 text-center text-2xl md:text-3xl">
-          휴가 상세 내역
+        <div class="w-2/3 md:w-5/6 text-center text-2xl md:text-3xl text-start">
+          휴가 취소 내역
         </div>
         <div
           class="w-full justify-between mt-5 md:flex-col md:justify-end justify-items-center md:items-end items-center text-end md:w-2/6 justify-end flex flex-row"
