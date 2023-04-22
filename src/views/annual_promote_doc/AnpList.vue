@@ -1,8 +1,14 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import { onMounted, ref } from 'vue'
-import { getListAnpDoc } from '@/api/index.js'
+import { getListAnpDoc,
+  getListDept,
+  getListEmpByDeptId,
+  getAnnualLeaveByEmpId,
+  insertAnpDoc
+} from '@/api/index.js'
 import router from '@/router'
+import { successToast, loadingAlert, failToast } from '@/sweetAlert'
 
 // 연차촉진문서함
 const importedAnpDocsList = ref({})
@@ -10,8 +16,8 @@ const pagination = ref({})
 const currentPage = ref(1)
 
 onMounted(async () => {
-  // 촉진문서 조회하기
-  getList(1)
+  getList(1) // 촉진문서리스트
+  getListDpt() // 부서조회(추가 모달에서 사용)
 })
 
 const getList = async (page) => {
@@ -34,6 +40,80 @@ const getList = async (page) => {
 const onClickItem = (docId) => {
   router.push({ name: '촉진요청서상세', params: { id: docId } })
 }
+
+//Modal
+const isOpen = ref(false)
+
+
+//부서 데이터 로딩
+const getListDpt = async () => {
+  await getListDept()
+    .then((res) => {
+      deptList.value = res.data
+    })
+    .catch(() => {
+      failToast('부서 데이터 로딩에 실패했습니다.')
+    })
+}
+// 부서리스트
+const deptList = ref([])
+const selectedDept = ref('')
+
+// 사원리스트
+const empList = ref([])
+const selectedEmpId = ref('')
+//부서 선택 시 부서Id로 부서사원 조회
+const onChangeTypes = async (e) => {
+  selectedDept.value = e.target.value
+  console.log('부서번호 : ' + selectedDept.value) // 확인
+  await getListEmpByDeptId(selectedDept.value)
+    .then((res) => {
+      empList.value = res.data
+      anpData.value.empDto.empId = empList.value[0].empId
+    })
+    .catch(() => {
+      failToast('사원 데이터 로딩에 실패했습니다.')
+    })
+}
+// 사원 연차정보
+const annualLeaveInfo = ref([])
+//insertData
+const anpData = ref({
+  totalAnv: '',
+  usedAnv: '',
+  remainAnv:'',
+  anvOccurDate:'',
+  empDto: {
+    empId: '',
+  },
+})
+// 선택된 사원으로 촉진문서요청 넣기
+const onChangeNames = async (e) => {
+  selectedEmpId.value = e.target.value // 사원번호
+  anpData.value.empDto.empId = selectedEmpId.value
+  console.log('선택된 emp::'+selectedEmpId.value)
+  const id = selectedEmpId.value
+  await getAnnualLeaveByEmpId(id)
+    .then((res) => {
+      annualLeaveInfo.value = res.data
+      anpData.value.totalAnv = annualLeaveInfo.value.vcDays
+      anpData.value.remainAnv = annualLeaveInfo.value.remainDays
+      anpData.value.usedAnv = anpData.value.totalAnv - anpData.value.remainAnv
+      anpData.value.anvOccurDate = annualLeaveInfo.value.grantedDate
+    })
+  console.log('현재 anpData 저장값:' + anpData.value.anvOccurDate)
+}
+//문서 생성
+const onSubmit = async () => {
+  console.log(anpData.value)
+  loadingAlert()
+  await insertAnpDoc(anpData.value).then(async (res) => {
+    console.log(res)
+    await successToast('촉진 요청서가 추가되었습니다')
+    loadingAlert().close()
+  })
+}
+
 </script>
 
 <template>
@@ -52,6 +132,17 @@ const onClickItem = (docId) => {
               <div
                 class="dataTable-wrapper dataTable-loading no-footer fixed-columns"
               >
+              <div class="dataTable-top px-0 py-3">
+                <div class="dataTable-dropdown float-right mb-4">
+                  <BaseBtn
+                    rounded
+                    class="border border-primary text-primary hover:bg-primary hover:text-white"
+                    @click="isOpen = true"
+                  >
+                    <strong>+촉진 문서 추가하기</strong>
+                  </BaseBtn>
+                </div>
+              </div>
                 <div
                   class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
                 >
@@ -203,8 +294,93 @@ const onClickItem = (docId) => {
           </BaseCard>
         </div>
       </div>
-
-
     </div>
+
+    <!-- 문서생성 모달창 -->
+    <div
+      v-show="isOpen"
+      class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-700 bg-opacity-50"
+    >
+      <div class="w-1/2 p-6 mx-4 bg-white rounded-md shadow-xl flex">
+        <!-- <div class="w-2/3 mr-4"> -->
+        <div class="w-full mr-4">
+          <!--왼쪽 영역-->
+          <div class="flex items-center justify-between">
+            <h3 class="text-2xl font-bold">연차촉진문서 발송대상 선택</h3>
+          </div>
+          <form class="space-y-12" @submit.prevent="onSubmit">
+            <div class="mt-4">
+              <!-- 부서 선택 -->
+              <div class="field">
+                <label
+                  for="types"
+                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  >부서 선택
+                </label>
+                <select
+                  id="deptNames"
+                  @change="onChangeTypes($event)"
+                  class="mt-1 block w-full mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  <option
+                    v-for="(item, index) in deptList"
+                    :key="index"
+                    :value="item.deptId"
+                  >
+                    {{ item?.deptName }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- 사원 선택 -->
+              <div class="field">
+                <label
+                  for="types"
+                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  >사원 선택
+                </label>
+                <select
+                  id="empNames"
+                  @change="onChangeNames($event)"
+                  class="mt-1 block w-full mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  <template v-if="empList?.length > 0">
+                    <option disabled selected value="">--직원 선택--</option>
+                    <option
+                      v-for="(item, index) in empList"
+                      :key="index"
+                      :value="item.empId"
+                    >
+                      {{ item?.name }}
+                    </option>
+                  </template>
+                  <template v-else>
+                    <option value="">사원이 없습니다</option>
+                  </template>
+                </select>
+              </div>
+
+              <BaseBtn
+                @click="isOpen = false"
+                rounded
+                class="border border-danger text-danger hover:bg-danger hover:text-white"
+                type="button"
+              >
+                Cancel
+              </BaseBtn>
+              <span>&nbsp;&nbsp;</span>
+              <BaseBtn
+                class="border border-success text-success hover:bg-success hover:text-white"
+                type="submit"
+              >
+                send
+              </BaseBtn>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- 문서생성 모달창 끝-->
+
   </div>
 </template>

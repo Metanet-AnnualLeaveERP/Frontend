@@ -20,3 +20,12 @@ export const getAnpDocDetail = (id) => {
     method:'get',
   })
 }
+
+// 연차촉진문서 추가
+export const insertAnpDoc = (data) => {
+  return api({
+    url:'/annual-promote',
+    method:'post',
+    data:data
+  })
+}
