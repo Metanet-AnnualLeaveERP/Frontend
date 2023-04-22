@@ -1,6 +1,7 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import { onMounted, ref } from 'vue'
+import store from '@/store/index.js'
 import {
   getListAnpDoc,
   getListDept,
@@ -183,7 +184,8 @@ const onSubmit = async () => {
                     <BaseBtn
                       rounded
                       class="border border-primary text-primary hover:bg-primary hover:text-white"
-                      @click="isOpen = true, getListDpt()"                    >
+                      @click="isOpen = true, getListDpt()"
+                      v-if="store.state.emp == false"                    >
                       <strong>+촉진 문서 추가하기</strong>
                     </BaseBtn>
                   </div>
