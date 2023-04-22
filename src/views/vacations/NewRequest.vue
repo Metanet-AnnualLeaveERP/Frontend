@@ -6,8 +6,8 @@
       </span>
     </div>
 
-    <div id="request-div">
-      <div class="request-calendar">
+    <div id="request-div" class="flex lg:flex-row gap-4 justify-between flex-col">
+      <div class="request-calendar w-full  lg:w-4/5">
         <CalendarView
           :items="state.items"
           :show-date="state.showDate"
@@ -42,6 +42,7 @@
       </div>
       <div class="request-form">
         <BaseCard>
+          <div>
           <form encType="multipart/form-data" @submit.prevent="onSubmit">
             <label
               class="block mb-2 text-xl font-bold text-gray-900 dark:text-white"
@@ -58,7 +59,9 @@
               <select
                 v-model="reqData.vcTypeDto.typeId"
                 id="types"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
+                focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
+                dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 @change="onChangeTypes($event)"
               >
                 <option value="" selected>유형을 선택하세요</option>
@@ -206,6 +209,7 @@
               </BaseBtn>
             </div>
           </form>
+          </div>
         </BaseCard>
       </div>
     </div>
@@ -665,5 +669,4 @@ const appendFile = () => {
 </script>
 
 <style>
-@import '@/assets/css/request-calendar.css';
 </style>

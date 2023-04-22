@@ -10,8 +10,8 @@ onMounted(async () => {
   await getVcRemainInfo().then((res) => {
     console.log(res.data)
     // list.value = res.data
-    annual.value = res.data.annual
-    reward.value = res.data.reward
+    annual.value = res?.data?.annual
+    reward.value = res?.data?.reward
     loading.value = true
   })
 })
@@ -35,18 +35,19 @@ onMounted(async () => {
       </thead>
       <tbody class="align-middle text-center">
         <!-- 연차 -->
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" v-if="annual">
           <th
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+
           >
-            {{ annual.vcTypeDto.typeName }}
+            {{ annual?.vcTypeDto?.typeName }}
           </th>
-          <td class="px-6 py-4">{{ annual.vcDays }}</td>
+          <td class="px-6 py-4">{{ annual?.vcDays }}</td>
           <td class="px-6 py-4">
-            {{ annual.vcDays - annual.remainDays }}
+            {{ annual?.vcDays - annual?.remainDays ?annual?.vcDays - annual?.remainDays: 0}}
           </td>
-          <td class="px-6 py-4">{{ annual.remainDays }}</td>
+          <td class="px-6 py-4">{{ annual?.remainDays }}</td>
         </tr>
         <!-- 타 휴가 리스트 -->
         <tr
@@ -58,13 +59,13 @@ onMounted(async () => {
             scope="row"
             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
           >
-            {{ item.vcTypeDto.typeName }}
+            {{ item?.vcTypeDto?.typeName }}
           </th>
-          <td class="px-6 py-4">{{ item.totalGvCnt }}</td>
+          <td class="px-6 py-4">{{ item?.totalGvCnt }}</td>
           <td class="px-6 py-4">
-            {{ item.totalGvCnt - item.cnt }}
+            {{ item?.totalGvCnt - item?.cnt ? item?.totalGvCnt - item?.cnt: 0 }}
           </td>
-          <td class="px-6 py-4">{{ item.cnt }}</td>
+          <td class="px-6 py-4">{{ item?.cnt }}</td>
         </tr>
       </tbody>
     </table>

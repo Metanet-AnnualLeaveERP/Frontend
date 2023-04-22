@@ -6,9 +6,12 @@ import {errorAlert, failToast, successToast} from '@/sweetAlert'
 const api = axios.create()
 api.defaults.baseURL = '/api'
 api.interceptors.request.use((request) => {
+    localStorage.setItem("url", request.url);
     if (request.url != null && request.url != '/user/login') {
-        localStorage.setItem("url", request.url);
         localStorage.setItem("method", request.method);
+        if (request.params) {
+            localStorage.setItem("param", JSON.stringify(request.params));
+        }
         request?.data && localStorage.setItem("data", JSON.stringify(request.data));
     }
     return request
@@ -17,7 +20,7 @@ api.interceptors.response.use(
     (response) => {
         return response
     },
-     (error) => {
+    (error) => {
         const status = error?.response?.status
         switch (status) {
             case 400:
@@ -25,22 +28,26 @@ api.interceptors.response.use(
                 errorAlert('잘못된 문법입니다.')
                 break
             case 401:
-                console.log(status)
-                 axios.post("/api/user/refreshtoken").then( (res) => {
-                    console.log(res.status)
-                    if (res.status === 200) {
-                         axios({
-                            method: localStorage.getItem("method"),
-                            url: '/api' + localStorage.getItem("url"),
-                            data: JSON.parse(localStorage.getItem('data'))
-                        }).then((res2) => {
-                            window.location.reload();
-                            localStorage.clear();
-                        }).catch((e) => console.log(e))
-                    } else {
-                        failToast('잘못된 요청입니다.');
-                    }
-                }).catch((e) => errorAlert('등록되지 않은 정보입니다.'))
+                const url = localStorage.getItem("url");
+                if (url !== '/user/login') {
+                    axios.post("/api/user/refreshtoken").then((res) => {
+                        if (res.status === 200) {
+                            axios({
+                                method: localStorage.getItem("method"),
+                                url: '/api' + url,
+                                data: JSON.parse(localStorage.getItem('data')),
+                                params: JSON.parse(localStorage.getItem('param'))
+                            }).then((res2) => {
+                                window.location.reload();
+                                localStorage.clear();
+                            }).catch((e) => console.log(e))
+                        } else {
+                            failToast('잘못된 요청입니다.');
+                        }
+                    }).catch((e) => errorAlert('등록되지 않은 정보입니다.'))
+                }else{
+                    errorAlert("아이디 및 패스워드가 잘못되었습니다.")
+                }
 
                 break
             case 403:

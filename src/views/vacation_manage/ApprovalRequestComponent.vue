@@ -50,7 +50,7 @@ const optionsPosition = [
   { value: null, text: '전체' },
   { value: '자동승인', text: '자동승인' },
   { value: '승인', text: '승인' },
-  { value: '관리자대기중', text: '관리자대기' },
+  { value: '관리자 대기중', text: '관리자 대기중' },
   { value: '대기중', text: '대기중' },
   { value: '취소', text: '취소' },
 ]

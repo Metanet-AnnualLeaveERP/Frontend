@@ -14,7 +14,6 @@ const gvIdNo = 'No.' + route.params.id
 onMounted(async () => {
   // 상세조회
   await getGrantedVcDetail(gvId).then((res) => {
-    console.log(res.data)
     gvInfo.value = res.data
   })
 })
@@ -29,12 +28,10 @@ let confirmFlag = null;
 const onClickDeleteBtn = async () => {
   confirmFlag = await checkConfirm('해당 내역을 삭제할까요?', 
   '삭제 시엔 부여일수만큼 전부 삭제됩니다!')
-  console.log(confirmFlag.isConfirmed)
   if(confirmFlag == null){
     return;
   } else if(confirmFlag.isConfirmed){
     deleteGrantedVc(gvId).then( (res => {
-      console.log(res)
       successToast('삭제가 성공하였습니다.')
       router.go(-1)
     }))

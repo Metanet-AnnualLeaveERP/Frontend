@@ -1,9 +1,11 @@
 <template>
-  <div style="margin: 2em 0;">
-    <span class="text-xl mr-4">
-      <h1>{{ detail.name }}</h1>
+  <div class="my-10 text-4xl flex flex-row justify-between" >
+    <BaseBtn class="bg-primary text-white hover:bg-blue-700" @click="router.go(-1)">이전으로</BaseBtn>
+    <span class="text-xl mr-4  ">
+      {{ detail.name }} 님의 정보
     </span>
   </div>
+  <hr class="mb-5">
   <BaseCard>
     <div class="grid grid-cols-1 md:grid-cols-2 justify-items-center">
       <div class="w-full flex flex-col">
@@ -15,11 +17,10 @@
           <span class="text-xl mr-4">재직여부</span>
           <input type="text" v-model="employmentStatus" :class="className.inputName" readonly disabled>
         </div>
-        <div class="m-4 gap-x-10 flex justify-between align-middle items-center">
+        <div class="m-4 gap-x-10 flex justify-between align-middle items-center" v-if="detail.userDto.enabled !== 0">
           <span class="text-xl mr-4">직책&nbsp;</span>
-          <div class="flex-1 relative inline-block w-full text-gray-700">
+          <div class="flex-1 relative inline-block w-full text-gray-700" >
             <select v-model="detail.deptDto.deptName" :class="['hidden']">
-              <option value="" disabled selected>직책 선택</option>
               <option value="팀장">팀장</option>
               <option value="팀원">팀원</option>
               <!-- 추가적인 직책은 여기에 작성 -->
@@ -49,7 +50,7 @@
             </div>
           </div>
         </div>
-        <div class="m-4 gap-x-10 flex justify-between align-middle items-center">
+        <div class="m-4 gap-x-10 flex justify-between align-middle items-center" v-if="detail.userDto.enabled !== 0">
           <span class="text-xl mr-4">부서&nbsp;</span>
           <div class="flex-1 relative inline-block w-full text-gray-700">
             <select v-model="detail.deptDto.deptName" :class="['hidden']">
@@ -110,7 +111,7 @@
       </div>
     </div>
   </BaseCard>
-  <div class="flex mt-5 justify-end">
+  <div class="flex mt-5 justify-end"  v-if="detail.userDto.enabled !== 0">
     <BaseBtn class="bg-primary text-white hover:bg-blue-700" :md="true" @click="modifyInfo">수정하기</BaseBtn>
     <BaseBtn class="bg-primary text-white ml-5 hover:bg-blue-700" :md="true" @click="disableAccount">비활성화</BaseBtn>
   </div>
@@ -123,6 +124,7 @@ import {useRoute} from "vue-router";
 import {getEmpInfo, modifyEmpInfoByAdmin, disableAccountByAdmin} from "@/api";
 import BaseCard from "@/components/Base/BaseCard.vue";
 import { failToast, returnInfoAlert } from '@/sweetAlert';
+import BaseBtn from "@/components/Base/BaseBtn.vue";
 
 const route = useRoute();
 const empId = route.params.id;
@@ -150,7 +152,6 @@ watch(() => detail.value.userDto.enabled, (newValue, oldValue) => {
     employmentStatus.value = newValue === 1 ? '재직중' : '퇴사';
   }
 });
-
 const isOpenDept = ref(false);
 const optionsDept = [
   {value: "개발팀", text: "개발팀"},
@@ -191,14 +192,12 @@ const selectOptionPosition = (option) => {
 };
 
 onMounted(async () => {
-  console.log(empId);
 
   await getEmpInfo(empId).then((res) => {
-    console.log(res.data);
     detail.value = res.data;
   });
-});
 
+});
 const modifyInfo = async () => {
   await modifyEmpInfoByAdmin({
     empId : detail.value.empId,

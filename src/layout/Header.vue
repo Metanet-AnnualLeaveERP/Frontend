@@ -5,6 +5,7 @@ import {useStore} from 'vuex'
 import {logout} from '@/api'
 import {successToast} from '@/sweetAlert'
 import router from '@/router'
+import BaseBtn from "@/components/Base/BaseBtn.vue";
 
 let store = useStore()
 const role = store.state.role;
@@ -40,7 +41,7 @@ let colorModeSwitch = () => {
     console.log(isDarkMode.value)
   }
 }
-
+const userName = store.state?.emp?.name || '관리자';
 const signOut = async () => {
   await logout().then((res) => {
     if (res.status === 200) {
@@ -68,7 +69,7 @@ const moveMyPage = (empId) => {
       <div class="logo flex justify-center">
         <img
             class="h-16 w-16 mr-6 ml-3"
-            src="/images/logo.png"
+            src="/MetaVC-logo.png"
             alt="logo"
             srcset=""
         />
@@ -98,7 +99,12 @@ const moveMyPage = (empId) => {
         </button>
       </div>
     </div>
+
     <div class="flex items-center">
+      <div class="mr-5">
+        <span class="font-bold">{{userName}}</span>
+        <span class="mx-2">님 환영합니다.</span>
+      </div>
       <button
           id="lightOrDarkMode"
           @click="colorModeSwitch"
@@ -115,82 +121,16 @@ const moveMyPage = (empId) => {
         />
       </button>
       <div>
-        <button
-            :class="[
-              active
-              ? 'bg-primary text-white'
-              : 'text-gray-900 dark:text-gray-300',
-              'group flex  items-center w-full px-4 py-2 text-sm',
-                      ]"
-            aria-label="Account Settings"
-            role="button"
+        <BaseBtn active aria-label="Account Settings" role="button" @click="moveMyPage"
+                 v-if="role !=='ROLE_ADMIN'"
         >
           내 정보수정
-        </button>
-        <button
-            :class="[active? 'bg-primary text-white'
-              :'text-gray-900 dark:text-gray-300',
-              'group flex  items-center w-full px-4 py-2 text-sm']"
-            aria-label="Sign out"
-            role="button"
-            @click="signOut">
+        </BaseBtn>
+        <BaseBtn aria-label="Sign out" role="button" @click="signOut">
           로그아웃
-        </button>
+        </BaseBtn>
       </div>
       <!-- profile-dropdown  -->
-      <Menu as="div" class="relative inline-block text-left lg:hidden">
-        <MenuItems
-            class="absolute right-0 w-44 mt-2 overflow-hidden origin-top-right
-                     bg-white dark:bg-dark rounded-md custom-box-shadow focus:outline-none">
-          <div class="">
-            <MenuItem v-slot="{ active }">
-              <button
-                  v-if="role!=='ROLE_ADMIN'"
-                  :class="[
-                                    active
-                                        ? 'bg-primary text-white'
-                                        : 'text-gray-900 dark:text-gray-300',
-                                    'group flex  items-center w-full px-4 py-2 text-sm',
-                                ]"
-                  aria-label="Account Settings"
-                  role="button"
-                  @click="moveMyPage(empId)"
-              >
-                내 정보
-              </button>
-            </MenuItem>
-            <MenuItem v-slot="{ active }">
-              <button
-                  :class="[
-                                    active
-                                        ? 'bg-primary text-white'
-                                        : 'text-gray-900 dark:text-gray-300',
-                                    'group flex  items-center w-full px-4 py-2 text-sm',
-                                ]"
-                  aria-label="History"
-                  role="button"
-              >
-                Billing History
-              </button>
-            </MenuItem>
-            <MenuItem v-slot="{ active }">
-              <button
-                  :class="[
-                                    active
-                                        ? 'bg-primary text-white'
-                                        : 'text-gray-900 dark:text-gray-300',
-                                    'group flex  items-center w-full px-4 py-2 text-sm',
-                                ]"
-                  aria-label="Sign out"
-                  role="button"
-                  @click="signOut"
-              >
-                로그아웃
-              </button>
-            </MenuItem>
-          </div>
-        </MenuItems>
-      </Menu>
     </div>
   </div>
 </template>

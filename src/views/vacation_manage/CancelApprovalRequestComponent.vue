@@ -29,6 +29,7 @@ const getCancelApproval = () => {
   })
 }
 getCancelApproval()
+
 const getList = (page) => {
   cri.value.pageNum = page
   currentPage.value = page
@@ -38,11 +39,10 @@ const isOpenPosition = ref(false)
 
 const optionsPosition = [
   { value: null, text: '전체' },
-  { value: '자동승인', text: '자동승인' },
+  { value: '자동취소', text: '자동취소' },
   { value: '승인', text: '승인' },
-  { value: '관리자대기중', text: '관리자대기' },
+  { value: '관리자 대기중', text: '관리자 대기중' },
   { value: '대기중', text: '대기중' },
-  { value: '취소', text: '취소' },
 ]
 
 const toggleDropdownPosition = () => {
@@ -62,6 +62,9 @@ const onClickCancelDetail = (cancelId) => {
     params: { id: cancelId },
   })
 }
+
+
+
 </script>
 
 <template>
@@ -84,9 +87,7 @@ const onClickCancelDetail = (cancelId) => {
                   @click="toggleDropdownPosition"
                 >
                   <div class="flex items-center justify-between">
-                    <span v-if="cri.keyword" class="text-base">{{
-                      cri.keyword
-                    }}</span>
+                    <span v-if="cri.keyword" class="text-base">{{cri.keyword}}</span>
                     <span v-else class="text-gray-400 italic">결재 상태</span>
                     <svg
                       class="w-5 h-5 fill-current text-gray-400"

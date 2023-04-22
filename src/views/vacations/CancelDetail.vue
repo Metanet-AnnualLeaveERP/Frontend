@@ -51,10 +51,10 @@ const onClickIssue = async () => {
 </script>
 
 <template>
-  <div>
-    <BaseCard>
+  <div class="flex flex-col justify-items-center align-middle justify-around items-center">
+    <BaseCard class="w-2/3">
       <!-- axios response 후 props 넘기기 위해 v-if 설정  -->
-      <div v-if="loading">
+      <div v-if="loading" >
         <VacationCancelConfirmation :id="cancelId" />
       </div>
     </BaseCard>
