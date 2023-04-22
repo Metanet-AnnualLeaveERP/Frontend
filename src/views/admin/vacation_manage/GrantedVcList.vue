@@ -442,7 +442,6 @@ const getListDpt = async () => {
 //부서 선택 시 부서Id로 부서사원 조회
 const onChangeTypes = async (e) => {
   selectedDept.value = e.target.value
-  console.log('부서번호 : ' + selectedDept.value) // 확인
   await getListEmpByDeptId(selectedDept.value)
     .then((res) => {
       empList.value = res.data
@@ -457,12 +456,10 @@ const onChangeTypes = async (e) => {
 const onChangeNames = async (e) => {
   selectedEmpId.value = e.target.value
   gvData.value.empDto.empId = selectedEmpId.value
-  console.log('현재 gvData 저장값:' + gvData.value.empDto.empId)
 }
 
 // 휴가신청
 const onSubmit = async () => {
-  console.log(gvData.value)
   loadingAlert()
   await insertGrantedVc(gvData.value).then(async (res) => {
     console.log(res)

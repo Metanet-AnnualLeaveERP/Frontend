@@ -13,7 +13,6 @@ const detailLoaded = ref(false)
 onMounted(async () => {
   // 촉진문서 상세 조회
   await getAnpDocDetail(docId).then((res) =>{
-    console.log(res.data)
     detailLoaded.value = true
     detail.value = res.data
     // await getEmpInfo()

@@ -102,16 +102,13 @@ const onClickBackBtn = () => {
 </script>
 
 <template>
-  <div>
-    <BaseCard>
+  <div class="flex flex-col justify-items-center align-middle justify-around items-center">
+    <BaseCard class="w-2/3">
       <!-- axios response 후 props 넘기기 위해 v-if 설정 -->
       <div ref="pdfContent" v-if="loading">
-        <div class="pr-5 pl-5">
-          <VacationReqConfirmation v-if="certType == 'request'" :id="propsId" />
-          <VacationCancelConfirmation
-            v-if="certType == 'cancel'"
-            :id="propsId"
-          />
+        <div class="pr-5 pl-5 ">
+          <VacationReqConfirmation v-if="certType == 'request'" :id="propsId"/>
+          <VacationCancelConfirmation v-if="certType == 'cancel'" :id="propsId"/>
           <!-- <VacationRequestCertificate v-if="certType =='request'" :item="detail" /> -->
           <CertificateVue :item="detail" />
         </div>
@@ -119,13 +116,17 @@ const onClickBackBtn = () => {
     </BaseCard>
     <div class="flex justify-end mt-5">
       <BaseBtn
-        class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        class="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4
+         focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto
+         px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         @click="downloadPDF"
       >
         PDF 다운로드하기
       </BaseBtn>
       <BaseBtn
-        class="mr-3 text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        class="mr-3 text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300
+         font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600
+         dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         @click="onClickBackBtn"
       >
         돌아가기
