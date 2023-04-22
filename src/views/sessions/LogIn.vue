@@ -2,21 +2,37 @@
 import router from '@/router/index.js'
 import { ref } from 'vue'
 import store from '@/store/index.js'
-import { login } from '@/api'
+import {getManagerInfo, getMyInfo, login} from '@/api'
 
 const user = ref({
   empNum: '',
   pwd: '',
 })
 
-const onClickLoginBtn = () => {
+const onClickLoginBtn = async () => {
   // 아래 주석 처리 해놓은 것처럼
   // 로그인 시 필요 정보 vuex state에 저장
   // 권한 별로 페이지 다르게 이동하도록 추가
-  login(user.value).then((res) => {
+  await login(user.value).then(async(res) => {
     // 권한을 vuex state 에 저장
     store.commit('setRole', res.headers.role)
     store.commit('setEmpNum', res.headers.empnum)
+
+    // 내 emp 정보 조회
+    await getMyInfo().then((res) => {
+      store.commit('setEmp', res.data)
+      // console.log(store.state.emp)
+    })
+
+    // 상사 정보 조회 (상사가 있는 경우에만 vuex 저장)
+    const mgrId = store.state.emp.mgrId
+    if (mgrId != null) {
+      getManagerInfo(mgrId).then((res) => {
+        store.commit('setManager', res.data)
+      })
+    }
+
+
     movePage(res.headers.role)
   }).catch((e)=>console.log('sdsss'))
 }

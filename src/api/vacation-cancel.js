@@ -17,13 +17,14 @@ export const getCancelApproval = (cancelId) => {
   })
 }
 
-export const approvalCancelSuccess = (data) => {
+export const approvalCancelSuccess = (params) => {
+
   return api({
-    url: `/manager/vacations/cancel/${data.cancelId}`,
+    url: `/manager/vacations/cancel/${params.cancelId}`,
     method: 'PUT',
     params: {
-      comment: null,
-      status: data.vcStatus,
+      comment: params.comments ? params.comments : null,
+      status: params.vcStatus,
     },
   })
 }

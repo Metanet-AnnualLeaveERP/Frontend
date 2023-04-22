@@ -294,20 +294,6 @@ onMounted(async () => {
       })
     })
   })
-
-  // 내 emp 정보 조회
-  await getMyInfo().then((res) => {
-    store.commit('setEmp', res.data)
-    // console.log(store.state.emp)
-  })
-
-  // 상사 정보 조회 (상사가 있는 경우에만 vuex 저장)
-  const mgrId = store.state.emp.mgrId
-  if (mgrId != null) {
-    getManagerInfo(mgrId).then((res) => {
-      store.commit('setManager', res.data)
-    })
-  }
 })
 
 const onClickCheckBtn = () => {
