@@ -15,19 +15,25 @@ import { successToast, loadingAlert, failToast } from '@/sweetAlert'
 const importedAnpDocsList = ref({})
 const pagination = ref({})
 const currentPage = ref(1)
+const importedEmpId = ref('')
 
 onMounted(async () => {
   getList(1) // 촉진문서리스트
-  getListDpt() // 부서조회(추가 모달에서 사용)
+  // getListDpt() // 부서조회(추가 모달에서 사용)
 })
 
+// 검색용
+const keywordName = ref('')
+const keyword = ref('')
 const getList = async (page) => {
-  if (page > pagination.value.endPage || page < pagination.value.startPage) {
-    return
-  }
+  // if (page > pagination.value.endPage || page < pagination.value.startPage) {
+  //   return
+  // }
   currentPage.value = page
-
-  await getListAnpDoc()
+  if (keywordName.value === '') {
+    keywordName.value += '이름'
+  }
+  await getListAnpDoc(page, 10, keywordName.value)
     .then((res) => {
       console.log(res.data)
       importedAnpDocsList.value = res.data.anpDocs
@@ -36,6 +42,13 @@ const getList = async (page) => {
     .catch(() => {
       failToast('데이터 로딩에 실패했습니다.')
     })
+  console.log('keywordName : '+keywordName.value)
+}
+
+// 검색
+const searchName = () => {
+  console.log(keywordName.value)
+  getList(currentPage.value)
 }
 
 const onClickItem = (docId) => {
@@ -112,6 +125,9 @@ const onSubmit = async () => {
     loadingAlert().close()
   })
 }
+
+
+
 </script>
 
 <template>
@@ -128,6 +144,37 @@ const onSubmit = async () => {
             <div
               class="block w-full overflow-x-auto whitespace-nowrap borderless hover"
             >
+              <div class="flex flex-row-reverse items-center align-middle">
+                <div class="relative w-fit text-gray-600 search-bar mx-3">
+                  <input
+                    class="bg-purple-50 bg-gray-100 dark:bg-dark border-transparent h-10 px-5 pr-10 rounded-md text-sm focus:outline-none"
+                    placeholder="이름검색"
+                    v-model="keywordName"
+                  />
+                  <button
+                    role="button"
+                    class="absolute right-0 top-0 mt-2 mr-4 focus:outline-none"
+                    @click="searchName"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+              </div>
+
               <div
                 class="dataTable-wrapper dataTable-loading no-footer fixed-columns"
               >
@@ -136,13 +183,11 @@ const onSubmit = async () => {
                     <BaseBtn
                       rounded
                       class="border border-primary text-primary hover:bg-primary hover:text-white"
-                      @click="isOpen = true"
-                    >
+                      @click="isOpen = true, getListDpt()"                    >
                       <strong>+촉진 문서 추가하기</strong>
                     </BaseBtn>
                   </div>
                 </div>
-                
 
                 <div
                   class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
