@@ -278,6 +278,10 @@ const getList = async () => {
 
 // 신청
 const onSubmit = () => {
+  if (!typeData.value.typeName) {
+    failToast('휴가 이름을 입력하세요.')
+    return false
+  }
   console.log(typeData)
   insertVcTypeList(typeData.value).then((res) => {
     console.log(res)

@@ -13,6 +13,7 @@ const gvIdNo = 'No.' + route.params.id
 
 onMounted(async () => {
   // 상세조회
+  console.log(gvId)
   await getGrantedVcDetail(gvId).then((res) => {
     gvInfo.value = res.data
   })

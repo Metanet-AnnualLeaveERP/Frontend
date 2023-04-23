@@ -5,7 +5,6 @@ import store from '@/store/index.js'
 import {
   getListAnpDoc,
   getListDept,
-  getListEmpByDeptId,
   getAnnualLeaveByEmpId,
   insertAnpDoc,
   selectEmpListByDeptIdAndExistsAnnualLeave,
@@ -119,7 +118,10 @@ const onChangeNames = async (e) => {
 }
 //문서 생성
 const onSubmit = async () => {
-  console.log(anpData.value)
+  if (!anpData.value.empDto.empId) {
+    failToast('사원을 선택해주세요.')
+    return false
+  }
   loadingAlert()
   await insertAnpDoc(anpData.value).then(async (res) => {
     console.log(res)
