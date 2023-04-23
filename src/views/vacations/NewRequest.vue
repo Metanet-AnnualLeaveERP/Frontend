@@ -551,7 +551,7 @@ const onChangeTypes = (e) => {
   if (e.target.value == 1) {
     reqTarget.value = '자동승인'
   } else {
-    if (store.state.emp.position == '사원') {
+    if (store.state.emp.position == '팀원') {
       reqTarget.value = manager.name + ' ' + manager.position
     } else {
       reqTarget.value = '인사팀장'
@@ -650,9 +650,9 @@ const minusHolidayFromReqDays = () => {
       }
     }
   }
-  console.log(reqData.endDate)
-  console.log(cnt)
-  console.log(reqData.reqDays)
+  // console.log(reqData.endDate)
+  // console.log(cnt)
+  // console.log(reqData.reqDays)
   reqData.reqDays = reqData.reqDays - cnt
 }
 
