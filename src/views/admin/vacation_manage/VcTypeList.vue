@@ -261,7 +261,7 @@ const isOpen = ref(false)
 const typeData = ref({
   typeName: '',
   pto: '',
-  maxGrantedDays: '365',
+  maxGrantedDays: '',
   description: '',
 })
 
@@ -274,6 +274,7 @@ const getList = async () => {
     console.log(res.data)
     list.value = res.data
     typeData.value.pto = 0
+    typeData.value.maxGrantedDays = 365
   })
 }
 
