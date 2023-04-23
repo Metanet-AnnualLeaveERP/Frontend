@@ -153,19 +153,6 @@ let toggleSubMenu = (e) => {
                 <p>문서 보관함</p>
               </router-link>
             </li>
-            <!-- nav child 있는 애들 -->
-            <li
-              @mouseenter="toggleSubMenu"
-              class="nav-item border-b border-gray-200 dark:border-dark"
-              :class="selectedParentMenu == 'dashboards' ? 'active' : ''"
-              data-item="dashboards"
-              :data-submenu="true"
-            >
-              <a class="nav-item-hold">
-                <i class="i-Bar-Chart text-3xl"></i>
-                <p>Dashboard</p>
-              </a>
-            </li>
           </ul>
         </perfect-scrollbar>
       </div>
