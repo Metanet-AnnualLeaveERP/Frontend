@@ -603,13 +603,18 @@ const formData = ref(null)
 
 // 휴가 신청 버튼 클릭 시 (Submit form)
 const onSubmit = () => {
+  // 휴가 유형을 선택 안 했을 경우 return
+  if (!reqData.vcTypeDto.typeId || !reqData.vcTypeDto.typeId === '') {
+    warningAlert('휴가유형을 선택해주세요')
+    return
+  }
   if (notAcceptable.value) {
     warningAlert('요청일수가 잔여일수보다 큽니다.\n날짜를 다시 선택해 주세요.')
     return
   }
   // 선택 유형이 연차면 상태 = '자동승인' / 타 휴가면 '대기중'
   reqData.status = reqData.vcTypeDto.typeId == 1 ? '자동승인' : '대기중'
-  // console.log(reqData)
+
   formData.value = new FormData()
   // 객체를 JSON 타입으로 변환하여 Blob 객체 생성
   formData.value.append(
@@ -622,7 +627,6 @@ const onSubmit = () => {
   if (file.value != null) {
     appendFile()
   }
-
   createRequest(formData.value).then(() => {
     successToast('휴가 신청이 완료되었습니다.')
     router.go(-1)
