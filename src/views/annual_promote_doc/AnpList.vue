@@ -8,6 +8,7 @@ import {
   getListEmpByDeptId,
   getAnnualLeaveByEmpId,
   insertAnpDoc,
+  selectEmpListByDeptIdAndExistsAnnualLeave,
 } from '@/api/index.js'
 import router from '@/router'
 import { successToast, loadingAlert, failToast } from '@/sweetAlert'
@@ -40,7 +41,7 @@ const getList = async (page) => {
     .catch(() => {
       failToast('데이터 로딩에 실패했습니다.')
     })
-  console.log('keywordName : '+keywordName.value)
+  console.log('keywordName : ' + keywordName.value)
 }
 
 // 검색
@@ -77,12 +78,14 @@ const selectedEmpId = ref('')
 const onChangeTypes = async (e) => {
   selectedDept.value = e.target.value
   console.log('부서번호 : ' + selectedDept.value) // 확인
-  await getListEmpByDeptId(selectedDept.value)
+  await selectEmpListByDeptIdAndExistsAnnualLeave(selectedDept.value)
     .then((res) => {
+      console.log(res.data)
       empList.value = res.data
-      anpData.value.empDto.empId = empList.value[0].empId
+      anpData.value.empDto.empId = empList?.value[0]?.empId
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e)
       failToast('사원 데이터 로딩에 실패했습니다.')
     })
 }
@@ -105,6 +108,7 @@ const onChangeNames = async (e) => {
   console.log('선택된 emp::' + selectedEmpId.value)
   const id = selectedEmpId.value
   await getAnnualLeaveByEmpId(id).then((res) => {
+    console.log(res.data)
     annualLeaveInfo.value = res.data
     anpData.value.totalAnv = annualLeaveInfo.value.vcDays
     anpData.value.remainAnv = annualLeaveInfo.value.remainDays
@@ -123,9 +127,6 @@ const onSubmit = async () => {
     loadingAlert().close()
   })
 }
-
-
-
 </script>
 
 <template>
@@ -170,7 +171,6 @@ const onSubmit = async () => {
                     </svg>
                   </button>
                 </div>
-
               </div>
 
               <div
@@ -181,8 +181,9 @@ const onSubmit = async () => {
                     <BaseBtn
                       rounded
                       class="border border-primary text-primary hover:bg-primary hover:text-white"
-                      @click="isOpen = true, getListDpt()"
-                      v-if="store.state.emp == false"                    >
+                      @click=";(isOpen = true), getListDpt()"
+                      v-if="store.state.emp == false"
+                    >
                       <strong>+촉진 문서 추가하기</strong>
                     </BaseBtn>
                   </div>
