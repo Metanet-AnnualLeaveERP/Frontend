@@ -82,7 +82,7 @@
                       <span>&nbsp;&nbsp;</span>
                       <select
                         id="typeId"
-                        class="mt-1 block mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="mt-1 block w-1/6 mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         v-model="search.vcType"
                       >
                         <option disabled selected>유형 선택</option>
@@ -352,7 +352,7 @@
                 </label>
                 <select
                   id="typeId"
-                  class="mt-1 block w-full mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  class="mt-1 block w-1/4 mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   @change="onChangeVCtype"
                 >
                   <option
@@ -369,7 +369,7 @@
               <div class="sm:col-span-4">
                 <label
                   for="typename"
-                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  class="mb-2  text-lg font-bold text-gray-900 dark:text-white"
                   >휴가일수</label
                 >
                 <p class="mt-1 text-sm leading-6 text-gray-600">
@@ -634,6 +634,6 @@ const getVcTypeListForSearch = async () => {
 
 const onClickTypeSearch = (e) => {
   search.value.vcType = e.target.value
-  getList()
+  getList(currentPage.value)
 }
 </script>
