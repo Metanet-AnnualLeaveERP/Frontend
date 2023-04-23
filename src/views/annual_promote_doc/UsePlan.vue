@@ -498,7 +498,8 @@ export default {
       const filename = '연차사용계획서_.pdf'
       const options = {
         filename: filename,
-        margin: [5, 0, 5, 0], // top, right, bottom, left 마진 여백
+        //margin: [5, 0, 5, 0], // top, right, bottom, left 마진 여백
+        margin: [0, 0, 0, 0], // top, right, bottom, left 마진 여백
         image: { type: 'jpeg', quality: 2 },
         html2canvas: {
           // html2canvas 옵션
@@ -512,6 +513,7 @@ export default {
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       }
+      console.log("작동함?")
       html2pdf().from(element).set(options).save()
     }
 
@@ -537,6 +539,7 @@ export default {
       previousDateList,
       onClickBackBtn,
       downloadPDF,
+      pdfContent,
       showDiv,
       toggleDiv
     }
