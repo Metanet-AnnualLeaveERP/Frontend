@@ -340,7 +340,7 @@ const optionsDept = [
   { value: '인사팀', text: '인사팀' },
   { value: '재무팀', text: '재무팀' },
   { value: '영업팀', text: '영업팀' },
-  { value: '디지인팀', text: '디지인팀' },
+  { value: '디자인팀', text: '디자인팀' },
   { value: '법무팀', text: '법무팀' },
   { value: 'IT팀', text: 'IT팀' },
   { value: '영상팀', text: '영상팀' },
