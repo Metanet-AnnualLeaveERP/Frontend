@@ -249,9 +249,6 @@ const state = reactive({
   startingDayOfWeek: 0,
   disablePast: true,
   disableFuture: false,
-  //   displayPeriodUom: 'month',
-  //   displayPeriodCount: 1,
-  //   displayWeekNumbers: false,
   showTimes: true,
   selectionStart: undefined,
   selectionEnd: undefined,
@@ -437,6 +434,7 @@ const onClickDay = (d) => {
   state.selectedDays = `${d.toLocaleDateString()}`
 
   // 시작일 및 종료일을 클릭 날짜로 1일 설정
+  console.log(d)
   reqData.startDate = d
   reqData.endDate = d
   reqData.reqDays = 1
@@ -603,6 +601,7 @@ const formData = ref(null)
 
 // 휴가 신청 버튼 클릭 시 (Submit form)
 const onSubmit = () => {
+  // console.log(reqData)
   // 휴가 유형을 선택 안 했을 경우 return
   if (!reqData.vcTypeDto.typeId || !reqData.vcTypeDto.typeId === '') {
     warningAlert('휴가유형을 선택해주세요')
@@ -645,7 +644,7 @@ const minusHolidayFromReqDays = () => {
       const newEndDate = addDays(reqData.endDate, 1)
 
       if (reqData.startDate <= date && date <= newEndDate) {
-        console.log(new Date(state.items[i].startDate))
+        // console.log(new Date(state.items[i].startDate))
         cnt++
       }
     }
