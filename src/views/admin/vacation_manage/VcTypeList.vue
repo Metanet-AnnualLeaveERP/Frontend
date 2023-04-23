@@ -261,18 +261,20 @@ const isOpen = ref(false)
 const typeData = ref({
   typeName: '',
   pto: '',
-  maxGrantedDays: '365',
+  maxGrantedDays: '',
   description: '',
 })
 
 // 휴가타입 출력
 onMounted(() => {
-  getList(1)
+  getList()
 })
 const getList = async () => {
   await getVcTypeList().then((res) => {
     console.log(res.data)
     list.value = res.data
+    typeData.value.pto = 0
+    typeData.value.maxGrantedDays = 365
   })
 }
 
@@ -282,7 +284,7 @@ const onSubmit = () => {
     failToast('휴가 이름을 입력하세요.')
     return false
   }
-  console.log(typeData)
+  console.log(typeData.value)
   insertVcTypeList(typeData.value).then((res) => {
     console.log(res)
     successToast('휴가유형 생성이 완료되었습니다.')
