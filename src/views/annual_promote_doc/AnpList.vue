@@ -27,9 +27,6 @@ onMounted(async () => {
 const keywordName = ref('')
 const keyword = ref('')
 const getList = async (page) => {
-  // if (page > pagination.value.endPage || page < pagination.value.startPage) {
-  //   return
-  // }
   currentPage.value = page
   if (keywordName.value === '') {
     keywordName.value += '이름'
