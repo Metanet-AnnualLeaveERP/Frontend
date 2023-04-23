@@ -348,6 +348,7 @@ const optionsDept = [
   {value: '영상팀', text: '영상팀'},
   {value: '서비스팀', text: '서비스팀'},
   {value: '미래전략팀', text: '미래전략팀'},
+
 ]
 const isOpen = ref(false)
 const options = [

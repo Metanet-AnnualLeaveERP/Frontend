@@ -4,7 +4,7 @@
       <!--        <div class="p-5 bx-2">-->
       <div class="flex flex-col gap-y-10 ">
         <div class="flex text-3xl font-bold font-sans text-center justify-center grid-cols">
-          <img src="/MetaVC-logo.png"
+          <img src="/images/MetaVC-logo.png"
                class="fill-current text-primary mx-auto"
                width="150"
                height="150"

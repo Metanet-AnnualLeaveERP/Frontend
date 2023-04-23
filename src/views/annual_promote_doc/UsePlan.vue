@@ -209,7 +209,7 @@
                     {{ detail.anvOccurDate }}
                   </td>
                   <td style="border: 1px solid black">
-                    {{ detail.anvOccurDate }} ~ {{ detail.anvOccurDate }}
+                    {{ detail.anvOccurDate }} ~ {{ expiredDate }}
                   </td>
                   <td style="border: 1px solid black">{{ detail.totalAnv }}</td>
                   <td style="border: 1px solid black">
@@ -291,6 +291,8 @@
                       name="startDate"
                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       v-model="startDate"
+                      v-bind:min="minStartDate"
+                      v-bind:max="expiredDate"
                       required
                     />
                     <label
@@ -304,6 +306,8 @@
                       name="endDate"
                       class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       v-model="endDate"
+                      v-bind:min="minStartDate"
+                      v-bind:max="expiredDate"
                       required
                     />
                   </div>
@@ -437,15 +441,38 @@ export default {
     const endDate = ref('') // 종료날짜입력
     const useDays = ref(0) // 잔여일수계산용
 
+    const expiredDate = ref('') // 연차만료일자계산용
+
+
+    // 휴가출발 오늘날짜 이전 선택 불가
+    const getMinStartDate = () => {
+      return new Date().toISOString().split("T")[0];
+    }
+    const minStartDate = getMinStartDate()
+
+    // 휴가종료 만료일자 이전 선택 불가
+    const getMaxStateDate = () => {
+      return endDate.value;
+    }
+    const maxEndDate = getMaxStateDate()
+
     // 작성자정보
     const detail = ref({})
     const getEmpInfoList = () => {
       getAnpDocDetail(docId).then((res) => {
         console.log(res.data)
         detail.value = res.data
+        // 만료일자 계산
+        const dateString = detail.value.anvOccurDate
+        const date = new Date(dateString);
+        date.setFullYear(date.getFullYear() + 1);
+        expiredDate.value = date.toISOString().slice(0, 10);
       })
     }
     getEmpInfoList()
+
+    // 1년 뒤
+
 
     // 기존작성정보
     const previousDateList = ref({})
@@ -498,7 +525,8 @@ export default {
       const filename = '연차사용계획서_.pdf'
       const options = {
         filename: filename,
-        margin: [5, 0, 5, 0], // top, right, bottom, left 마진 여백
+        //margin: [5, 0, 5, 0], // top, right, bottom, left 마진 여백
+        margin: [0, 0, 0, 0], // top, right, bottom, left 마진 여백
         image: { type: 'jpeg', quality: 2 },
         html2canvas: {
           // html2canvas 옵션
@@ -512,6 +540,7 @@ export default {
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       }
+      console.log("작동함?")
       html2pdf().from(element).set(options).save()
     }
 
@@ -537,8 +566,14 @@ export default {
       previousDateList,
       onClickBackBtn,
       downloadPDF,
+      pdfContent,
       showDiv,
-      toggleDiv
+      toggleDiv,
+      getMinStartDate,
+      minStartDate,
+      getMaxStateDate,
+      maxEndDate,
+      expiredDate
     }
   },
 }

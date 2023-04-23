@@ -17,7 +17,6 @@ export const getManagerInfo = (id) => {
   })
 }
 
-
 // deptId 로 empList 리턴
 export const getListEmpByDeptId = (id) => {
   return api({
@@ -29,46 +28,49 @@ export const getListEmpByDeptId = (id) => {
 // 사용자 리스트
 export const getEmpList = (page, amount, keyword) => {
   return api({
-    url:`/admin/emp?pageNum=${page}&amount=${amount}&keyword=${keyword}`,
+    url: `/admin/emp?pageNum=${page}&amount=${amount}&keyword=${keyword}`,
     // url:'/admin/emp',
-    method: 'get'
-  });
+    method: 'get',
+  })
 }
 
 // 사용자 상세 정보
 export const getEmpInfo = (empId) => {
   return api({
-    url:`/emp/${empId}`,
-    method:'get'
+    url: `/emp/${empId}`,
+    method: 'get',
   })
-
 }
 
 // 사용자 정보 수정(관리자)
 export const modifyEmpInfoByAdmin = (data) => {
   return api({
-    url : `/admin/emp/modify`,
-    method :'put',
-    data : data
-
+    url: `/admin/emp/modify`,
+    method: 'put',
+    data: data,
   })
-
 }
 
 // 직원등록
 export const registerEmp = (data) => {
   return api({
-    url : `/admin/emp/create`,
-    method :'post',
-    data : data
+    url: `/admin/emp/create`,
+    method: 'post',
+    data: data,
   })
 }
 
 // 사용자 정보 수정(사용자)
 export const modifyEmpInfo = (data) => {
   return api({
-    url : '/emp/modify',
-    method : 'put',
-    data : data
+    url: '/emp/modify',
+    method: 'put',
+    data: data,
+  })
+}
+export const selectEmpListByDeptIdAndExistsAnnualLeave = (deptId) => {
+  return api({
+    url: `/admin/dept-emp-info/annual/${deptId}`,
+    method: 'GET',
   })
 }

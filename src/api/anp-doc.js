@@ -2,14 +2,15 @@
 import api from './api'
 
 // 연차촉진문서 조회
-export const getListAnpDoc = (pno, a) => {
+export const getListAnpDoc = (page, amount, keyword) => {
   return api({
-    url:'/annual-promote',
-    method:'get',
-    params:{
-      pageNum: pno,
-      amount: a,
-    },
+    // url:'/anuual-promote'
+    url:`/annual-promote?pageNum=${page}&amount=${amount}&keyword=${keyword}`,
+    method:'get'
+    // params:{
+    //   pageNum: pno,
+    //   amount: a,
+    // },
   })
 }
 

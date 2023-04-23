@@ -16,6 +16,90 @@
             <div
               class="dataTable-wrapper dataTable-loading no-footer fixed-columns"
             >
+              <!-- 검색 바 -->
+              <div class="flex flex-row-reverse items-center align-middle">
+                <div class="relative w-fit text-gray-600 search-bar mx-3">
+                  <input
+                    class="bg-purple-50 bg-gray-100 dark:bg-dark border-transparent h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
+                    placeholder="이름검색"
+                    v-model="search.userName"
+                  />
+                  <button
+                    role="button"
+                    class="absolute right-0 top-0 mt-2 mr-4 focus:outline-none"
+                    @click="searchName"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div
+                  class="m-4 gap-x-10 flex justify-between align-middle items-center w-full"
+                >
+                  <div
+                    class="flex-1 relative inline-block w-full text-gray-700"
+                  >
+                    <div class="field flex items-center">
+                      <label
+                        for="types"
+                        class="mb-2 text-md font-light text-gray-500 dark:text-white"
+                        >부서별 검색
+                      </label>
+                      <span>&nbsp;&nbsp;</span>
+                      <select
+                        id="deptNames"
+                        class="mt-1 block w-1/6 mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        v-model="search.deptId"
+                      >
+                        <option disabled selected>부서 선택</option>
+                        <option value="">전체보기</option>
+                        <option
+                          v-for="(item, index) in deptList"
+                          :key="index"
+                          :value="item.deptId"
+                        >
+                          {{ item.deptName }}
+                        </option>
+                      </select>
+                      <span>&nbsp;&nbsp;</span>
+                      <label
+                        for="types"
+                        class="mb-2 text-md font-light text-gray-500 dark:text-white"
+                        >휴가유형별 검색
+                      </label>
+                      <span>&nbsp;&nbsp;</span>
+                      <select
+                        id="typeId"
+                        class="mt-1 block mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        v-model="search.vcType"
+                      >
+                        <option disabled selected>유형 선택</option>
+                        <option value="">전체 보기</option>
+                        <option
+                          v-for="(item, index) in vcTypeListForSearch"
+                          :key="index"
+                          :value="item.typeId"
+                        >
+                          {{ item.typeName }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 검색 바 끝 -->
               <div class="dataTable-top px-0 py-3">
                 <div class="dataTable-dropdown float-right mb-4">
                   <BaseBtn
@@ -208,7 +292,7 @@
           <div class="flex items-center justify-between">
             <h3 class="text-2xl font-bold">임의 휴가 부여</h3>
           </div>
-          <form class="space-y-12" @submit.prevent="onSubmit">
+          <form class="space-y-12">
             <div class="mt-4">
               <!-- 부서 선택 -->
               <div class="field">
@@ -269,6 +353,7 @@
                 <select
                   id="typeId"
                   class="mt-1 block w-full mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  @change="onChangeVCtype"
                 >
                   <option
                     v-for="(item, index) in vcTypeList"
@@ -340,6 +425,7 @@
               <BaseBtn
                 class="border border-success text-success hover:bg-success hover:text-white"
                 type="submit"
+                @click.prevent="onSubmit"
               >
                 Save
               </BaseBtn>
@@ -370,10 +456,11 @@ import {
   getListEmpByDeptId,
   getVcTypeList,
 } from '@/api/index.js'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref, watch, watchEffect } from 'vue'
 import { successToast, loadingAlert, failToast } from '@/sweetAlert'
 import router from '@/router/index.js'
-
+const data2 = ref()
+console.log(data2)
 const list = ref({})
 const pagination = ref({})
 const currentPage = ref(1)
@@ -401,24 +488,47 @@ const gvData = ref({
   },
 })
 
+//search data
+const search = ref({
+  deptId: '',
+  vcType: '',
+  userName: '',
+})
+
 //Modal
 const isOpen = ref(false)
+
+const onChangeVCtype = (e) => {
+  console.log(e.target.value)
+  gvData.value.vcTypeDto.typeId = e.target.value
+}
 
 onMounted(() => {
   const endOfYear = new Date(Date.UTC(new Date().getUTCFullYear(), 11, 31))
   const formattedDate = endOfYear.toISOString().slice(0, 10)
   gvData.value.expiredDate = formattedDate
-  getList(1), getListDpt(), getVcType()
+  getList(1), getListDpt(), getVcType(), getVcTypeListForSearch()
 })
 
 //휴가리스트조회
 const getList = async (page) => {
-  if (page > pagination.value.endPage || page < pagination.value.startPage) {
-    return
-  }
+  // if (page > pagination.value.endPage || page < pagination.value.startPage) {
+  //   return
+  // }
   currentPage.value = page
+  let keyword = []
 
-  await getListGrantedVc(page, 10)
+  if (!(search.value.deptId && search.value.deptId === '')) {
+    keyword[0] = search.value.deptId
+  }
+  if (!(search.value.vcType && search.value.vcType === '')) {
+    keyword[1] = search.value.vcType
+  }
+  if (!(search.value.userName && search.value.userName === '')) {
+    keyword[2] = search.value.userName
+  }
+  const searchValue = keyword.join(',')
+  await getListGrantedVc(page, 10, searchValue)
     .then((res) => {
       list.value = res.data.grantedVcs
       pagination.value = res.data.paging
@@ -428,13 +538,21 @@ const getList = async (page) => {
     })
 }
 
+watch(
+  () => search,
+  (newValue, prevValue) => {
+    getList(1)
+  },
+  { deep: true }
+)
+
 //부서 데이터 로딩
 const getListDpt = async () => {
   await getListDept()
     .then((res) => {
       deptList.value = res.data
     })
-    .catch(() => {
+    .catch((e) => {
       failToast('부서 데이터 로딩에 실패했습니다.')
     })
 }
@@ -442,12 +560,13 @@ const getListDpt = async () => {
 //부서 선택 시 부서Id로 부서사원 조회
 const onChangeTypes = async (e) => {
   selectedDept.value = e.target.value
+  console.log(gvData.value)
   await getListEmpByDeptId(selectedDept.value)
     .then((res) => {
       empList.value = res.data
-      gvData.value.empDto.empId = empList.value[0].empId //초기값 지정
+      gvData.value.empDto.empId = empList?.value[0]?.empId //초기값 지정
     })
-    .catch(() => {
+    .catch((e) => {
       failToast('사원 데이터 로딩에 실패했습니다.')
     })
 }
@@ -456,22 +575,38 @@ const onChangeTypes = async (e) => {
 const onChangeNames = async (e) => {
   selectedEmpId.value = e.target.value
   gvData.value.empDto.empId = selectedEmpId.value
+  console.log(gvData.value)
 }
 
 // 휴가신청
 const onSubmit = async () => {
+  if (!gvData.value.empDto.empId) {
+    failToast('사원을 선택해주세요.')
+    return false
+  }
+  if (!gvData.value.vcDays) {
+    failToast('부여 일수를 입력해주세요.')
+    return false
+  }
   loadingAlert()
   await insertGrantedVc(gvData.value).then(async (res) => {
     console.log(res)
     await successToast('휴가 부여가 완료되었습니다.')
     loadingAlert().close()
+    isOpen.value = false
+    getList()
   })
 }
 
 // 휴가유형 리스트 출력
 const getVcType = async () => {
   await getVcTypeList().then((res) => {
-    const filteredList = res.data.filter((item) => item.typeName !== '연차')
+    const filteredList = res.data.filter(
+      (item) =>
+        item.typeName !== '연차' &&
+        item.typeName !== '오전반차' &&
+        item.typeName !== '오후반차'
+    )
     vcTypeList.value = filteredList // 연차 제외한 항목만 선택리스트에 담음
     gvData.value.vcTypeDto.typeId = vcTypeList.value[0].typeId // 초기값
   })
@@ -479,8 +614,26 @@ const getVcType = async () => {
 
 // 상세페이지 이동
 const onClickItem = (id) => {
-  router.push({ name: '휴가부여상세', params: { id:id}
+  router.push({ name: '휴가부여상세', params: { id: id } })
+}
+
+// 부서 검색
+const onClickDeptSearch = async (e) => {
+  search.value.deptId = e.target.value
+
+  getList()
+}
+
+// 휴가 검색
+const vcTypeListForSearch = ref([])
+const getVcTypeListForSearch = async () => {
+  await getVcTypeList().then((res) => {
+    vcTypeListForSearch.value = res.data
   })
 }
-</script>
 
+const onClickTypeSearch = (e) => {
+  search.value.vcType = e.target.value
+  getList()
+}
+</script>

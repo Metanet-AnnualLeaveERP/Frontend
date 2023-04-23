@@ -6,8 +6,11 @@
       </span>
     </div>
 
-    <div id="request-div" class="flex lg:flex-row gap-4 justify-between flex-col">
-      <div class="request-calendar w-full  lg:w-4/5">
+    <div
+      id="request-div"
+      class="flex lg:flex-row gap-4 justify-between flex-col"
+    >
+      <div class="request-calendar w-full lg:w-4/5">
         <CalendarView
           :items="state.items"
           :show-date="state.showDate"
@@ -43,172 +46,170 @@
       <div class="request-form">
         <BaseCard>
           <div>
-          <form encType="multipart/form-data" @submit.prevent="onSubmit">
-            <label
-              class="block mb-2 text-xl font-bold text-gray-900 dark:text-white"
-              >요청사항 작성</label
-            >
-
-            <div class="field">
+            <form encType="multipart/form-data" @submit.prevent="onSubmit">
               <label
-                for="types"
-                class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                >휴가 유형</label
+                class="block mb-2 text-xl font-bold text-gray-900 dark:text-white"
+                >요청사항 작성</label
               >
-              <!-- 휴가 유형 get 해서 v-for문으로 select 에 넣기 -->
-              <select
-                v-model="reqData.vcTypeDto.typeId"
-                id="types"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
-                focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
-                dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                @change="onChangeTypes($event)"
-              >
-                <option value="" selected>유형을 선택하세요</option>
-                <option
-                  v-for="(item, index) in vcTypeNames"
-                  :key="index"
-                  :value="item.typeId"
+
+              <div class="field">
+                <label
+                  for="types"
+                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  >휴가 유형</label
                 >
-                  {{ item.name }}
-                </option>
-              </select>
-            </div>
+                <!-- 휴가 유형 get 해서 v-for문으로 select 에 넣기 -->
+                <select
+                  v-model="reqData.vcTypeDto.typeId"
+                  id="types"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  @change="onChangeTypes($event)"
+                >
+                  <option value="" selected>유형을 선택하세요</option>
+                  <option
+                    v-for="(item, index) in vcTypeNames"
+                    :key="index"
+                    :value="item.typeId"
+                  >
+                    {{ item.name }}
+                  </option>
+                </select>
+              </div>
 
-            <p class="mt-5 mb-5">캘린더에서 날짜를 선택해 주세요!</p>
+              <p class="mt-5 mb-5">캘린더에서 날짜를 선택해 주세요!</p>
 
-            <!-- 유형을 선택했을 경우에만 보이도록 설정 -->
-            <div class="field">
-              <label
-                for="alTypes"
-                class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                >요청 시간</label
-              >
-              <!-- 휴가 선택일 보이게 설정 -->
-              <div class="">선택 일자: {{ state.selectedDays }}</div>
-              <!-- 해당 일자의 잔여 TO가 0이면 -->
-              <!-- <div class=""></div> -->
+              <!-- 유형을 선택했을 경우에만 보이도록 설정 -->
+              <div class="field">
+                <label
+                  for="alTypes"
+                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  >요청 시간</label
+                >
+                <!-- 휴가 선택일 보이게 설정 -->
+                <div class="">선택 일자: {{ state.selectedDays }}</div>
+                <!-- 해당 일자의 잔여 TO가 0이면 -->
+                <!-- <div class=""></div> -->
 
-              <!-- 연차에 한해서만 보이게 설정 / 연차를 하루만 쓸 때 -->
-              <!-- 연차(1) or 반차(0.5) -->
-              <select
-                disabled
-                id="alTypes"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                v-model="alType"
-                @change="onChangeAlTypes($event)"
-              >
-                <option value="" selected>시간을 선택하세요</option>
-                <option value="FULL">연차</option>
-                <option value="AM">오전 반차</option>
-                <option value="PM">오후 반차</option>
-              </select>
-            </div>
+                <!-- 연차에 한해서만 보이게 설정 / 연차를 하루만 쓸 때 -->
+                <!-- 연차(1) or 반차(0.5) -->
+                <select
+                  disabled
+                  id="alTypes"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  v-model="alType"
+                  @change="onChangeAlTypes($event)"
+                >
+                  <option value="" selected>시간을 선택하세요</option>
+                  <option value="FULL">연차</option>
+                  <option value="AM">오전 반차</option>
+                  <option value="PM">오후 반차</option>
+                </select>
+              </div>
 
-            <div class="field">
-              <label
-                class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                >요청 대상</label
-              >
-              <span class="ml-5">
-                <!-- 연차를 선택했을 경우 자동 승인이 뜨도록 설정 -->
-                <!-- 연차이외의 휴가인 경우 현재 로그인한 사원의 팀장 -->
-                {{ reqTarget }}
-              </span>
-            </div>
+              <div class="field">
+                <label
+                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  >요청 대상</label
+                >
+                <span class="ml-5">
+                  <!-- 연차를 선택했을 경우 자동 승인이 뜨도록 설정 -->
+                  <!-- 연차이외의 휴가인 경우 현재 로그인한 사원의 팀장 -->
+                  {{ reqTarget }}
+                </span>
+              </div>
 
-            <div class="field">
-              <label
-                for="message"
-                class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                >요청 사유</label
-              >
-              <!-- 텍스트필드 -->
-              <textarea
-                id="message"
-                rows="1"
-                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="사유를 입력하세요 (ex. 결혼식 참석)"
-                v-model="reqData.comments"
-              ></textarea>
-            </div>
+              <div class="field">
+                <label
+                  for="message"
+                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  >요청 사유</label
+                >
+                <!-- 텍스트필드 -->
+                <textarea
+                  id="message"
+                  rows="1"
+                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="사유를 입력하세요 (ex. 결혼식 참석)"
+                  v-model="reqData.comments"
+                ></textarea>
+              </div>
 
-            <div class="field">
-              <label
-                class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
-                for="multiple_files"
-                >첨부 파일</label
-              >
-              <!-- input type: file -->
-              <input
-                class="file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-50 file:dark:text-gray-400 file:dark:bg-gray-700 file:dark:border-gray-600 hover:file:bg-gray-100 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                id="multiple_files"
-                type="file"
-                multiple
-                @change="uploadFile($event)"
-              />
-              <p
-                class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
-                id="file_input_help"
-              >
-                제출해야 할 증명 서류가 있는 경우 파일을 첨부하세요.
-              </p>
-            </div>
+              <div class="field">
+                <label
+                  class="mb-2 text-lg font-bold text-gray-900 dark:text-white"
+                  for="multiple_files"
+                  >첨부 파일</label
+                >
+                <!-- input type: file -->
+                <input
+                  class="file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-50 file:dark:text-gray-400 file:dark:bg-gray-700 file:dark:border-gray-600 hover:file:bg-gray-100 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                  id="multiple_files"
+                  type="file"
+                  multiple
+                  @change="uploadFile($event)"
+                />
+                <p
+                  class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
+                  id="file_input_help"
+                >
+                  제출해야 할 증명 서류가 있는 경우 파일을 첨부하세요.
+                </p>
+              </div>
 
-            <label class="text-lg font-bold text-gray-900 dark:text-white"
-              >요청사항 확인</label
-            >
-            <div class="my-req">
-              <label
-                class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
-                >날짜</label
+              <label class="text-lg font-bold text-gray-900 dark:text-white"
+                >요청사항 확인</label
               >
-              <span class="ml-5">
-                {{ state.selectedDays }}
-              </span>
-              <br />
-              <label
-                class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
-                >유형</label
-              >
-              <span class="ml-5">
-                <!-- 내가 선택한 유형 -->
-                {{ selectedVcType }}
-              </span>
-              <br />
-              <label
-                class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
-                >총 요청 일수</label
-              >
-              <span class="ml-5">
-                {{ reqData.reqDays }}
-              </span>
+              <div class="my-req">
+                <label
+                  class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
+                  >날짜</label
+                >
+                <span class="ml-5">
+                  {{ state.selectedDays }}
+                </span>
+                <br />
+                <label
+                  class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
+                  >유형</label
+                >
+                <span class="ml-5">
+                  <!-- 내가 선택한 유형 -->
+                  {{ selectedVcType }}
+                </span>
+                <br />
+                <label
+                  class="mb-2 text-base font-semibold text-gray-900 dark:text-white"
+                  >총 요청 일수</label
+                >
+                <span class="ml-5">
+                  {{ reqData.reqDays }}
+                </span>
 
-              <p
-                class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
-                id="req-info"
-                v-if="remainDays != -999"
-              >
-                승인 시 {{ reqData.vcType }} 휴가의 잔여 일수는
-                {{ remainDays }} -> {{ newRemainDays }}일입니다.
-              </p>
-            </div>
-            <div id="btn-wrapper" class="flex justify-between mb-5">
-              <BaseBtn
-                disabled
-                id="submitBtn"
-                type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                신청하기
-              </BaseBtn>
-              <BaseBtn
-                class="text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                돌아가기
-              </BaseBtn>
-            </div>
-          </form>
+                <p
+                  class="mt-1 mb-5 text-sm text-gray-500 dark:text-gray-300"
+                  id="req-info"
+                  v-if="remainDays != -999"
+                >
+                  승인 시 {{ reqData.vcType }} 휴가의 잔여 일수는
+                  {{ remainDays }} -> {{ newRemainDays }}일입니다.
+                </p>
+              </div>
+              <div id="btn-wrapper" class="flex justify-between mb-5">
+                <BaseBtn
+                  disabled
+                  id="submitBtn"
+                  type="submit"
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  신청하기
+                </BaseBtn>
+                <BaseBtn
+                  class="text-white bg-light hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  돌아가기
+                </BaseBtn>
+              </div>
+            </form>
           </div>
         </BaseCard>
       </div>
@@ -248,9 +249,6 @@ const state = reactive({
   startingDayOfWeek: 0,
   disablePast: true,
   disableFuture: false,
-  //   displayPeriodUom: 'month',
-  //   displayPeriodCount: 1,
-  //   displayWeekNumbers: false,
   showTimes: true,
   selectionStart: undefined,
   selectionEnd: undefined,
@@ -411,7 +409,10 @@ onMounted(async () => {
   // vcType 조회
   await getVcRemainInfo().then((res) => {
     vcTypeRemains.value = res.data
-    vcTypeNames.value.push({ typeId: 1, name: '연차' })
+
+    if (res.data.annual != null) {
+      vcTypeNames.value.push({ typeId: 1, name: '연차' })
+    }
     res.data.reward.forEach((e) => {
       vcTypeNames.value.push({
         typeId: e.vcTypeDto.typeId,
@@ -433,6 +434,7 @@ const onClickDay = (d) => {
   state.selectedDays = `${d.toLocaleDateString()}`
 
   // 시작일 및 종료일을 클릭 날짜로 1일 설정
+  console.log(d)
   reqData.startDate = d
   reqData.endDate = d
   reqData.reqDays = 1
@@ -547,7 +549,7 @@ const onChangeTypes = (e) => {
   if (e.target.value == 1) {
     reqTarget.value = '자동승인'
   } else {
-    if (store.state.emp.position == '사원') {
+    if (store.state.emp.position == '팀원') {
       reqTarget.value = manager.name + ' ' + manager.position
     } else {
       reqTarget.value = '인사팀장'
@@ -599,13 +601,19 @@ const formData = ref(null)
 
 // 휴가 신청 버튼 클릭 시 (Submit form)
 const onSubmit = () => {
+  // console.log(reqData)
+  // 휴가 유형을 선택 안 했을 경우 return
+  if (!reqData.vcTypeDto.typeId || !reqData.vcTypeDto.typeId === '') {
+    warningAlert('휴가유형을 선택해주세요')
+    return
+  }
   if (notAcceptable.value) {
     warningAlert('요청일수가 잔여일수보다 큽니다.\n날짜를 다시 선택해 주세요.')
     return
   }
   // 선택 유형이 연차면 상태 = '자동승인' / 타 휴가면 '대기중'
   reqData.status = reqData.vcTypeDto.typeId == 1 ? '자동승인' : '대기중'
-  // console.log(reqData)
+
   formData.value = new FormData()
   // 객체를 JSON 타입으로 변환하여 Blob 객체 생성
   formData.value.append(
@@ -618,7 +626,6 @@ const onSubmit = () => {
   if (file.value != null) {
     appendFile()
   }
-
   createRequest(formData.value).then(() => {
     successToast('휴가 신청이 완료되었습니다.')
     router.go(-1)
@@ -637,14 +644,14 @@ const minusHolidayFromReqDays = () => {
       const newEndDate = addDays(reqData.endDate, 1)
 
       if (reqData.startDate <= date && date <= newEndDate) {
-        console.log(new Date(state.items[i].startDate))
+        // console.log(new Date(state.items[i].startDate))
         cnt++
       }
     }
   }
-  console.log(reqData.endDate)
-  console.log(cnt)
-  console.log(reqData.reqDays)
+  // console.log(reqData.endDate)
+  // console.log(cnt)
+  // console.log(reqData.reqDays)
   reqData.reqDays = reqData.reqDays - cnt
 }
 
@@ -668,5 +675,4 @@ const appendFile = () => {
 }
 </script>
 
-<style>
-</style>
+<style></style>

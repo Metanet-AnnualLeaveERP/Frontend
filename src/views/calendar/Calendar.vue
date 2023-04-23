@@ -43,8 +43,8 @@
           <label class="font-semibold">표시 기간 설정</label>
           <div class="mt-1">
             <select
-                v-model="state.displayPeriodUom"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              v-model="state.displayPeriodUom"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               <option value="month">월 단위</option>
               <option value="week">주 단위</option>
@@ -57,8 +57,8 @@
           <label class="font-semibold">표시 개월 수</label>
           <div class="mt-1">
             <select
-                v-model="state.displayPeriodCount"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              v-model="state.displayPeriodCount"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               <option :value="1">1개월</option>
               <option :value="2">2개월</option>
@@ -71,13 +71,13 @@
           <label class="font-semibold">주 시작 요일</label>
           <div class="mt-1">
             <select
-                v-model="state.startingDayOfWeek"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              v-model="state.startingDayOfWeek"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             >
               <option
-                  v-for="(d, index) in dayNames"
-                  :key="index"
-                  :value="index"
+                v-for="(d, index) in dayNames"
+                :key="index"
+                :value="index"
               >
                 {{ d }}
               </option>
@@ -92,47 +92,47 @@
 
           <div class="flex items-center mb-4">
             <input
-                v-model="state.useTodayIcons"
-                type="checkbox"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              v-model="state.useTodayIcons"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
             <label
-                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >Use icon for today's period</label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >Use icon for today's period</label
             >
           </div>
           <div class="flex items-center mb-4">
             <input
-                v-model="state.displayWeekNumbers"
-                type="checkbox"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              v-model="state.displayWeekNumbers"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
             <label
-                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >주 번호 표시하기</label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >주 번호 표시하기</label
             >
           </div>
 
           <div class="flex items-center mb-4">
             <input
-                v-model="state.showTimes"
-                type="checkbox"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              v-model="state.showTimes"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
             <label
-                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >일정에 시간 표시하기</label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >일정에 시간 표시하기</label
             >
           </div>
           <div class="items-center mb-4">
             <input
-                v-model="state.useDefaultTheme"
-                type="checkbox"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              v-model="state.useDefaultTheme"
+              type="checkbox"
+              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
             <label
-                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >캘린더 CSS 적용</label
+              class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >캘린더 CSS 적용</label
             >
           </div>
         </div>
@@ -143,18 +143,18 @@
           </div>
           <div class="flex justify-center mt-2">
             <BaseBtn
-                class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
-                @click="onClickCheckBtn"
-            >휴가 정보 확인하기</BaseBtn
+              class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
+              @click="onClickCheckBtn"
+              >휴가 정보 확인하기</BaseBtn
             >
           </div>
         </div>
 
         <div class="flex justify-center mt-5">
           <BaseBtn
-              class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
-              @click="onClickRequestBtn"
-          >휴가 신청하기</BaseBtn
+            class="border border-info text-info hover:bg-info hover:text-white mb-3 mr-3"
+            @click="onClickRequestBtn"
+            >휴가 신청하기</BaseBtn
           >
         </div>
       </BaseCard>
@@ -259,7 +259,7 @@ onMounted(async () => {
 
   // 로그인한 사용자의 휴가 리스트
   await getVcReqList('false').then((res) => {
-    // console.log(res.data)
+    console.log(res.data.vcReqs)
     const list = res.data.vcReqs
     list.forEach((e) => {
       // console.log(e)
@@ -385,11 +385,10 @@ const onClickRequestBtn = () => {
 }
 
 .my-vacation {
-  background-color: #99CCFF !important;
+  background-color: #99ccff !important;
 }
 
 .team-vacation {
-  background-color: #CCCCFF !important;
+  background-color: #ccccff !important;
 }
-
 </style>

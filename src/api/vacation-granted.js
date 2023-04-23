@@ -2,13 +2,14 @@
 import api from './api'
 
 // 휴가부여내역 조회
-export const getListGrantedVc =(p, a) => {
-  return api({
+export const getListGrantedVc =(p, a,searchValue) => {
+    return api({
     url:'/admin/vacations/granted',
     method: 'get',
     params: {
       pageNum: p,
       amount: a,
+      keyword: searchValue
     },
   })
 }

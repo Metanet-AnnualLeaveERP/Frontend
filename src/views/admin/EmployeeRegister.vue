@@ -96,21 +96,29 @@
         </div>
       </div>
       <div class="w-full flex flex-col ">
-        <div class="m-4 flex gap-x-10 justify-between align-middle items-center">
-          <span class="text-xl mr-4">입사일</span>
+        <div class="m-4 flex gap-x-16 justify-between align-middle items-center">
+          <span class="text-xl mr-4">입사일&nbsp;</span>
           <input type="date" v-model="detail.hireDate" :class="className.inputName">
         </div>
         <div class="flex flex-col">
-          <div class="m-4 gap-x flex justify-between align-middle items-center">
+          <div class="m-4 gap-x-7 flex justify-between align-middle items-center">
             <span class=" text-xl mr-4">개인이메일</span>
             <input type="text" v-model="detail.pEmail"
                    placeholder="example@gmail.com" @blur="checkEmail" :class="className.inputName" >
           </div>
           <div v-if="showMessageEmail" class="text-red-500 text-end mr-4">{{ messageEmail }}</div>
         </div>
-        <div class="m-4 gap-x-5 flex justify-start align-middle items-center">
+        <div class="m-4 gap-x-12 flex justify-start align-middle items-center">
           <span class="text-xl mr-4">비밀번호</span>
-          <input type="text" v-model="detail.userDto.pwd" :class="className.inputName">
+          <input type="password" v-model="detail.userDto.pwd" @blur="checkPassword" :class="className.inputName">
+        </div>
+        <div class="flex flex-col">
+          <div class="m-4 gap-x-1 flex justify-between align-middle items-center">
+            <span class=" text-xl mr-4">비밀번호 확인</span>
+            <input type="password" v-model="pwdConfirm"
+                   @keyup="checkPassword" :class="className.inputName" >
+          </div>
+          <div v-if="showMessagePwdCheck" class="text-red-500 text-end mr-4">{{ messagePwdCheck }}</div>
         </div>
       </div>
     </div>
@@ -126,7 +134,7 @@ import router from '@/router/index.js'
 import {useRoute} from "vue-router";
 import {registerEmp} from "@/api";
 import BaseCard from "@/components/Base/BaseCard.vue";
-import { failToast, returnInfoAlert } from '@/sweetAlert';
+import {failToast, loadingAlert, successToast} from '@/sweetAlert';
 const route = useRoute();
 
 const detail = ref({
@@ -146,13 +154,23 @@ const detail = ref({
   },
 });
 
+const pwdConfirm = ref('');
+const isEqualPwd = ref(false);
+const messagePwdCheck = ref('');
+const showMessagePwdCheck = ref(false);
+const checkPassword = () => {
+  isEqualPwd.value = detail.value.userDto.pwd === pwdConfirm.value;
+  showMessagePwdCheck.value = true;
+  messagePwdCheck.value = isEqualPwd.value ? '' : '비밀번호가 일치하지 않습니다.';
+}
+
 const isOpenDept = ref(false);
 const optionsDept = [
   {value: "개발팀", text: "개발팀"},
   {value: "인사팀", text: "인사팀"},
   {value: "재무팀", text: "재무팀"},
   {value: "영업팀", text: "영업팀"},
-  {value: "디지인팀", text: "디지인팀"},
+  {value: "디자인팀", text: "디자인팀"},
   {value: "법무팀", text: "법무팀"},
   {value: "IT팀", text: "IT팀"},
   {value: "영상팀", text: "영상팀"},
@@ -210,10 +228,15 @@ const validate = () => {
     failToast('비밀번호를 입력하세요.');
     return false;
   }
+  if (!isEqualPwd.value) {
+    failToast('비밀번호가 일치하지 않습니다.');
+    return false;
+  }
   addMember()
 }
 
 const addMember = async () => {
+  loadingAlert()
   await registerEmp({
     empDto : {
       empId: detail.value.empId,
@@ -229,10 +252,11 @@ const addMember = async () => {
       empNum : detail.value.userDto.empNum,
       pwd : detail.value.userDto.pwd
     }
-  }).then((res) => {
+  }).then(async (res) => {
     if (res.status === 200) {
-      returnInfoAlert('등록 완료');
-      router.push({name:'사원관리'});
+      await successToast('등록 완료');
+      loadingAlert().close()
+      router.push({name: '사원관리'});
     }
   }).catch(() => {
     failToast('직원등록에 실패하였습니다. 다시 시도해주세요.')

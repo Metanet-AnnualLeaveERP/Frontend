@@ -1,11 +1,13 @@
 <script setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import { onMounted, ref } from 'vue'
-import { getListAnpDoc,
+import store from '@/store/index.js'
+import {
+  getListAnpDoc,
   getListDept,
-  getListEmpByDeptId,
   getAnnualLeaveByEmpId,
-  insertAnpDoc
+  insertAnpDoc,
+  selectEmpListByDeptIdAndExistsAnnualLeave,
 } from '@/api/index.js'
 import router from '@/router'
 import { successToast, loadingAlert, failToast } from '@/sweetAlert'
@@ -14,19 +16,22 @@ import { successToast, loadingAlert, failToast } from '@/sweetAlert'
 const importedAnpDocsList = ref({})
 const pagination = ref({})
 const currentPage = ref(1)
+const importedEmpId = ref('')
 
 onMounted(async () => {
   getList(1) // 촉진문서리스트
-  getListDpt() // 부서조회(추가 모달에서 사용)
+  // getListDpt() // 부서조회(추가 모달에서 사용)
 })
 
+// 검색용
+const keywordName = ref('')
+const keyword = ref('')
 const getList = async (page) => {
-  if (page > pagination.value.endPage || page < pagination.value.startPage) {
-    return
-  }
   currentPage.value = page
-
-  await getListAnpDoc()
+  if (keywordName.value === '') {
+    keywordName.value += '이름'
+  }
+  await getListAnpDoc(page, 10, keywordName.value)
     .then((res) => {
       console.log(res.data)
       importedAnpDocsList.value = res.data.anpDocs
@@ -35,6 +40,13 @@ const getList = async (page) => {
     .catch(() => {
       failToast('데이터 로딩에 실패했습니다.')
     })
+  console.log('keywordName : ' + keywordName.value)
+}
+
+// 검색
+const searchName = () => {
+  console.log(keywordName.value)
+  getList(currentPage.value)
 }
 
 const onClickItem = (docId) => {
@@ -43,7 +55,6 @@ const onClickItem = (docId) => {
 
 //Modal
 const isOpen = ref(false)
-
 
 //부서 데이터 로딩
 const getListDpt = async () => {
@@ -66,12 +77,14 @@ const selectedEmpId = ref('')
 const onChangeTypes = async (e) => {
   selectedDept.value = e.target.value
   console.log('부서번호 : ' + selectedDept.value) // 확인
-  await getListEmpByDeptId(selectedDept.value)
+  await selectEmpListByDeptIdAndExistsAnnualLeave(selectedDept.value)
     .then((res) => {
+      console.log(res.data)
       empList.value = res.data
-      anpData.value.empDto.empId = empList.value[0].empId
+      anpData.value.empDto.empId = empList?.value[0]?.empId
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e)
       failToast('사원 데이터 로딩에 실패했습니다.')
     })
 }
@@ -81,8 +94,8 @@ const annualLeaveInfo = ref([])
 const anpData = ref({
   totalAnv: '',
   usedAnv: '',
-  remainAnv:'',
-  anvOccurDate:'',
+  remainAnv: '',
+  anvOccurDate: '',
   empDto: {
     empId: '',
   },
@@ -91,21 +104,24 @@ const anpData = ref({
 const onChangeNames = async (e) => {
   selectedEmpId.value = e.target.value // 사원번호
   anpData.value.empDto.empId = selectedEmpId.value
-  console.log('선택된 emp::'+selectedEmpId.value)
+  console.log('선택된 emp::' + selectedEmpId.value)
   const id = selectedEmpId.value
-  await getAnnualLeaveByEmpId(id)
-    .then((res) => {
-      annualLeaveInfo.value = res.data
-      anpData.value.totalAnv = annualLeaveInfo.value.vcDays
-      anpData.value.remainAnv = annualLeaveInfo.value.remainDays
-      anpData.value.usedAnv = anpData.value.totalAnv - anpData.value.remainAnv
-      anpData.value.anvOccurDate = annualLeaveInfo.value.grantedDate
-    })
+  await getAnnualLeaveByEmpId(id).then((res) => {
+    console.log(res.data)
+    annualLeaveInfo.value = res.data
+    anpData.value.totalAnv = annualLeaveInfo.value.vcDays
+    anpData.value.remainAnv = annualLeaveInfo.value.remainDays
+    anpData.value.usedAnv = anpData.value.totalAnv - anpData.value.remainAnv
+    anpData.value.anvOccurDate = annualLeaveInfo.value.grantedDate
+  })
   console.log('현재 anpData 저장값:' + anpData.value.anvOccurDate)
 }
 //문서 생성
 const onSubmit = async () => {
-  console.log(anpData.value)
+  if (!anpData.value.empDto.empId) {
+    failToast('사원을 선택해주세요.')
+    return false
+  }
   loadingAlert()
   await insertAnpDoc(anpData.value).then(async (res) => {
     console.log(res)
@@ -113,15 +129,15 @@ const onSubmit = async () => {
     loadingAlert().close()
   })
 }
-
 </script>
 
 <template>
   <div>
     <div class="container mx-auto text-center">
-      <breadcrumbs parentTitle="문서관리" subParentTitle="연차촉진문서" 
-        style="font-weight: bold;
-        font-size: 1.2em;"
+      <breadcrumbs
+        parentTitle="문서관리"
+        subParentTitle="연차촉진문서"
+        style="font-weight: bold; font-size: 1.2em"
       />
       <div class="grid grid-cols-12 gap-5">
         <div class="col-span-12">
@@ -129,20 +145,52 @@ const onSubmit = async () => {
             <div
               class="block w-full overflow-x-auto whitespace-nowrap borderless hover"
             >
+              <div class="flex flex-row-reverse items-center align-middle">
+                <div class="relative w-fit text-gray-600 search-bar mx-3">
+                  <input
+                    class="bg-purple-50 bg-gray-100 dark:bg-dark border-transparent h-10 px-5 pr-10 rounded-md text-sm focus:outline-none"
+                    placeholder="이름검색"
+                    v-model="keywordName"
+                  />
+                  <button
+                    role="button"
+                    class="absolute right-0 top-0 mt-2 mr-4 focus:outline-none"
+                    @click="searchName"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
               <div
                 class="dataTable-wrapper dataTable-loading no-footer fixed-columns"
               >
-              <div class="dataTable-top px-0 py-3">
-                <div class="dataTable-dropdown float-right mb-4">
-                  <BaseBtn
-                    rounded
-                    class="border border-primary text-primary hover:bg-primary hover:text-white"
-                    @click="isOpen = true"
-                  >
-                    <strong>+촉진 문서 추가하기</strong>
-                  </BaseBtn>
+                <div class="dataTable-top px-0 py-3">
+                  <div class="dataTable-dropdown float-right mb-4">
+                    <BaseBtn
+                      rounded
+                      class="border border-primary text-primary hover:bg-primary hover:text-white"
+                      @click=";(isOpen = true), getListDpt()"
+                      v-if="store.state.emp == false"
+                    >
+                      <strong>+촉진 문서 추가하기</strong>
+                    </BaseBtn>
+                  </div>
                 </div>
-              </div>
+
                 <div
                   class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
                 >
@@ -191,7 +239,9 @@ const onSubmit = async () => {
                         <!--발송일자-->
                         <td class="py-3">{{ item?.anvOccurDate }}</td>
                         <!--연차만료일자-->
-                        <td class="py-3">{{ item?.plan === 0 ? '미작성' : '작성' }}</td>
+                        <td class="py-3">
+                          {{ item?.plan === 0 ? '미작성' : '작성' }}
+                        </td>
                         <!--계획서 작성 여부-->
                       </tr>
                     </tbody>
@@ -322,6 +372,7 @@ const onSubmit = async () => {
                   @change="onChangeTypes($event)"
                   class="mt-1 block w-full mb-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
+                  <option disabled selected value="">--부서 선택--</option>
                   <option
                     v-for="(item, index) in deptList"
                     :key="index"
@@ -381,6 +432,5 @@ const onSubmit = async () => {
       </div>
     </div>
     <!-- 문서생성 모달창 끝-->
-
   </div>
 </template>
