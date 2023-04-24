@@ -409,7 +409,7 @@ onMounted(async () => {
   // vcType 조회
   await getVcRemainInfo().then((res) => {
     vcTypeRemains.value = res.data
-
+    console.log(res.data)
     if (res.data.annual != null) {
       vcTypeNames.value.push({ typeId: 1, name: '연차' })
     }
